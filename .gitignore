@@ -1,0 +1,16 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+android/app/src/main/assets/public
+.gradle/
+gradle-app.setting
+*.apk
+*.zip
+*.log
+monitor_build.cjs
+

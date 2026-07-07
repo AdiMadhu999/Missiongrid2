@@ -1,0 +1,6 @@
+{
+  "name": "MissionGrid",
+  "description": "Daily Mission for Selection App for Daily Targets, Accountability, Rank maintenance, and Test Series.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

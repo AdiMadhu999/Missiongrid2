@@ -1,0 +1,155 @@
+    <div id="ai_test_workspace_wrapper" className="fixed inset-0 z-50 bg-slate-950 text-slate-100 flex flex-col pt-[env(safe-area-inset-top)] md:pt-0 font-sans">
+              className="p-2 text-slate-400 hover:text-white bg-slate-850 rounded-xl transition"
+                 <Sparkles className="w-4 h-4 text-indigo-400 animate-pulse" />
+               <p className="text-[9px] text-slate-400 tracking-wider font-semibold uppercase">Adi Madhu Mobile Spec</p>
+              <span className="text-[10px] uppercase font-black bg-indigo-950 border border-indigo-800 text-indigo-300 px-2 py-1 rounded-lg">
+                 <p className="text-xs text-slate-400 font-medium">
+                        <Sparkles className="w-4 h-4 text-indigo-400 animate-pulse" />
+                        <span className="text-xs font-black text-slate-200 uppercase tracking-wide">AI Instruction Workspace</span>
+                     <span className="text-[9px] bg-indigo-950/80 border border-indigo-800 text-indigo-300 font-extrabold uppercase px-2 py-0.5 rounded-lg font-mono">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">📚 Select Preset Mock Pattern</span>
+                                   : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-500 hover:bg-slate-50'
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Custom overlay Guidelines</label>
+                        <span className="text-[9px] text-slate-500 font-mono font-bold">
+                       className="w-full h-24 bg-white text-xs rounded-xl p-2.5 border border-slate-200 focus:outline-none focus:border-indigo-500 text-slate-900 resize-none font-medium leading-relaxed shadow-inner"
+                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">✓ One-Tap Custom Directives Templates</span>
+                                   : 'bg-slate-950 border-slate-850 text-slate-400 hover:border-indigo-500/50 hover:text-slate-100'
+                               <span className="shrink-0 text-indigo-400 text-[10px] font-bold ml-1">{hasTpl ? "✓" : "+"}</span>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">🕒 Recent Saved Instructions</span>
+                                 className="text-[9px] text-slate-350 hover:text-white truncate font-semibold text-left flex-1"
+                                 className="text-slate-605 hover:text-rose-400 p-0.5 ml-2 transition"
+                     <Info className="w-3 h-3 text-indigo-400 shrink-0 mt-0.5" />
+                     <p className="text-[9px] text-slate-500 leading-normal">
+                     <span className="text-xs font-bold text-slate-200">Upload PDF</span>
+                     <span className="text-[9px] text-slate-500 font-semibold uppercase">Exam papers</span>
+                     <span className="text-xs font-bold text-slate-200">Upload Photos</span>
+                     <span className="text-[9px] text-slate-500 font-semibold uppercase">Gallery / Notes</span>
+                        <Sparkles className="w-6 h-6 text-indigo-400 animate-spin" />
+                     <span className="text-xs font-bold text-slate-200">Camera / Document Scan</span>
+                     <span className="text-[9px] text-slate-500 font-semibold uppercase">Snap paper questions in real time</span>
+                        <ClipboardList className="w-6 h-6 text-slate-300" />
+                     <span className="text-xs font-bold text-slate-200">Paste Text</span>
+                     <span className="text-[9px] text-slate-500 font-semibold uppercase">Syllabus / Prompts</span>
+                     <span className="text-xs font-bold text-slate-200">YouTube Video</span>
+                     <span className="text-[9px] text-slate-500 font-semibold uppercase">Topic Context</span>
+                      <div className="w-9 h-9 rounded-full bg-indigo-950/50 border border-indigo-800 flex items-center justify-center shrink-0 text-indigo-400">
+                        <p className="text-[10px] text-slate-400 leading-normal">
+                        className="py-2.5 px-4 bg-slate-950 text-slate-400 border border-slate-800 rounded-xl text-[10px] font-bold uppercase transition hover:text-red-400 hover:bg-red-950/20"
+                     <span className="text-xs font-bold text-slate-200 uppercase tracking-wide">Daily Spend Guardianship</span>
+                 <p className="text-[10px] text-slate-400 leading-normal font-medium flex items-center justify-between">
+                           : 'bg-slate-950 border-slate-850 text-slate-440 hover:text-white hover:bg-slate-900'
+                       <span className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                         <RefreshCw className="w-3.5 h-3.5 animate-spin text-indigo-400" />
+                                      <h4 className="text-xs font-extrabold text-slate-100 truncate flex-1 leading-snug">
+                                   <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wide">
+                                      Step: <span className="text-slate-350">{j.steps?.[j.currentStepIndex] || "Executing Initial scans"}</span> • {j.percent || 5}%
+                                       className="px-2 py-1 bg-slate-950 border border-slate-850 hover:bg-slate-800 text-slate-300 rounded-lg text-[9px] font-black uppercase flex items-center space-x-1"
+                                       <Eye className="w-3 h-3 text-indigo-400" />
+                                       className="px-2 py-1 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-400 rounded-lg text-[9px] font-black uppercase"
+                                     className="p-1 text-slate-500 hover:text-red-400 hover:bg-slate-950 rounded-lg transition-colors"
+                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Saved Workspace Drafts ({recentDrafts.length})</span>
+                     <button onClick={fetchRecentTests} className="text-indigo-400 hover:underline text-[10px] font-bold">Refresh</button>
+                    <div className="py-8 text-center text-xs text-slate-500 font-bold uppercase animate-pulse">Loading Workspace...</div>
+                               <h4 className="text-xs font-bold text-slate-205 truncate">{d.title}</h4>
+                               <div className="flex items-center space-x-2 text-[9px] text-slate-500 mt-1 uppercase font-semibold">
+                                  <span className="text-indigo-400">{d.questions?.length || 0} Questions</span>
+                                 className="px-2 py-1 bg-indigo-950 hover:bg-indigo-900 border border-indigo-900 rounded-lg text-[9px] font-black uppercase text-indigo-300"
+                                 className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-slate-950 rounded-lg"
+                         <div className="text-center py-6 text-[10px] text-slate-600 font-black uppercase">No active mock drafts. Upload files above to build one automatically.</div>
+                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Released Batch Tests ({publishedTests.length})</span>
+                             <div className="text-xs font-bold text-slate-300 truncate">{t.title}</div>
+                             <div className="text-[10px] text-slate-500 mt-1 uppercase font-bold">{t.subject} • Released Cover</div>
+                       <p className="text-center text-[10px] text-slate-600 uppercase py-2 font-black">No published batch assessments yet.</p>
+                          <button onClick={() => setActiveUploadMethod(null)} className="p-1 text-slate-400 hover:text-white bg-slate-800 rounded-lg"><X className="w-4 h-4" /></button>
+                            <p className="text-xs text-slate-400 leading-normal">Choose target PDF test paper files (supports mixed formulas & images).</p>
+                              className="w-full text-xs text-slate-350 bg-slate-950 p-3 rounded-xl border border-slate-800"
+                            <p className="text-xs text-slate-400 leading-normal">Select image captures or screenshot files from your library.</p>
+                              className="w-full text-xs text-slate-350 bg-slate-950 p-3 rounded-xl border border-slate-800"
+                            <p className="text-xs text-slate-400 font-bold block">Type raw study questions, references or key concepts:</p>
+                            <p className="text-xs text-slate-400 leading-normal">Provide educational video link/concepts context:</p>
+                    <Upload className="w-5 h-5 text-indigo-400" />
+                  <p className="text-xs text-slate-400">Review selected files list ready for Gemini OCR extraction.</p>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Selected files ({uploadQueue.length})</span>
+                  <div className="p-3 bg-indigo-950/30 border border-indigo-900/40 rounded-2xl text-[10px] text-indigo-300 leading-normal flex items-start gap-2">
+                    <span className="mt-0.5 font-bold uppercase shrink-0 px-1.5 py-0.5 bg-indigo-900/40 rounded text-[8px] text-indigo-200">Notice</span>
+                             <div className="p-2.5 rounded-lg bg-indigo-900/40 text-indigo-400">
+                                <div className="text-xs font-bold text-slate-200 truncate pr-5">{item.name}</div>
+                          <button onClick={() => removeQueueItem(item.id)} className="p-1 px-1.5 text-slate-500 hover:text-white bg-slate-900 border border-slate-800 rounded-lg">
+                       <p className="text-center py-6 text-slate-500 text-xs font-bold uppercase">No files loaded yet.</p>
+                       className="py-2.5 bg-slate-950 hover:bg-slate-800 text-slate-350 border border-slate-800 rounded-xl text-xs font-bold uppercase shadow-sm text-center"
+                  <Sparkles className="w-7 h-7 text-indigo-400 animate-pulse" />
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black leading-normal">OCR, layout cleaning & math equation alignments live</p>
+                         idx === processingStep ? 'bg-slate-950 text-indigo-400 border border-slate-800 animate-pulse' : 
+                         'bg-slate-950 text-slate-600 border border-slate-850'
+                       <span className={idx === processingStep ? 'text-white font-bold' : idx < processingStep ? 'text-slate-400' : 'text-slate-500'}>
+                 className="p-2 px-4 bg-slate-900 hover:bg-slate-850 rounded-xl text-xs font-extrabold text-slate-300 uppercase letter-wider transition"
+                     <Settings className="w-3.5 h-3.5 text-indigo-400" />
+                        workspaceLayout === 'mobile-cards' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'
+                        workspaceLayout === 'classic' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'
+                       className="p-1 px-1.5 bg-slate-950 border border-slate-850 rounded-lg text-slate-400 hover:text-white disabled:opacity-30 text-[10px]"
+                       className="p-1 px-1.5 bg-slate-950 border border-slate-850 rounded-lg text-slate-400 hover:text-white disabled:opacity-30 text-[10px]"
+                        <Search className="w-3.5 h-3.5 text-slate-400" />
+                       className="bg-slate-900 border border-slate-800 rounded-xl px-2 text-xs font-black text-indigo-400 outline-none"
+                       className={`font-black uppercase tracking-wider ${isBulkMode ? 'text-indigo-400 underline font-black shadow' : 'text-slate-500 hover:text-white'}`}
+                          <button onClick={toggleSelectAll} className="text-indigo-400 font-extrabold uppercase">All</button>
+                             'bg-slate-900 border-slate-800 text-slate-400'
+                       className="h-8 min-w-[32px] px-2 bg-slate-900 border border-dashed border-slate-720 rounded-lg text-indigo-400 hover:text-white flex items-center justify-center shrink-0"
+                                <span className="bg-slate-950 text-indigo-400 border border-slate-800 px-2 py-0.5 rounded text-[10px] font-black uppercase">
+                                <span className="text-[9px] text-slate-500 uppercase font-black tracking-widest bg-slate-950 p-0.5 px-1 rounded border border-slate-850">
+                             <label className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Tap to Edit Question Body</label>
+                               className="w-full text-xs font-semibold text-slate-150 bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-2xl p-3 h-24 outline-none resize-none leading-relaxed"
+                                  <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Mock Answer option choices</span>
+                                    className="text-[9px] font-black text-indigo-400 uppercase tracking-widest"
+                                             isCorrect ? 'bg-green-600 border-green-500 text-white' : 'bg-slate-950 border-slate-800 text-slate-500'
+                                           className="p-1 text-slate-650 hover:text-red-400 hover:bg-slate-950 rounded-lg"
+                             <label className="text-[9px] uppercase font-extrabold text-indigo-400 tracking-wider">Explanatory Solution & Steps</label>
+                               className="w-full text-[11px] text-slate-300 bg-slate-950 border border-slate-850 rounded-2xl p-2.5 h-16 outline-none resize-none leading-relaxed"
+                                <label className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">Points awarded</label>
+                                <label className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">Topic target</label>
+                                 getActiveQuestion()?.uncertaintyFlag ? 'bg-amber-955 border-amber-900 text-amber-400 animate-pulse' : 'bg-slate-950 border-slate-850 text-slate-500'
+                                 getActiveQuestion()?.isApproved ? 'bg-green-955 border-green-900 text-green-400' : 'bg-slate-950 border-slate-850 text-slate-500'
+                            className="bg-slate-900 hover:bg-slate-800 disabled:opacity-30 border border-slate-800 text-slate-300 font-bold p-3 rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5"
+                            className="bg-slate-900 hover:bg-slate-800 disabled:opacity-30 border border-slate-800 text-slate-300 font-bold p-3 rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5"
+                            className="text-indigo-400 hover:underline font-bold flex items-center gap-1"
+                              className="text-slate-400 hover:text-white font-bold"
+                    <div className="py-16 text-center text-slate-500 uppercase text-xs font-bold space-y-1.5 pr-2">
+                       <HelpCircle className="w-8 h-8 mx-auto text-slate-600 animate-bounce" />
+                       <p className="text-[10px] lowercase text-slate-500">Pick any number in the horizontal bar or add manually</p>
+                       <p className="text-xs text-slate-350 leading-relaxed font-medium">
+                    className="flex-1 p-2 bg-slate-900 hover:bg-slate-850 text-slate-300 font-extrabold text-[10px] uppercase tracking-wider rounded-xl border border-slate-800 text-center transition"
+                    className="flex-1 p-2 bg-slate-900 hover:bg-slate-850 text-slate-300 font-extrabold text-[10px] uppercase tracking-wider rounded-xl border border-slate-800 text-center transition"
+                    className="flex-1 p-2 bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 font-extrabold text-[10px] uppercase tracking-wider rounded-xl border border-indigo-900/60 text-center transition"
+                className="h-full w-full bg-slate-50 text-slate-900 flex flex-col overflow-y-auto overflow-x-hidden md:py-8 md:px-4 select-none"
+                              <span className="flex items-center space-x-1 text-slate-400 text-xs font-semibold font-mono">
+                            <div className="flex items-center space-x-3 text-slate-400">
+                            <p className="text-[17px] font-bold text-slate-900 leading-snug tracking-tight">
+                                        : "bg-white border-slate-200 text-slate-800 hover:bg-slate-50"
+                                      <span className="font-serif italic text-base text-slate-450 mr-3 shrink-0">
+                                      <span className="text-[15px] font-semibold text-slate-800 truncate">
+                            className="flex-1 py-3 border border-indigo-600 bg-transparent text-indigo-700 font-extrabold text-xs uppercase tracking-wider rounded-xl text-center active:scale-95 transition"
+                      <div className="py-24 text-center text-slate-400 text-sm font-semibold">
+                                  activePreviewTab === "symbols" ? "bg-blue-100 text-blue-700" : "bg-slate-50 hover:bg-slate-100 text-slate-600"
+                                  activePreviewTab === "instructions" ? "bg-blue-100 text-blue-700" : "bg-slate-50 hover:bg-slate-100 text-slate-600"
+                              className="p-1 rounded-full text-slate-400 hover:bg-slate-100 transition"
+                            <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none mb-4">
+                              <span className="flex items-center space-x-2 text-[13px] font-semibold text-slate-700">
+                              <span className="text-[14px] font-black text-slate-900 font-mono">
+                              <span className="flex items-center space-x-2 text-[13px] font-semibold text-slate-700">
+                              <span className="text-[14px] font-black text-slate-900 font-mono">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2 leading-none">
+                          <h3 className="text-lg font-black text-slate-900 leading-none">Submit Examination?</h3>
+                          <p className="text-xs text-slate-500">
+                        <div className="bg-slate-50 p-3.5 rounded-2xl divide-y divide-slate-100 text-xs text-slate-700">
+                            <span className="font-extrabold text-slate-900">{activeQs.length}</span>
+                            className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs uppercase rounded-xl transition"
+                         className="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white"
+                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">📂 Study Documents Ingestion Stack</span>
+                            <div key={item.id} className="flex items-center justify-between text-[11px] text-slate-300">
+                               <span className="text-[9px] uppercase font-black text-indigo-400 bg-indigo-950/40 px-1.5 py-0.5 rounded border border-indigo-900/30">
+                       <p className="text-[9px] text-slate-500">
+                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">⚙️ Default Ingestion System Tasks</span>
+                            <div key={task} className="flex items-center space-x-2 text-[10px] text-slate-300">
+                            <p className="text-[11px] text-slate-100 italic leading-relaxed text-left w-full font-medium">
+                            <span className="text-[11px] text-slate-500 italic font-medium">
+                    <p className="text-[9.5px] text-slate-400 leading-normal bg-indigo-950/30 border border-indigo-900/40 p-2.5 rounded-xl font-medium">
+                         className="py-2.5 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-black uppercase tracking-wider text-center active:scale-95 transition"
