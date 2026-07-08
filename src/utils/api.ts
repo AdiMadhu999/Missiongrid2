@@ -1,6 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 
-export const DEFAULT_LIVE_HOST = 'https://ais-pre-4lc74fjhivgouuxt4jkrwg-977053100479.asia-southeast1.run.app';
+export const DEFAULT_LIVE_HOST = 'https://mission-selection-43729399220.asia-south1.run.app';
 
 export const getLiveHost = (): string => {
   try {
