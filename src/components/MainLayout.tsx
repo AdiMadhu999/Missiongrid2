@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useSearchParams } from 'react-router-dom';
-import { Home, Target, BookOpen, Award, Shield, ClipboardCheck, ClipboardList, Rss, User, FileText } from 'lucide-react';
+import { Home, Target, BookOpen, Award, Shield, ClipboardCheck, ClipboardList, Rss, User, FileText, HelpCircle } from 'lucide-react';
 import { useAuth } from '../providers/AuthProvider';
 
 export default function MainLayout() {
@@ -44,15 +44,27 @@ export default function MainLayout() {
               </NavLink>
 
               <NavLink 
-                to="/app/feed" 
+                to="/app/doubt" 
                 className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
                   isActive 
                     ? 'text-indigo-600 bg-indigo-50/80 scale-105 font-bold' 
                     : 'text-slate-500 hover:text-indigo-500'
                 }`}
               >
-                <Rss size={22} className="transition-transform duration-200" />
-                <span className="text-[10px] font-bold tracking-tight mt-1">Community</span>
+                <HelpCircle size={22} className="transition-transform duration-200" />
+                <span className="text-[10px] font-bold tracking-tight mt-1">Doubt</span>
+              </NavLink>
+
+              <NavLink 
+                to="/app/guide" 
+                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                  isActive 
+                    ? 'text-blue-600 bg-blue-50/80 scale-105 font-bold' 
+                    : 'text-slate-500 hover:text-blue-500'
+                }`}
+              >
+                <BookOpen size={22} className="transition-transform duration-200" />
+                <span className="text-[10px] font-bold tracking-tight mt-1">Guide</span>
               </NavLink>
 
               <NavLink 
@@ -121,15 +133,27 @@ export default function MainLayout() {
               )}
 
               <NavLink 
-                to="/app/feed" 
+                to="/app/doubt" 
                 className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
                   isActive 
                     ? 'text-indigo-600 bg-indigo-50/80 scale-105 font-bold' 
                     : 'text-slate-500 hover:text-indigo-500'
                 }`}
               >
-                <Rss size={22} className="transition-transform duration-200" />
-                <span className="text-[10px] font-bold tracking-tight mt-1">Community</span>
+                <HelpCircle size={22} className="transition-transform duration-200" />
+                <span className="text-[10px] font-bold tracking-tight mt-1">Doubt</span>
+              </NavLink>
+
+              <NavLink 
+                to="/app/guide" 
+                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                  isActive 
+                    ? 'text-blue-600 bg-blue-50/80 scale-105 font-bold' 
+                    : 'text-slate-500 hover:text-blue-500'
+                }`}
+              >
+                <BookOpen size={22} className="transition-transform duration-200" />
+                <span className="text-[10px] font-bold tracking-tight mt-1">Guide</span>
               </NavLink>
 
               {!isMentor && (
@@ -160,17 +184,31 @@ export default function MainLayout() {
                 </NavLink>
               )}
 
-              <NavLink 
-                to="/app/profile" 
-                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
-                  isActive 
-                    ? 'text-slate-900 bg-slate-100 scale-105 font-bold' 
-                    : 'text-slate-500 hover:text-slate-900'
-                }`}
-              >
-                <User size={22} className="transition-transform duration-200" />
-                <span className="text-[10px] font-bold tracking-tight mt-1">Profile</span>
-              </NavLink>
+              {!isMentor ? (
+                <NavLink 
+                  to="/app/profile" 
+                  className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                    isActive 
+                      ? 'text-slate-900 bg-slate-100 scale-105 font-bold' 
+                      : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  <User size={22} className="transition-transform duration-200" />
+                  <span className="text-[10px] font-bold tracking-tight mt-1">Profile</span>
+                </NavLink>
+              ) : (
+                <NavLink 
+                  to="/app/mentor-place" 
+                  className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                    isActive 
+                      ? 'text-slate-900 bg-slate-100 scale-105 font-bold' 
+                      : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  <Award size={22} className="transition-transform duration-200" />
+                  <span className="text-[10px] font-bold tracking-tight mt-1">Mentor Place</span>
+                </NavLink>
+              )}
             </>
           )}
 

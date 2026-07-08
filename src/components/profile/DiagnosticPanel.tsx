@@ -18,7 +18,7 @@ export const DiagnosticPanel: React.FC = () => {
         const sysSettings = await getSystemSettings();
         const start = sysSettings?.currentCycleStartDate || '2023-01-01';
 
-        const uIds = Array.from(new Set([userProfile.id, userProfile.uid, (userProfile as any).studentCode])).filter(Boolean) as string[];
+        const uIds = Array.from(new Set([userProfile.id, userProfile.id, (userProfile as any).studentCode])).filter(Boolean) as string[];
 
         // Fetch reports
         const reportsSnap = await getDocs(query(collection(db, 'dailyMissionReports'), where('userId', 'in', uIds)));
@@ -78,7 +78,7 @@ export const DiagnosticPanel: React.FC = () => {
             try {
               setLoading(true);
               const { StudentStatsService } = await import('../../services/studentStats');
-              await StudentStatsService.updateStats(userProfile?.id || userProfile?.uid || '');
+              await StudentStatsService.updateStats(userProfile?.id || userProfile?.id || '');
               window.location.reload();
             } catch (err) {
               console.error(err);
@@ -105,7 +105,7 @@ export const DiagnosticPanel: React.FC = () => {
           <pre className="bg-slate-900 p-3 rounded-xl overflow-x-auto text-[10px] leading-relaxed">
             {JSON.stringify({
               id: userProfile?.id,
-              uid: userProfile?.uid,
+              uid: userProfile?.id,
               batchId: userProfile?.batchId,
               cyclePoints: (userProfile as any)?.cyclePoints,
               consistencyIndex: (userProfile as any)?.consistencyIndex,

@@ -27,7 +27,7 @@ export default function MentorPostCreationScreen() {
                 content: description,
                 postType: activityType as MentorPostType,
                 type: 'MentorPost',
-                authorId: userProfile?.uid,
+                authorId: userProfile?.id,
                 authorName: userProfile?.name,
                 visibility: batchVisibility === 'global' ? 'global' : 'batch',
                 batchId: batchVisibility !== 'global' ? batchVisibility : null,
@@ -44,7 +44,7 @@ export default function MentorPostCreationScreen() {
                     sendNotification(user.id, userProfile!.uid, 'MentorPost', docRef.id, 'New Mentor Post', title);
                 });
             }
-            navigate('/app/feed');
+            navigate('/app/guide');
         } catch (error) {
             console.error('Error publishing post:', error);
         } finally {
@@ -54,7 +54,7 @@ export default function MentorPostCreationScreen() {
 
     return (
         <div className="p-6 min-h-screen bg-slate-50">
-            <button onClick={() => navigate('/app/feed')} className="flex items-center gap-2 text-slate-600 mb-6 font-bold">
+            <button onClick={() => navigate('/app/guide')} className="flex items-center gap-2 text-slate-600 mb-6 font-bold">
                 <ArrowLeft className="w-5 h-5" /> Back to Community
             </button>
             <h1 className="text-2xl font-black text-slate-900 capitalize tracking-tight mb-6">Create {activityType}</h1>

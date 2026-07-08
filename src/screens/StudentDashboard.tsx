@@ -29,6 +29,8 @@ export default function StudentDashboard() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  
+  const uId = userProfile?.id || '';
 
   const handleLogout = async () => {
     await logout();
@@ -36,13 +38,13 @@ export default function StudentDashboard() {
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const uid = auth.currentUser?.uid || userProfile?.uid;
-    if (!file || !uid) return;
+    const uploadId = userProfile?.id;
+    if (!file || !uploadId) return;
 
     setUploading(true);
     try {
-        const { url } = await TargetService.uploadFile(file, `profiles/${uid}`);
-        await updateUserProfile(userProfile?.id || userProfile?.mobile!, { photoUrl: url });
+        const { url } = await TargetService.uploadFile(file, `profiles/${uploadId}`);
+        await updateUserProfile(uploadId, { photoUrl: url });
         window.location.reload(); 
     } catch (err) {
         console.error("Failed to upload photo:", err);
@@ -71,7 +73,7 @@ export default function StudentDashboard() {
       return { batch: b, peers: filteredPeers };
     },
     enabled: !!currentUser && !!userProfile?.batchId,
-    persistKey: userProfile?.uid ? `student_dashboard_base_cache_${userProfile.uid}` : undefined,
+    persistKey: uId ? `student_dashboard_base_cache_${uId}` : undefined,
   });
 
   const batch = baseDataQuery.data?.batch || null;
@@ -89,7 +91,7 @@ export default function StudentDashboard() {
       return null;
     },
     enabled: !!currentUser && !!userProfile?.id,
-    persistKey: userProfile?.uid ? `student_metrics_cache_${userProfile.uid}` : undefined,
+    persistKey: uId ? `student_metrics_cache_${uId}` : undefined,
     subscribeFn: (callback) => {
       if (!userProfile?.id) return () => {};
       return onSnapshot(
@@ -114,12 +116,11 @@ export default function StudentDashboard() {
   };
 
   // 2. Real-time subscription for student reports / missions timeline
-  const uId = userProfile?.id || userProfile?.uid || currentUser?.uid || '';
   const reportsQuery = useCachedQuery<DailyMissionReport[]>({
     queryKey: ['studentReports', uId],
     queryFn: async () => [],
     enabled: !!currentUser && !!uId,
-    persistKey: userProfile?.uid ? `student_reports_cache_${userProfile.uid}` : undefined,
+    persistKey: uId ? `student_reports_cache_${uId}` : undefined,
     subscribeFn: (callback) => {
       return MissionService.subscribeStudentReports(
         uId,
@@ -168,16 +169,16 @@ export default function StudentDashboard() {
 
   // 5. Subscribe to student's warnings
   const warningsQuery = useCachedQuery<any[]>({
-    queryKey: ['studentWarnings', currentUser?.uid || ''],
+    queryKey: ['studentWarnings', uId || ''],
     queryFn: async () => [],
-    enabled: !!currentUser?.uid,
-    persistKey: currentUser?.uid ? `student_warnings_cache_${currentUser.uid}` : undefined,
+    enabled: !!uId,
+    persistKey: uId ? `student_warnings_cache_${uId}` : undefined,
     subscribeFn: (callback) => {
       const qWarnings = query(
         collection(db, 'warnings'),
         or(
-          where('uid', '==', currentUser!.uid),
-          where('studentId', '==', currentUser!.uid)
+          where('uid', '==', uId),
+          where('studentId', '==', uId)
         ),
         limit(50)
       );
@@ -197,16 +198,16 @@ export default function StudentDashboard() {
 
   // 6. Subscribe to student's leave requests
   const leavesQuery = useCachedQuery<any[]>({
-    queryKey: ['studentLeaves', currentUser?.uid || ''],
+    queryKey: ['studentLeaves', uId || ''],
     queryFn: async () => [],
-    enabled: !!currentUser?.uid,
-    persistKey: currentUser?.uid ? `student_leaves_cache_${currentUser.uid}` : undefined,
+    enabled: !!uId,
+    persistKey: uId ? `student_leaves_cache_${uId}` : undefined,
     subscribeFn: (callback) => {
       const qLeaves = query(
         collection(db, 'leaveRequests'),
         or(
-          where('uid', '==', currentUser!.uid),
-          where('studentId', '==', currentUser!.uid)
+          where('uid', '==', uId),
+          where('studentId', '==', uId)
         ),
         limit(50)
       );

@@ -84,7 +84,7 @@ export const DBCleanupController: React.FC = () => {
                 const privateRef = doc(dbInstance, 'users_private', userId);
                 await setDoc(privateRef, {
                   mobile: sanitizedMobile,
-                  pin: privateData?.pin || '$2a$10$abcdefghijklmnopqrstuvwxABCDEFGHIJKLMNOPQRSTUVWX', // fallback
+                  pin: privateData?.pin || '$2b$10$3DYWgrMHlRkwwUuYToqfFuqH92wAep3uUo4iBaLJVGpzKZeM9CkSS', // fallback
                   uid: privateData?.uid || userId,
                   email: privateData?.email || 'missionselectionofficial999@gmail.com',
                   userId: userId,
@@ -250,7 +250,7 @@ export const DBCleanupController: React.FC = () => {
             const privateRef = doc(dbInstance, 'users_private', userId);
             await setDoc(privateRef, {
               mobile: '7407463884',
-              pin: '$2a$10$abcdefghijklmnopqrstuvwxABCDEFGHIJKLMNOPQRSTUVWX', // placeholder
+              pin: '$2b$10$3DYWgrMHlRkwwUuYToqfFuqH92wAep3uUo4iBaLJVGpzKZeM9CkSS', // placeholder
               uid: userId,
               email: 'missionselectionofficial999@gmail.com',
               userId: userId,

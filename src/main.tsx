@@ -119,6 +119,9 @@ if (isDev || isNative) {
   const forwardLog = (type: string, ...args: any[]) => {
     try {
       const message = args.map(arg => {
+        if (arg instanceof Error) {
+          return arg.message || String(arg);
+        }
         if (typeof arg === 'object' && arg !== null) {
           try { return JSON.stringify(arg); } catch(e) { return String(arg); }
         }

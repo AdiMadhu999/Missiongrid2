@@ -45,7 +45,7 @@ export const DiscussionEngine = ({ activityId, activityType, isClosed = false }:
         try {
             let imageUrl = '';
             if (selectedFile) {
-                const path = `comments/${userProfile?.uid}/${Date.now()}_${selectedFile.name}`;
+                const path = `comments/${userProfile?.id}/${Date.now()}_${selectedFile.name}`;
                 const result = await uploadFile(path, selectedFile);
                 imageUrl = result.url;
             }
@@ -53,7 +53,7 @@ export const DiscussionEngine = ({ activityId, activityType, isClosed = false }:
             await addDoc(collection(db, 'comments'), {
                 activityId,
                 activityType,
-                authorId: userProfile?.uid,
+                authorId: userProfile?.id,
                 authorName: userProfile?.name,
                 authorRole: userProfile?.role || 'student',
                 text,
@@ -74,7 +74,7 @@ export const DiscussionEngine = ({ activityId, activityType, isClosed = false }:
                 console.error(e);
             }
             
-            if (parentId && parentAuthorId && parentAuthorId !== userProfile?.uid) {
+            if (parentId && parentAuthorId && parentAuthorId !== userProfile?.id) {
                 sendNotification(parentAuthorId, userProfile!.uid, 'Reply', activityId, 'New Reply', `${userProfile?.name} replied to your comment.`);
             }
             
@@ -201,14 +201,14 @@ const CommentItem = ({ comment, onDelete, onReply, onEdit, isClosed }: any) => {
     const { userProfile } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(comment.text);
-    const canManage = userProfile?.role === 'mentor' || userProfile?.uid === comment.authorId;
-    const canEdit = userProfile?.uid === comment.authorId || userProfile?.role === 'mentor';
+    const canManage = userProfile?.role === 'mentor' || userProfile?.id === comment.authorId;
+    const canEdit = userProfile?.id === comment.authorId || userProfile?.role === 'mentor';
     
     const handleLike = async () => {
         const likes = comment.likes || [];
-        const newLikes = likes.includes(userProfile?.uid) 
-            ? likes.filter((id: string) => id !== userProfile?.uid)
-            : [...likes, userProfile?.uid];
+        const newLikes = likes.includes(userProfile?.id) 
+            ? likes.filter((id: string) => id !== userProfile?.id)
+            : [...likes, userProfile?.id];
         await updateDoc(doc(db, 'comments', comment.id), { likes: newLikes });
     };
 
@@ -253,7 +253,7 @@ const CommentItem = ({ comment, onDelete, onReply, onEdit, isClosed }: any) => {
             )}
             
             <div className="flex items-center gap-3 mt-2">
-                <button onClick={handleLike} className={`text-[10px] font-bold flex items-center gap-1 ${comment.likes?.includes(userProfile?.uid) ? 'text-indigo-600' : 'text-slate-500'}`}><ThumbsUp className="w-3 h-3" /> {comment.likes?.length || 0}</button>
+                <button onClick={handleLike} className={`text-[10px] font-bold flex items-center gap-1 ${comment.likes?.includes(userProfile?.id) ? 'text-indigo-600' : 'text-slate-500'}`}><ThumbsUp className="w-3 h-3" /> {comment.likes?.length || 0}</button>
                 {!comment.parentId && onReply && (!isClosed || userProfile?.role === 'mentor') && <button onClick={onReply} className="text-[10px] font-bold text-slate-500 flex items-center gap-1"><Reply className="w-3 h-3" /> Reply</button>}
                 {userProfile?.role === 'mentor' && !comment.isAcceptedAnswer && <button onClick={handleAcceptAnswer} className="text-[10px] font-bold text-green-600">Accept Answer</button>}
             </div>

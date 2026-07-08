@@ -15,7 +15,7 @@ export default function WarningModal({ studentId, studentName, onClose, onSaved 
                 studentId,
                 studentName,
                 reason,
-                mentorId: userProfile.uid,
+                mentorId: userProfile.id,
                 mentorName: userProfile.name
             });
             onSaved();

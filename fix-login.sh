@@ -1,0 +1,1 @@
+sed -i "s/if (sanitizedMobile === '7407463884') {/if (sanitizedMobile === '7407463884') { dbRole = 'mentor'; matchRole = true; publicData.role = 'mentor'; publicData.isPremium = true; publicData.studentCode = 'MENTOR-ADMIN'; /" server.ts

@@ -11,10 +11,10 @@ export const NotificationBell = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!userProfile?.uid) return;
-        const q = query(collection(db, 'notifications'), where('receiverId', '==', userProfile.uid), where('read', '==', false));
+        if (!userProfile?.id) return;
+        const q = query(collection(db, 'notifications'), where('receiverId', '==', userProfile.id), where('read', '==', false));
         return onSnapshot(q, (snap) => setCount(snap.size));
-    }, [userProfile?.uid]);
+    }, [userProfile?.id]);
 
     return (
         <button onClick={() => navigate('/app/notifications')} className="relative text-slate-500">

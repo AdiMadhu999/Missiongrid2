@@ -11,8 +11,8 @@ export const NotificationScreen = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!userProfile?.uid) return;
-        const q = query(collection(db, 'notifications'), where('receiverId', '==', userProfile.uid), limit(50));
+        if (!userProfile?.id) return;
+        const q = query(collection(db, 'notifications'), where('receiverId', '==', userProfile.id), limit(50));
         return onSnapshot(q, (snap) => {
             const data = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
             data.sort((a, b) => {
@@ -22,7 +22,7 @@ export const NotificationScreen = () => {
             });
             setNotifications(data);
         });
-    }, [userProfile?.uid]);
+    }, [userProfile?.id]);
 
     const markAsRead = async (id: string) => {
         await updateDoc(doc(db, 'notifications', id), { read: true });

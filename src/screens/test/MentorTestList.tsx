@@ -229,7 +229,7 @@ export default function MentorTestList() {
           duration: test.duration,
           questionCount: test.questions?.length || test.totalQuestions || 0,
           shareToCommunity: true,
-          authorId: userProfile?.uid || 'mentor',
+          authorId: userProfile?.id || 'mentor',
           authorName: userProfile?.name || 'Mentor',
           createdAt: new Date().toISOString(),
           visibility: 'global',

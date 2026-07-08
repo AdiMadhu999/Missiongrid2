@@ -51,7 +51,7 @@ const IndexRedirect = () => {
   if (!userProfile) return null;
   const role = (userProfile.role || '').toLowerCase();
   const isMentor = role === 'mentor' || role === 'primary-mentor' || role === 'staff' || role === 'admin' || role === 'examiner';
-  return <Navigate to={isMentor ? "home" : "feed"} replace />;
+  return <Navigate to={isMentor ? "home" : "doubt"} replace />;
 };
 
 // Sleek, animated skeleton spinner for lazy-loaded route transitions
@@ -101,7 +101,9 @@ export default function App() {
                       </ProtectedRoute>
                     }>
                       <Route index element={<IndexRedirect />} />
-                      <Route path="feed" element={<MissionFeedScreen />} />
+                      <Route path="feed" element={<MissionFeedScreen feedType="all" />} />
+                      <Route path="doubt" element={<MissionFeedScreen feedType="doubt" />} />
+                      <Route path="guide" element={<MissionFeedScreen feedType="guide" />} />
                       <Route path="create/:activityType" element={<MentorPostCreationScreen />} />
                       <Route path="home" element={<Dashboard />} />
                       <Route path="users" element={<UserListScreen />} />

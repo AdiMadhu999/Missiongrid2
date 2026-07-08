@@ -27,7 +27,7 @@ export default function TargetScreen() {
     queryKey: ['targets', userProfile?.role || '', resolvedBatchId || '', userProfile?.id || ''],
     queryFn: async () => [],
     enabled: queryEnabled,
-    persistKey: userProfile?.uid ? `targets_cache_${userProfile.uid}` : undefined,
+    persistKey: userProfile?.id ? `targets_cache_${userProfile.id}` : undefined,
     subscribeFn: (callback) => {
       return TargetService.subscribeTargetsForUser(
         userProfile!.role,

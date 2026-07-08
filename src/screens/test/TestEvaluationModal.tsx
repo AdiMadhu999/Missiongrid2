@@ -24,7 +24,7 @@ export default function TestEvaluationModal({ attempt, test, onClose, onSaved }:
     if (!userProfile) return;
     setLoading(true);
     try {
-      await TestService.evaluateSubjective(attempt.id, evaluations, userProfile.uid);
+      await TestService.evaluateSubjective(attempt.id, evaluations, userProfile.id);
       onSaved();
       onClose();
     } catch (e) {

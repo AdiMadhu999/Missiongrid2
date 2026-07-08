@@ -66,7 +66,7 @@ export default function Login() {
         } else {
           const userRole = (user.role || '').toLowerCase();
           const isMentor = userRole === 'mentor' || userRole === 'primary-mentor' || userRole === 'staff' || userRole === 'admin' || userRole === 'examiner';
-          navigate(isMentor ? '/app/home' : '/app/feed', { replace: true });
+          navigate(isMentor ? '/app/home' : '/app/doubt', { replace: true });
         }
       }
     } catch (err: any) {

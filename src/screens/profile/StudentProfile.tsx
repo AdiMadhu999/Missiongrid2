@@ -30,7 +30,7 @@ export default function StudentProfile({ userProfile, onSettings }: Props) {
     queryFn: async () => {
       return new Promise<DailyMissionReport[]>((resolve) => {
          if (!userProfile.id) return resolve([]);
-         const unsub = MissionService.subscribeStudentReports(userProfile.id || userProfile.uid!, (data) => {
+         const unsub = MissionService.subscribeStudentReports(userProfile.id || userProfile.id!, (data) => {
             unsub();
             resolve(data);
          }, () => {
@@ -43,7 +43,7 @@ export default function StudentProfile({ userProfile, onSettings }: Props) {
     persistKey: userProfile.id ? `student_profile_missions_${userProfile.id}` : undefined,
     subscribeFn: (callback) => {
        if (!userProfile.id) return () => {};
-       return MissionService.subscribeStudentReports(userProfile.id || userProfile.uid!, callback, (err) => {
+       return MissionService.subscribeStudentReports(userProfile.id || userProfile.id!, callback, (err) => {
           console.error(err);
        });
     }
@@ -79,7 +79,7 @@ export default function StudentProfile({ userProfile, onSettings }: Props) {
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const uid = auth.currentUser?.uid || userProfile.uid;
+    const uid = auth.currentUser?.uid || userProfile.id;
     if (!file || !uid) return;
 
     setUploading(true);

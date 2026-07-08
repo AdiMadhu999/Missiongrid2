@@ -141,7 +141,7 @@ export default function CommunityManagementScreen() {
 
       // Log high-authority action for auditing trail
       await logAuditAction(
-        userProfile.uid,
+        userProfile.id,
         userProfile.name || 'System Mentor',
         'Updated Community Configuration',
         'global_community',

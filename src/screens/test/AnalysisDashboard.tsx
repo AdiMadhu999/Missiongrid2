@@ -10,8 +10,8 @@ export default function AnalysisDashboard({ onBack }: { onBack: () => void }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (userProfile?.uid) {
-      loadStats(userProfile.uid);
+    if (userProfile?.id) {
+      loadStats(userProfile.id);
     }
   }, [userProfile]);
 

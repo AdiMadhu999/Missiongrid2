@@ -110,7 +110,7 @@ export default function MissionReviewWorkspace({ batchId, onBack }: Props) {
     
     setSubmitting(true);
     try {
-      await MissionService.deleteReport(selectedReport.id!, userProfile.id || userProfile.uid!);
+      await MissionService.deleteReport(selectedReport.id!, userProfile.id || userProfile.id!);
       toast.success('Submission successfully deleted');
       
       // Move to next in list
@@ -444,7 +444,7 @@ export default function MissionReviewWorkspace({ batchId, onBack }: Props) {
     setSubmitting(true);
     try {
       const currentReportId = selectedReport.id!;
-      const currentUser = userProfile.id || userProfile.uid!;
+      const currentUser = userProfile.id || userProfile.id!;
 
       // Optimistically move to next
       const currentIndex = reports.findIndex(r => r.id === currentReportId);
@@ -538,13 +538,13 @@ export default function MissionReviewWorkspace({ batchId, onBack }: Props) {
               };
             }
           });
-          await MissionService.reviewSectionsReport(report.id!, userProfile.id || userProfile.uid!, reviews, report);
+          await MissionService.reviewSectionsReport(report.id!, userProfile.id || userProfile.id!, reviews, report);
         } else {
           await MissionService.reviewReport(report.id!, {
             status: 'Approved',
             marks: report.marks ?? 50,
             remarks: 'Approved in bulk.',
-            reviewedBy: userProfile.id || userProfile.uid!
+            reviewedBy: userProfile.id || userProfile.id!
           });
         }
       }
@@ -588,7 +588,7 @@ export default function MissionReviewWorkspace({ batchId, onBack }: Props) {
     setSubmitting(true);
     try {
         const currentReportId = selectedReport.id!;
-        const currentUser = userProfile.id || userProfile.uid!;
+        const currentUser = userProfile.id || userProfile.id!;
         
         // Optimistically move to next
         const currentIndex = reports.findIndex(r => r.id === currentReportId);

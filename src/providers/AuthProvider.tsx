@@ -518,7 +518,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const loadProfile = async () => {
           const userIdFromClaims = claims.userId as string;
-          const effectiveUserId = savedUserId || userIdFromClaims;
+          let effectiveUserId = savedUserId || userIdFromClaims;
+          
+          if (!effectiveUserId && user.phoneNumber) {
+             const sanitized = user.phoneNumber.replace(/\D/g, '');
+             effectiveUserId = sanitized.length > 10 ? sanitized.slice(-10) : sanitized;
+          }
+          
           if (effectiveUserId) {
             try {
               const privSnap = await getDoc(doc(db, 'users_private', effectiveUserId));
@@ -550,13 +556,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const savedProfile = JSON.parse(savedProfileStr);
                 if (savedProfile.mobile) {
                   // Perform simple lookup/linking on users_private
-                  const qByMobile = query(collection(db, 'users_private'), where('mobile', '==', savedProfile.mobile.replace(/\D/g, '')));
-                  const mSnap = await getDocs(qByMobile);
-                  if (!mSnap.empty) {
-                    const targetDoc = mSnap.docs[0];
+                  const mobileId = savedProfile.mobile.replace(/\D/g, '');
+                  const tenDigitsId = mobileId.length > 10 ? mobileId.slice(-10) : mobileId;
+                  
+                  const targetDoc = await getDoc(doc(db, 'users_private', tenDigitsId));
+                  if (targetDoc.exists()) {
                     await updateDoc(doc(db, 'users_private', targetDoc.id), { 
                       uid: user.uid
                     });
+                  } else {
+                      const qByMobile = query(collection(db, 'users_private'), where('mobile', '==', mobileId));
+                      const mSnap = await getDocs(qByMobile);
+                      if (!mSnap.empty) {
+                        const tDoc = mSnap.docs[0];
+                        await updateDoc(doc(db, 'users_private', tDoc.id), { 
+                          uid: user.uid
+                        });
+                      }
                   }
                 }
               }

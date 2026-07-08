@@ -166,7 +166,7 @@ export default function MissionHub({ onBack }: Props) {
         return;
     }
     
-    const uId = userProfile.id || userProfile.uid;
+    const uId = userProfile.id || userProfile.id;
 
     let hasCached = false;
 
@@ -251,7 +251,7 @@ export default function MissionHub({ onBack }: Props) {
   const handleForceSync = async () => {
     if (!userProfile) return;
     setSyncing(true);
-    const uId = userProfile.id || userProfile.uid;
+    const uId = userProfile.id || userProfile.id;
     try {
       const report = await MissionService.getDailyReport(uId!, today);
       setTodayReport(report);
@@ -357,7 +357,7 @@ export default function MissionHub({ onBack }: Props) {
       }
 
       await MissionService.submitSectionReport(
-        userProfile.id || userProfile.uid!,
+        userProfile.id || userProfile.id!,
         userProfile.name || 'Anonymous Student',
         userProfile.mobile || null,
         userProfile.photoUrl || null,
@@ -841,7 +841,7 @@ export default function MissionHub({ onBack }: Props) {
                {userProfile && (
                  <StudentUpdatesCard refreshTrigger={refreshUpdatesTrigger} 
                    studentId={userProfile.id!} 
-                   authUid={userProfile.uid!} 
+                   authUid={userProfile.id!} 
                  />
                )}
             </motion.div>

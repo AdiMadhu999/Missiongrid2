@@ -219,7 +219,7 @@ export default function TargetFormModal({ target, onClose, onSaved }: Props) {
       if (!userProfile) return;
       
       if (isEditingNew) {
-        targetPayload.createdBy = userProfile.uid;
+        targetPayload.createdBy = userProfile.id;
         targetPayload.creatorName = userProfile.name || 'Mentor';
         const docId = await TargetService.createTarget(targetPayload);
         

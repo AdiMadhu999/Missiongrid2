@@ -46,7 +46,8 @@ service cloud.firestore {
     function isPremium() {
       return isSignedIn() && (
         isMentor() ||
-        request.auth.token.get('premiumStatus', '') == 'PREMIUM'
+        request.auth.token.get('premiumStatus', '') == 'PREMIUM' ||
+        request.auth.token.get('premiumStatus', '') == 'active'
       );
     }
 
@@ -57,16 +58,69 @@ service cloud.firestore {
              data.missionGridStudentId.matches('^MG[0-9]{6}$');
     }
 
-    function isStudentProfileUnmodified(reqData, resData) {
-      return true;
+    function isFieldUnmodified(field) {
+      return request.resource.data.get(field, null) == resource.data.get(field, null);
     }
 
     // --- COLLECTION RULES ---
 
     match /users/{userId} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && (isMentor() || (request.auth.uid == userId && isValidNewStudentProfile(request.resource.data, request.auth.uid)) || request.resource.data.get('uid', '') == request.auth.uid);
-      allow update: if isSignedIn() && (isMentor() || isOwner(userId));
+      allow create: if isSignedIn() && (isMentor() || (request.resource.data.get('uid', '') == request.auth.uid && isValidNewStudentProfile(request.resource.data, request.auth.uid)));
+      allow update: if isSignedIn() && (
+        isMentor() || 
+        (
+          (isOwner(userId) || (resource != null && resource.data.get('uid', '') == request.auth.uid)) &&
+          isFieldUnmodified('role') &&
+          isFieldUnmodified('premiumStatus') &&
+          isFieldUnmodified('premium') &&
+          isFieldUnmodified('isPremium') &&
+          isFieldUnmodified('premiumPlan') &&
+          isFieldUnmodified('premiumSource') &&
+          isFieldUnmodified('premiumStartDate') &&
+          isFieldUnmodified('premiumExpiryDate') &&
+          isFieldUnmodified('premiumDays') &&
+          isFieldUnmodified('premiumType') &&
+          isFieldUnmodified('trialDays') &&
+          isFieldUnmodified('remainingPremiumDays') &&
+          isFieldUnmodified('manualPremiumOverride') &&
+          isFieldUnmodified('lastPremiumChangeDate') &&
+          isFieldUnmodified('premiumChangedBy') &&
+          isFieldUnmodified('consecutiveMissedMissions') &&
+          isFieldUnmodified('consecutiveMissedDays') &&
+          isFieldUnmodified('rollingMissedSubmissions') &&
+          isFieldUnmodified('missedSubmissionsCount') &&
+          isFieldUnmodified('missionGridStudentId') &&
+          isFieldUnmodified('studentCode') &&
+          isFieldUnmodified('registrationDate') &&
+          isFieldUnmodified('registrationTime') &&
+          isFieldUnmodified('registrationTimestamp') &&
+          isFieldUnmodified('registrationDateTime') &&
+          isFieldUnmodified('registrationIP') &&
+          isFieldUnmodified('registrationSource') &&
+          isFieldUnmodified('currentBatch') &&
+          isFieldUnmodified('batchId') &&
+          isFieldUnmodified('status') &&
+          isFieldUnmodified('category') &&
+          isFieldUnmodified('missionPoints') &&
+          isFieldUnmodified('currentRank') &&
+          isFieldUnmodified('previousRank') &&
+          isFieldUnmodified('currentStreak') &&
+          isFieldUnmodified('streakUpdatedAt') &&
+          isFieldUnmodified('reputationScore') &&
+          isFieldUnmodified('consistencyIndex') &&
+          isFieldUnmodified('achievements') &&
+          isFieldUnmodified('mentorAccess') &&
+          isFieldUnmodified('permissionLevel') &&
+          isFieldUnmodified('testAccess') &&
+          isFieldUnmodified('lockUntil') &&
+          isFieldUnmodified('loginCount') &&
+          isFieldUnmodified('failedAttempts') &&
+          isFieldUnmodified('uid') &&
+          isFieldUnmodified('userId') &&
+          isFieldUnmodified('mobile')
+        )
+      );
       allow delete: if isMentor();
     }
 
@@ -182,14 +236,53 @@ service cloud.firestore {
 
     match /dailyMissionReports/{reportId} {
       allow read: if isSignedIn();
-      allow create, update: if isSignedIn() && (isMentor() || isPremium());
+      allow create: if isSignedIn() && (
+        isMentor() || 
+        (
+          isPremium() && 
+          (request.resource.data.userId == request.auth.uid || isOwner(request.resource.data.userId)) &&
+          request.resource.data.get('status', 'Pending') == 'Pending' &&
+          request.resource.data.get('marks', 0) == 0 &&
+          request.resource.data.get('reviewedBy', null) == null &&
+          request.resource.data.get('reviewedAt', null) == null
+        )
+      );
+      allow update: if isSignedIn() && (
+        isMentor() ||
+        (
+          isPremium() &&
+          (resource.data.userId == request.auth.uid || isOwner(resource.data.userId)) &&
+          isFieldUnmodified('marks') &&
+          isFieldUnmodified('remarks') &&
+          isFieldUnmodified('reviewedBy') &&
+          isFieldUnmodified('reviewedAt') &&
+          (request.resource.data.get('status', 'Pending') == 'Pending' || isFieldUnmodified('status'))
+        )
+      );
       allow delete: if isMentor();
     }
 
     match /missionSubmissions/{submissionId} {
       allow read: if isSignedIn() && (isMentor() || request.auth.uid == resource.data.firebaseUid);
-      allow create: if isSignedIn() && request.auth.uid == request.resource.data.firebaseUid;
-      allow update: if isSignedIn() && (isMentor() || request.auth.uid == resource.data.firebaseUid);
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.firebaseUid && (
+        isMentor() ||
+        (
+          request.resource.data.get('status', 'Pending Review') in ['Pending Review', 'Pending'] &&
+          request.resource.data.get('evaluatedBy', null) == null &&
+          request.resource.data.get('evaluatedAt', null) == null
+        )
+      );
+      allow update: if isSignedIn() && (
+        isMentor() ||
+        (
+          request.auth.uid == resource.data.firebaseUid &&
+          isFieldUnmodified('status') &&
+          isFieldUnmodified('remarks') &&
+          isFieldUnmodified('evaluatedBy') &&
+          isFieldUnmodified('evaluatedAt') &&
+          isFieldUnmodified('points')
+        )
+      );
     }
 
     match /test_folders/{folderId} {
@@ -199,14 +292,12 @@ service cloud.firestore {
 
     match /studentStats/{statId} {
       allow read: if isSignedIn();
-      allow create, update: if isSignedIn() && (isMentor() || isOwner(statId) || statId == request.auth.uid);
-      allow delete: if isMentor();
+      allow write: if isMentor();
     }
 
     match /student_metrics/{metricId} {
       allow read: if isSignedIn();
-      allow create, update: if isSignedIn() && (isMentor() || isOwner(metricId) || metricId == request.auth.uid);
-      allow delete: if isMentor();
+      allow write: if isMentor();
     }
 
     match /mentors/{mentorId} {

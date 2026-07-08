@@ -15,7 +15,11 @@ import { NotificationBell } from '../components/NotificationBell';
 import { CreatePostModal } from '../components/feed/CreatePostModal';
 import { useCachedQuery } from '../hooks/useCachedQuery';
 
-export default function MissionFeedScreen() {
+interface MissionFeedScreenProps {
+  feedType?: 'all' | 'doubt' | 'guide';
+}
+
+export default function MissionFeedScreen({ feedType = 'all' }: MissionFeedScreenProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPostType, setSelectedPostType] = useState<MentorPostType | 'doubt'>('doubt');
@@ -32,7 +36,7 @@ export default function MissionFeedScreen() {
     queryKey: ['feedPosts', userProfile?.batchId || ''],
     queryFn: async () => [],
     enabled: !!currentUser && !!userProfile?.id,
-    persistKey: userProfile?.uid ? `feed_posts_cache_${userProfile.uid}` : undefined,
+    persistKey: userProfile?.id ? `feed_posts_cache_${userProfile.id}` : undefined,
     subscribeFn: (callback) => {
       const qPosts = query(collection(db, 'mentorPosts'), orderBy('createdAt', 'desc'), limit(50));
       return onSnapshot(qPosts, (snap) => {
@@ -52,7 +56,7 @@ export default function MissionFeedScreen() {
     queryKey: ['feedDoubts', userProfile?.batchId || ''],
     queryFn: async () => [],
     enabled: !!currentUser && !!userProfile?.id,
-    persistKey: userProfile?.uid ? `feed_doubts_cache_${userProfile.uid}` : undefined,
+    persistKey: userProfile?.id ? `feed_doubts_cache_${userProfile.id}` : undefined,
     subscribeFn: (callback) => {
       const qDoubts = query(collection(db, 'discussions'), orderBy('createdAt', 'desc'), limit(50));
       return onSnapshot(qDoubts, (snap) => {
@@ -71,7 +75,7 @@ export default function MissionFeedScreen() {
     queryKey: ['feedTests', userProfile?.batchId || ''],
     queryFn: async () => [],
     enabled: !!currentUser && !!userProfile?.id,
-    persistKey: userProfile?.uid ? `feed_tests_cache_${userProfile.uid}` : undefined,
+    persistKey: userProfile?.id ? `feed_tests_cache_${userProfile.id}` : undefined,
     subscribeFn: (callback) => {
       const qTests = query(collection(db, 'dailyTests'), orderBy('createdAt', 'desc'), limit(30));
       return onSnapshot(qTests, (snap) => {
@@ -115,10 +119,19 @@ export default function MissionFeedScreen() {
                   (doubtsQuery.isLoading && doubts.length === 0) || 
                   (testsQuery.isLoading && tests.length === 0);
 
-  const showHeroCard = tests.length > 0 && (filterType === 'All' || filterType === 'Tests') && !searchQuery;
+  const showHeroCard = (feedType === 'all' || feedType === 'guide') && tests.length > 0 && (filterType === 'All' || filterType === 'Tests') && !searchQuery;
   const testsToFeed = showHeroCard ? tests.slice(1) : tests;
 
-  const filteredItems = [...posts, ...doubts, ...testsToFeed]
+  let baseItems: any[] = [];
+  if (feedType === 'doubt') {
+    baseItems = [...doubts];
+  } else if (feedType === 'guide') {
+    baseItems = [...posts, ...testsToFeed];
+  } else {
+    baseItems = [...posts, ...doubts, ...testsToFeed];
+  }
+
+  const filteredItems = baseItems
     .filter(item => {
         const title = (item as any).title || (item as any).testName || '';
         const content = (item as any).content || '';
@@ -134,7 +147,7 @@ export default function MissionFeedScreen() {
         if (filterType === 'Videos') matchesFilter = item.type === 'MentorPost' && (item as MentorPost).postType === 'video';
         if (filterType === 'Doubts') matchesFilter = item.type === 'Doubt';
         if (filterType === 'Tests') matchesFilter = item.type === 'DailyTest';
-        if (filterType === 'Bookmarks') matchesFilter = (item as any).saves?.includes(userProfile?.uid);
+        if (filterType === 'Bookmarks') matchesFilter = (item as any).saves?.includes(userProfile?.id);
 
         return matchesSearch && matchesFilter;
     })
@@ -196,7 +209,12 @@ export default function MissionFeedScreen() {
         
 
         <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide border-t border-slate-50 bg-white">
-            {['All', 'Announcements', 'Articles', 'Doubts', 'Tests', 'Voice Notes', 'Videos', 'Bookmarks'].map(type => {
+            {(feedType === 'doubt' 
+              ? ['All'] 
+              : feedType === 'guide' 
+                ? ['All', 'Announcements', 'Articles', 'Tests', 'Voice Notes', 'Videos', 'Bookmarks']
+                : ['All', 'Announcements', 'Articles', 'Doubts', 'Tests', 'Voice Notes', 'Videos', 'Bookmarks']
+            ).map(type => {
                 const isActive = filterType === type;
                 return (
                     <button 
@@ -297,7 +315,7 @@ export default function MissionFeedScreen() {
       <div className="fixed bottom-20 right-6 z-50 flex flex-col items-end gap-3">
         {isOpen && (
           <div className="bg-white p-2 rounded-2xl shadow-xl border border-slate-100 flex flex-col gap-1 w-48 animate-in fade-in zoom-in duration-200">
-            {userProfile?.role === 'mentor' && (
+            {userProfile?.role === 'mentor' && feedType !== 'doubt' && (
               <>
                 <button onClick={() => { setSelectedPostType('announcement'); setModalOpen(true); setIsOpen(false); }} className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl text-sm font-bold text-slate-900"><Megaphone className="w-5 h-5 text-indigo-600" /> Announcement</button>
                 <button onClick={() => { setSelectedPostType('article'); setModalOpen(true); setIsOpen(false); }} className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl text-sm font-bold text-slate-900"><FileText className="w-5 h-5 text-indigo-600" /> Article</button>
@@ -307,7 +325,9 @@ export default function MissionFeedScreen() {
                 <button onClick={() => { setSelectedPostType('image'); setModalOpen(true); setIsOpen(false); }} className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl text-sm font-bold text-slate-900"><Video className="w-5 h-5 text-indigo-600" /> Image</button>
               </>
             )}
-            <button onClick={() => { setSelectedPostType('doubt'); setModalOpen(true); setIsOpen(false); }} className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl text-sm font-bold text-slate-900"><HelpCircle className="w-5 h-5 text-indigo-600" /> Doubt</button>
+            {feedType !== 'guide' && (
+              <button onClick={() => { setSelectedPostType('doubt'); setModalOpen(true); setIsOpen(false); }} className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl text-sm font-bold text-slate-900"><HelpCircle className="w-5 h-5 text-indigo-600" /> Doubt</button>
+            )}
           </div>
         )}
         <button 

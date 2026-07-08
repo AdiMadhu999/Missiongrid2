@@ -53,7 +53,7 @@ export default function StudentManagementScreen() {
           isPremium: data.newStatus === 'PREMIUM',
           premiumExpiryDate: new Date(data.newExpiry).toISOString(),
           lastPremiumChangeDate: new Date().toISOString(),
-          premiumChangedBy: userProfile?.uid
+          premiumChangedBy: userProfile?.id
         },
         action: 'MANUAL_OVERRIDE',
         reason: data.reason,

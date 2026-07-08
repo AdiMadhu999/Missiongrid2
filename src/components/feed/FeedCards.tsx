@@ -40,7 +40,7 @@ const CardHeader = ({ item, collectionName }: { item: any, collectionName: strin
                 </div>
             </div>
             
-            {(userProfile?.role === 'mentor' || userProfile?.uid === item.authorId) && (
+            {(userProfile?.role === 'mentor' || userProfile?.id === item.authorId) && (
                 <div className="relative">
                     <button onClick={() => setMenuOpen(!menuOpen)} className="text-slate-400 hover:text-slate-600 p-2">...</button>
                     {menuOpen && (
@@ -68,18 +68,18 @@ const CardActions = ({ item, type }: { item: any, type: 'mentorPost' | 'doubt' |
     const handleLike = async () => {
         const docRef = doc(db, collectionName, item.id);
         const likes = item.likes || [];
-        const newLikes = likes.includes(userProfile?.uid) 
-            ? likes.filter((id: string) => id !== userProfile?.uid)
-            : [...likes, userProfile?.uid];
+        const newLikes = likes.includes(userProfile?.id) 
+            ? likes.filter((id: string) => id !== userProfile?.id)
+            : [...likes, userProfile?.id];
         await updateDoc(docRef, { likes: newLikes });
     };
 
     const handleSave = async () => {
         const docRef = doc(db, collectionName, item.id);
         const saves = item.saves || [];
-        const newSaves = saves.includes(userProfile?.uid) 
-            ? saves.filter((id: string) => id !== userProfile?.uid)
-            : [...saves, userProfile?.uid];
+        const newSaves = saves.includes(userProfile?.id) 
+            ? saves.filter((id: string) => id !== userProfile?.id)
+            : [...saves, userProfile?.id];
         await updateDoc(docRef, { saves: newSaves });
     };
 
@@ -101,12 +101,12 @@ const CardActions = ({ item, type }: { item: any, type: 'mentorPost' | 'doubt' |
 
     return (
         <div className="grid grid-cols-4 gap-2 mt-2 pt-2 border-t border-slate-100">
-            <button onClick={handleLike} className={`flex items-center justify-center gap-2 text-xs font-bold ${item.likes?.includes(userProfile?.uid) ? 'text-indigo-600' : 'text-slate-600'} hover:bg-slate-50 py-1 rounded-md transition`}>
+            <button onClick={handleLike} className={`flex items-center justify-center gap-2 text-xs font-bold ${item.likes?.includes(userProfile?.id) ? 'text-indigo-600' : 'text-slate-600'} hover:bg-slate-50 py-1 rounded-md transition`}>
                 <ThumbsUp className="w-4 h-4" /> {item.likes?.length || 0}
             </button>
             <button className="flex items-center justify-center gap-2 text-xs font-bold text-slate-600 hover:bg-slate-50 py-1 rounded-md transition"><MessageSquare className="w-4 h-4" /> {item.comments || 0}</button>
             <button onClick={handleShare} className="flex items-center justify-center gap-2 text-xs font-bold text-slate-600 hover:bg-slate-50 py-1 rounded-md transition"><span className="w-4 h-4">📤</span></button>
-            <button onClick={handleSave} className={`flex items-center justify-center gap-2 text-xs font-bold ${item.saves?.includes(userProfile?.uid) ? 'text-indigo-600' : 'text-slate-600'} hover:bg-slate-50 py-1 rounded-md transition`}><span className="w-4 h-4">🔖</span></button>
+            <button onClick={handleSave} className={`flex items-center justify-center gap-2 text-xs font-bold ${item.saves?.includes(userProfile?.id) ? 'text-indigo-600' : 'text-slate-600'} hover:bg-slate-50 py-1 rounded-md transition`}><span className="w-4 h-4">🔖</span></button>
         </div>
     );
 };
@@ -121,13 +121,14 @@ export const DoubtCard = ({ item }: { item: any }) => {
     const toggleSolved = async () => {
         const isNowSolved = !isSolved;
         await updateDoc(doc(db, 'discussions', item.id), { status: isNowSolved ? 'Solved' : 'Unsolved' });
-        if (isNowSolved && item.authorId !== userProfile?.uid) {
+        if (isNowSolved && item.authorId !== userProfile?.id) {
             sendNotification(item.authorId, userProfile!.uid, 'Solved', item.id, 'Doubt Solved', `Your doubt "${item.title}" was marked as solved.`);
         }
     };
     
     return (
-        <div className="py-2 border-b border-slate-100 bg-white">
+        <div className="p-4 mb-3 bg-white border border-indigo-100 rounded-2xl shadow-sm relative overflow-hidden">
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-indigo-500 to-purple-500"></div>
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <img src={item.authorPhoto || `https://ui-avatars.com/api/?name=${item.authorName}`} className="w-8 h-8 rounded-full" alt={item.authorName} />
@@ -150,12 +151,12 @@ export const DoubtCard = ({ item }: { item: any }) => {
                 <p className="text-xs text-slate-600 leading-relaxed mb-1.5">{item.content}</p>
             </div>
             
-            <div className="flex gap-2 items-center pl-[40px]">
-                <button onClick={() => setExpanded(!expanded)} className="text-xs font-bold text-indigo-600 hover:underline">
-                    {expanded ? 'Hide Discussion' : `Join Discussion Room (${item.replyCount || 0})`}
+            <div className="flex gap-2 items-center mt-3 pl-[40px] flex-wrap">
+                <button onClick={() => setExpanded(!expanded)} className="text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors px-3 py-1.5 rounded-lg shadow-sm">
+                    {expanded ? 'Leave Room' : `Enter Discussion Room (${item.replyCount || 0})`}
                 </button>
                 {isMentor && (
-                    <button onClick={toggleSolved} className={`text-[10px] font-bold ${isSolved ? 'text-amber-700' : 'text-slate-500 hover:text-indigo-600'}`}>
+                    <button onClick={toggleSolved} className={`text-[10px] font-bold px-2 py-1 rounded-md ${isSolved ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'}`}>
                         {isSolved ? 'Reopen Room' : 'Close Room (Mark Solved)'}
                     </button>
                 )}

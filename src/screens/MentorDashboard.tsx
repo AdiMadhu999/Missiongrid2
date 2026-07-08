@@ -21,7 +21,7 @@ export default function MentorDashboard() {
   const navigate = useNavigate();
   
   const { data: cachedStats, isLoading: loading } = useCachedQuery({
-    queryKey: ['mentorDashboardStats', userProfile?.uid || ''],
+    queryKey: ['mentorDashboardStats', userProfile?.id || ''],
     queryFn: async () => {
       const todayStr = new Date().toISOString().split('T')[0];
 
@@ -83,8 +83,8 @@ export default function MentorDashboard() {
       
       return freshStats;
     },
-    enabled: !!userProfile?.uid,
-    persistKey: userProfile?.uid ? `mentor_dashboard_cache_enhanced_${userProfile.uid}` : undefined,
+    enabled: !!userProfile?.id,
+    persistKey: userProfile?.id ? `mentor_dashboard_cache_enhanced_${userProfile.id}` : undefined,
   });
 
   const stats = cachedStats || {

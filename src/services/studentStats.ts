@@ -4,6 +4,7 @@ import { StudentStats } from '../models/studentStats';
 import { User } from '../models/user';
 import { DailyMissionReport } from '../models/mission';
 import { getSystemSettings } from './system';
+import { apiFetch } from '../utils/api';
 
 export const StudentStatsService = {
   updateStats: async (studentId: string, updatedReport?: DailyMissionReport): Promise<void> => {
@@ -27,6 +28,21 @@ export const StudentStatsService = {
         throw new Error('Student not found');
     }
     const user = userSnap.data() as User;
+    if (user.role === 'student' || !user.role) {
+      console.log(`StudentStatsService: Student role detected. Delegating recalculation to secure backend endpoint.`);
+      const response = await apiFetch('/api/metrics/recalculate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ targetUserId: studentDocId })
+      });
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Failed to recalculate metrics via backend: ${errText}`);
+      }
+      return;
+    }
     const studentIds = Array.from(new Set([studentDocId, user.uid, (user as any).studentCode, user.id])).filter(Boolean) as string[];
 
     // Fetch remaining dependent details

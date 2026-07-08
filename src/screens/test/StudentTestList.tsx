@@ -51,7 +51,7 @@ export default function StudentTestList() {
       return TestService.getTestsForStudent(userProfile!.id);
     },
     enabled: !!userProfile?.id && !!currentUser?.uid,
-    persistKey: userProfile?.uid ? `student_tests_cache_${userProfile.uid}` : undefined,
+    persistKey: userProfile?.id ? `student_tests_cache_${userProfile.id}` : undefined,
   });
 
   const attemptsQuery = useCachedQuery<TestAttempt[]>({
@@ -60,7 +60,7 @@ export default function StudentTestList() {
       return TestService.getAttemptsForStudent(userProfile!.id);
     },
     enabled: !!userProfile?.id && !!currentUser?.uid,
-    persistKey: userProfile?.uid ? `student_attempts_cache_${userProfile.uid}` : undefined,
+    persistKey: userProfile?.id ? `student_attempts_cache_${userProfile.id}` : undefined,
   });
 
   const folders = foldersQuery.data || [];

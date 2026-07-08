@@ -588,8 +588,14 @@ export const MissionService = {
         console.warn('Mission Review Index Missing. Falling back to non-ordered fetch.');
         const q = query(collection(db, path), where('status', 'in', ['Pending', 'Submitted']), limit(pageSize));
         const snap = await getDocs(q);
+        const reports = snap.docs.map(d => ({ ...(d.data() as any), id: d.id } as DailyMissionReport));
+        reports.sort((a, b) => {
+          const tA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
+          const tB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
+          return tB - tA;
+        });
         return {
-          data: snap.docs.map(d => ({ ...(d.data() as any), id: d.id } as DailyMissionReport)),
+          data: reports,
           lastVisible: null 
         };
       }

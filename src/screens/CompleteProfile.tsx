@@ -108,7 +108,7 @@ export default function CompleteProfile() {
       } else {
         const userRole = (userProfile?.role || '').toLowerCase();
         const isMentor = userRole === 'mentor' || userRole === 'primary-mentor' || userRole === 'staff' || userRole === 'admin' || userRole === 'examiner';
-        navigate(isMentor ? '/app/home' : '/app/feed');
+        navigate(isMentor ? '/app/home' : '/app/doubt');
       }
     } catch (err: any) {
       setError(err.message);

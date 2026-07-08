@@ -119,6 +119,11 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
       }
 
       const user = await AuthService.loginWithMobileAndPassword(mobile, sanitizedPassword, 'mentor', loginMethod);
+      if (user.mentorDirectLogin) {
+        await logAuthAttempt(mobile, 'SUCCESS', 'Security PIN verified instantly');
+        onSuccess(user);
+        return;
+      }
       setTempUser(user);
       
       if (loginMethod === 'sms') {

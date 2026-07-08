@@ -249,7 +249,7 @@ export const PremiumManagementDashboard: React.FC<PremiumManagementDashboardProp
     const targetStudentId = selectedStudent.id || selectedStudent.uid || selectedStudent.mobile!;
     const studentName = selectedStudent.name || 'Student';
     const mentorName = userProfile?.name || 'Mentor';
-    const mentorId = userProfile?.id || userProfile?.uid || 'mentor';
+    const mentorId = userProfile?.id || userProfile?.id || 'mentor';
 
     if (!reason.trim()) {
       toast.error('Please specify a reason for this audit change.');

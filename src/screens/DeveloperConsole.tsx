@@ -1284,7 +1284,7 @@ export default function DeveloperConsole() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono text-slate-300">
                   <div className="space-y-2">
-                    <p><span className="text-slate-500">Developer UID:</span> <span className="text-indigo-300 select-all font-semibold">{userProfile?.uid}</span></p>
+                    <p><span className="text-slate-500">Developer UID:</span> <span className="text-indigo-300 select-all font-semibold">{userProfile?.id}</span></p>
                     <p><span className="text-slate-500">Official Mobile:</span> <span className="text-indigo-300 select-all font-semibold">{userProfile?.mobile}</span></p>
                     <p><span className="text-slate-500">Authorized Role:</span> <span className="text-indigo-300 uppercase font-semibold">{userProfile?.role}</span></p>
                     <p><span className="text-slate-500">Batch Assignment:</span> <span className="text-indigo-300 font-semibold">{userProfile?.batchId || 'N/A (Global Monitor)'}</span></p>

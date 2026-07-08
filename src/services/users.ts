@@ -514,7 +514,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
   if (!userData.uid) throw new Error("UID is required to enroll a user.");
   const sanitizedMobile = userData.mobile.replace(/\D/g, '');
 
-  const userId = userData.uid; // Use UID as document ID
+  const userId = sanitizedMobile; // Use verified mobile number as document ID
   const missionGridStudentId = await generateNextStudentId();
 
   // Try to fetch current IP and user agent from our own endpoint
@@ -611,7 +611,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
     // Automatic Data Capture - Permanent Identity
     missionGridStudentId: missionGridStudentId,
     studentCode: missionGridStudentId,
-    uid: userId,
+    uid: userData.uid,
     mobile: sanitizedMobile,
     
     registrationDate,
@@ -656,7 +656,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
     mobile: sanitizedMobile,
     email: userData.email || '',
     pin: hashPin(userData.pin || '123456'),
-    uid: userId,
+    uid: userData.uid,
     address: userData.address || '',
     
     registrationDateTime: registrationTimestamp,
@@ -697,13 +697,13 @@ export const createUserProfile = async (userData: Partial<User>) => {
   }
 
   try {
-    await setDoc(doc(db, 'user_roles', userId), {
+    await setDoc(doc(db, 'user_roles', userData.uid), {
       userId: userId,
       role: 'student',
       updatedAt: registrationTimestamp
     });
   } catch (error) {
-    handleFirestoreError(error, OperationType.CREATE, `user_roles/${userId}`);
+    handleFirestoreError(error, OperationType.CREATE, `user_roles/${userData.uid}`);
   }
 
   // Create a document in premium_history containing user's exact required fields

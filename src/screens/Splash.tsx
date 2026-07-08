@@ -24,7 +24,7 @@ export default function Splash() {
       if (userProfile && userProfile.status === 'active') {
         const role = (userProfile.role || '').toLowerCase();
         const isMentor = role === 'mentor' || role === 'primary-mentor' || role === 'staff' || role === 'admin' || role === 'examiner';
-        navigate(isMentor ? '/app/home' : '/app/feed', { replace: true });
+        navigate(isMentor ? '/app/home' : '/app/doubt', { replace: true });
       } else {
         navigate('/login', { replace: true });
       }

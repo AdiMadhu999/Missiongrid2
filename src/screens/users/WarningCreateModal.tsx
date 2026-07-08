@@ -22,7 +22,7 @@ export default function WarningCreateModal({ studentId, studentName, onClose, on
             await addWarning({
                 studentId,
                 studentName,
-                mentorId: userProfile.uid,
+                mentorId: userProfile.id,
                 mentorName: userProfile.name || 'Mentor',
                 reason
             });

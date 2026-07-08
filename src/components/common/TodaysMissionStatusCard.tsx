@@ -17,7 +17,7 @@ export const TodaysMissionStatusCard: React.FC = () => {
         
         setLoading(true);
         const unsubscribe = MissionService.subscribeDailyReport(
-            userProfile.id || userProfile.uid!, 
+            userProfile.id || userProfile.id!, 
             today,
             (res) => {
                 setReport(res);

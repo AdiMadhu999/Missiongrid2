@@ -34,12 +34,13 @@ export default function TestAttemptSession() {
         setTest(testData);
         
         // Check for active attempt
-        const existingAttempt = await getActiveAttempt(currentUser.uid, testId) as any;
+        const userId = userProfile?.id || currentUser.uid;
+        const existingAttempt = await getActiveAttempt(userId, testId) as any;
         if (existingAttempt) {
             setAttemptId(existingAttempt.id);
             setResponses(existingAttempt.responses || {});
         } else {
-            const newAttemptId = await createAttempt(currentUser.uid, testId);
+            const newAttemptId = await createAttempt(userId, testId);
             setAttemptId(newAttemptId);
         }
         

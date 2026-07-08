@@ -1342,7 +1342,7 @@ export default function AITestCreator({ onClose, onSaved }: AITestCreatorProps) 
         body: JSON.stringify({
           uploadQueue,
           preferences,
-          createdBy: userProfile?.uid || "mentor",
+          createdBy: userProfile?.id || "mentor",
           dailyBudgetLimit: dailyBudgetLimit
         })
       });
@@ -1423,7 +1423,7 @@ Please resolve these validation errors before saving.`);
         category,
         visibility: "global" as const,
         questions,
-        createdBy: userProfile?.uid || "mentor",
+        createdBy: userProfile?.id || "mentor",
         isAiDraft: status === 'draft',
         isArchived: false,
         auditReport,
@@ -1493,7 +1493,7 @@ Please resolve these validation errors before saving.`);
       status: "draft",
       visibility: "global" as const,
       questions: JSON.parse(JSON.stringify(questions)),
-      createdBy: userProfile?.uid || "mentor",
+      createdBy: userProfile?.id || "mentor",
       isAiDraft: true,
       isArchived: false,
       auditReport,
@@ -1614,7 +1614,7 @@ Please fix all validation errors before publishing.`);
                 websiteLink: q.websiteLink || '',
                 imageUrl: q.imageUrl || '',
                 solutionImageUrl: q.solutionImageUrl || '',
-                createdBy: userProfile?.uid || "mentor",
+                createdBy: userProfile?.id || "mentor",
                 updatedAt: new Date().toISOString()
               };
               await libUpdateQuestion(dupMatch.duplicateInLibrary.id, replacementPayload as any);
@@ -1651,7 +1651,7 @@ Please fix all validation errors before publishing.`);
             websiteLink: q.websiteLink || '',
             imageUrl: q.imageUrl || '',
             solutionImageUrl: q.solutionImageUrl || '',
-            createdBy: userProfile?.uid || "mentor",
+            createdBy: userProfile?.id || "mentor",
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           };
@@ -1691,7 +1691,7 @@ Please fix all validation errors before publishing.`);
             return cleanQ;
           }),
           scheduledFor: publishMode === 'schedule' ? scheduledTime : undefined,
-          createdBy: userProfile?.uid || "mentor",
+          createdBy: userProfile?.id || "mentor",
           updatedAt: new Date().toISOString()
         });
 

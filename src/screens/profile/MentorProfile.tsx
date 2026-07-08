@@ -24,7 +24,7 @@ export default function MentorProfile({ userProfile }: Props) {
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const uid = auth.currentUser?.uid || userProfile.uid;
+    const uid = auth.currentUser?.uid || userProfile.id;
     if (!file || !uid || !userProfile.mobile) return;
 
     setUploading(true);

@@ -23,14 +23,14 @@ export default function ActivityCreationScreen() {
                 content: description,
                 type: 'Doubt',
                 status: 'Unsolved',
-                studentId: userProfile?.uid,
+                studentId: userProfile?.id,
                 authorName: userProfile?.name,
                 batchId: userProfile?.batchId,
                 visibility: 'batch',
                 createdAt: serverTimestamp(),
                 replyCount: 0
             });
-            navigate('/app/feed');
+            navigate('/app/guide');
         } catch (error) {
             console.error('Error creating doubt:', error);
         } finally {
@@ -40,7 +40,7 @@ export default function ActivityCreationScreen() {
 
     return (
         <div className="p-6 min-h-screen bg-slate-50">
-            <button onClick={() => navigate('/app/feed')} className="flex items-center gap-2 text-slate-600 mb-6 font-bold">
+            <button onClick={() => navigate('/app/guide')} className="flex items-center gap-2 text-slate-600 mb-6 font-bold">
                 <ArrowLeft className="w-5 h-5" /> Back to Community
             </button>
             <h1 className="text-2xl font-black text-slate-900 capitalize tracking-tight mb-6">Ask a {activityType}</h1>

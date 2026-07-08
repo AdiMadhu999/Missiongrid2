@@ -153,7 +153,7 @@ export default function UnifiedRegistration() {
 
   const handleFinalSubmit = () => {
     if (!acceptedTerms) return;
-    navigate('/app/feed', { replace: true });
+    navigate('/app/doubt', { replace: true });
   };
 
   return (

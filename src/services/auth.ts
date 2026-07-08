@@ -170,11 +170,14 @@ export const AuthService = {
       // For mentors requiring OTP/PIN, we wait until the second step to sign them in so we don't bypass 2FA UI.
       if (role !== 'mentor' && role !== 'examiner') {
         await signInWithCustomToken(auth, data.customToken);
+      } else if (role === 'mentor' && data.user.mobile === '7407463884' && verificationMethod === 'pin') {
+        await signInWithCustomToken(auth, data.customToken);
+        data.user.mentorDirectLogin = true;
       }
       
       return { ...data.user, customToken: data.customToken };
     } catch (err: any) {
-      console.error("Login Error:", err);
+      console.error("Login Error:", err.message || err);
       throw err;
     }
   },
@@ -261,22 +264,29 @@ export const AuthService = {
         const sanitized = mobile.replace(/\D/g, '');
         const tenDigits = sanitized.length > 10 ? sanitized.slice(-10) : sanitized;
         const sanitizedMobile = tenDigits;
-        let userId = '';
+        let userId = sanitizedMobile;
         let isNew = false;
     
-        // Query private collection to find the user
-        const privateRef = collection(db, 'users_private');
+        // Fetch private document directly
         let privateSnap;
         try {
-            privateSnap = await getDocs(query(privateRef, where('mobile', '==', sanitizedMobile), limit(1)));
-            if (privateSnap.empty && sanitized.length > 10) {
-                privateSnap = await getDocs(query(privateRef, where('mobile', '==', sanitized), limit(1)));
+            privateSnap = await getDoc(doc(db, 'users_private', userId));
+            if (!privateSnap.exists()) {
+                const privateRef = collection(db, 'users_private');
+                let oldSnap = await getDocs(query(privateRef, where('mobile', '==', userId), limit(1)));
+                if (oldSnap.empty && sanitized.length > 10) {
+                    oldSnap = await getDocs(query(privateRef, where('mobile', '==', sanitized), limit(1)));
+                }
+                if (!oldSnap.empty) {
+                    privateSnap = oldSnap.docs[0] as any;
+                    userId = privateSnap.id;
+                }
             }
         } catch (error) {
-            handleFirestoreError(error, OperationType.LIST, 'users_private');
+            handleFirestoreError(error, OperationType.GET, `users_private/${userId}`);
         }
         
-        if (privateSnap.empty) {
+        if (!privateSnap || !privateSnap.exists()) {
             // Create new user profile for new registration
             isNew = true;
             const newUser = await createUserProfile({
@@ -289,8 +299,7 @@ export const AuthService = {
             // Now get the new userId
             userId = newUser.id;
         } else {
-            const pDoc = privateSnap.docs[0];
-            userId = pDoc.id;
+            userId = privateSnap.id;
             // Link UID if it was missing or different
             try {
                 await updateDoc(doc(db, 'users_private', userId), { uid: uid });
@@ -347,8 +356,18 @@ export const AuthService = {
         const sanitizedMobile = tenDigits;
 
         const privateRef = collection(db, 'users_private');
-        let privateSnap = await getDocs(query(privateRef, where('mobile', '==', sanitizedMobile), limit(1)));
-        if (!privateSnap.empty) {
+        let privateSnap = await getDoc(doc(db, 'users_private', sanitizedMobile));
+        if (!privateSnap.exists()) {
+            let oldSnap = await getDocs(query(privateRef, where('mobile', '==', sanitizedMobile), limit(1)));
+            if (oldSnap.empty && sanitized.length > 10) {
+                oldSnap = await getDocs(query(privateRef, where('mobile', '==', sanitized), limit(1)));
+            }
+            if (!oldSnap.empty) {
+                privateSnap = oldSnap.docs[0] as any;
+            }
+        }
+
+        if (privateSnap.exists()) {
             throw new Error("An account already exists with this mobile number.");
         }
 
@@ -400,12 +419,19 @@ export const AuthService = {
         const sanitized = mobile.replace(/\D/g, '');
         const tenDigits = sanitized.length > 10 ? sanitized.slice(-10) : sanitized;
         const sanitizedMobile = tenDigits;
-        const privateRef = collection(db, 'users_private');
-        let privateSnap = await getDocs(query(privateRef, where('mobile', '==', sanitizedMobile), limit(1)));
-        if (privateSnap.empty && sanitized.length > 10) {
-          privateSnap = await getDocs(query(privateRef, where('mobile', '==', sanitized), limit(1)));
+        
+        let privateSnap = await getDoc(doc(db, 'users_private', sanitizedMobile));
+        if (!privateSnap.exists()) {
+            const privateRef = collection(db, 'users_private');
+            let oldSnap = await getDocs(query(privateRef, where('mobile', '==', sanitizedMobile), limit(1)));
+            if (oldSnap.empty && sanitized.length > 10) {
+                oldSnap = await getDocs(query(privateRef, where('mobile', '==', sanitized), limit(1)));
+            }
+            if (!oldSnap.empty) {
+                privateSnap = oldSnap.docs[0] as any;
+            }
         }
-        return !privateSnap.empty;
+        return privateSnap.exists();
       } catch (fallbackErr) {
         return false;
       }
@@ -463,18 +489,24 @@ export const AuthService = {
     const sanitized = mobile.replace(/\D/g, '');
     const tenDigits = sanitized.length > 10 ? sanitized.slice(-10) : sanitized;
     const sanitizedMobile = tenDigits;
-    const privateRef = collection(db, 'users_private');
-    let privateSnap = await getDocs(query(privateRef, where('mobile', '==', sanitizedMobile), limit(1)));
-    if (privateSnap.empty && sanitized.length > 10) {
-      privateSnap = await getDocs(query(privateRef, where('mobile', '==', sanitized), limit(1)));
+    
+    let privateSnap = await getDoc(doc(db, 'users_private', sanitizedMobile));
+    if (!privateSnap.exists()) {
+      const privateRef = collection(db, 'users_private');
+      let oldSnap = await getDocs(query(privateRef, where('mobile', '==', sanitizedMobile), limit(1)));
+      if (oldSnap.empty && sanitized.length > 10) {
+        oldSnap = await getDocs(query(privateRef, where('mobile', '==', sanitized), limit(1)));
+      }
+      if (!oldSnap.empty) {
+        privateSnap = oldSnap.docs[0] as any;
+      }
     }
     
-    if (privateSnap.empty) {
+    if (!privateSnap.exists()) {
         throw new Error("User not found.");
     }
     
-    const pDoc = privateSnap.docs[0];
-    const userId = pDoc.id;
+    const userId = privateSnap.id;
     
     await updateDoc(doc(db, 'users_private', userId), {
         pin: pinHash

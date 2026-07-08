@@ -7,7 +7,7 @@ import {
   Clock, CheckCircle, Pin, ChevronRight, ChevronDown, 
   Bookmark, BookmarkCheck, Search, Calendar, User, 
   Sparkles, FileText, Youtube, ExternalLink, HelpCircle, 
-  Bell, ArrowRight, CheckSquare, Award, Mic, Music, Volume2
+  Bell, ArrowRight, CheckSquare, Award, Mic, Music, Volume2, Lock
 } from 'lucide-react';
 import { TargetService } from '../../services/target';
 import { useAuth } from '../../providers/AuthProvider';
@@ -75,6 +75,7 @@ export default function StudentTargetView({
   const [recentlyViewedIds, setRecentlyViewedIds] = useState<string[]>([]);
   
   const [todayMissionReport, setTodayMissionReport] = useState<DailyMissionReport | null>(null);
+  const [studentReports, setStudentReports] = useState<DailyMissionReport[]>([]);
   
   // Archive filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -82,13 +83,13 @@ export default function StudentTargetView({
 
   // Setup localStorage Bookmarks & Recents & Mission Listener
   useEffect(() => {
-    if (!userProfile?.uid) return;
+    if (!userProfile?.id) return;
 
-    const savedBookmarked = localStorage.getItem(`bookmarks_${userProfile.uid}`);
+    const savedBookmarked = localStorage.getItem(`bookmarks_${userProfile.id}`);
     if (savedBookmarked) {
       setBookmarkedIds(JSON.parse(savedBookmarked));
     }
-    const savedRecents = localStorage.getItem(`recents_${userProfile.uid}`);
+    const savedRecents = localStorage.getItem(`recents_${userProfile.id}`);
     if (savedRecents) {
       setRecentlyViewedIds(JSON.parse(savedRecents));
     }
@@ -96,7 +97,7 @@ export default function StudentTargetView({
     // Fetch/Listen today's mission report
     const todayDate = new Date().toISOString().split('T')[0];
     const unsubscribe = MissionService.subscribeDailyReport(
-      userProfile.uid,
+      userProfile.id,
       todayDate,
       (report) => {
         setTodayMissionReport(report);
@@ -106,15 +107,28 @@ export default function StudentTargetView({
       }
     );
 
-    return () => unsubscribe();
-  }, [userProfile?.uid]);
+    const unsubscribeReports = MissionService.subscribeStudentReports(
+      userProfile.id,
+      (reports) => {
+        setStudentReports(reports);
+      },
+      (err) => {
+        console.error("Error subscribing to student reports", err);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+      unsubscribeReports();
+    };
+  }, [userProfile?.id]);
 
   // 1. Subscribe to progress (only depends on user's uid)
   useEffect(() => {
-    if (!userProfile?.uid) return;
+    if (!userProfile?.id) return;
 
     const unsubscribeProgress = TargetService.subscribeAllProgressForStudent(
-      userProfile.uid,
+      userProfile.id,
       (allProgress) => {
         const progressMap: Record<string, TargetProgress> = {};
         allProgress.forEach(p => {
@@ -126,13 +140,13 @@ export default function StudentTargetView({
     );
 
     return () => unsubscribeProgress();
-  }, [userProfile?.uid]);
+  }, [userProfile?.id]);
 
   // 2. Subscribe to reactions (only resubscribes when targets list (ids) actually changes)
   const targetIdsStr = JSON.stringify(targets.map(t => t.id));
 
   useEffect(() => {
-    if (!userProfile?.uid || targets.length === 0) return;
+    if (!userProfile?.id || targets.length === 0) return;
 
     const targetIds = JSON.parse(targetIdsStr);
     const unsubscribeReactions = TargetService.subscribeBulkReactions(
@@ -153,7 +167,7 @@ export default function StudentTargetView({
     );
 
     return () => unsubscribeReactions();
-  }, [targetIdsStr, userProfile?.uid]);
+  }, [targetIdsStr, userProfile?.id]);
 
   // 3. Fetch notifications (run once when targets are loaded)
   useEffect(() => {
@@ -174,7 +188,7 @@ export default function StudentTargetView({
     if (!userProfile) return;
     setRecentlyViewedIds(prev => {
       const updated = [targetId, ...prev.filter(id => id !== targetId)].slice(0, 5);
-      localStorage.setItem(`recents_${userProfile.uid}`, JSON.stringify(updated));
+      localStorage.setItem(`recents_${userProfile.id}`, JSON.stringify(updated));
       return updated;
     });
   };
@@ -189,7 +203,7 @@ export default function StudentTargetView({
       } else {
         updated = [...prev, targetId];
       }
-      localStorage.setItem(`bookmarks_${userProfile.uid}`, JSON.stringify(updated));
+      localStorage.setItem(`bookmarks_${userProfile.id}`, JSON.stringify(updated));
       return updated;
     });
   };
@@ -205,7 +219,7 @@ export default function StudentTargetView({
     setProgress(prev => {
       const existing = prev[targetId] || {
         targetId,
-        studentId: userProfile.uid,
+        studentId: userProfile.id,
         status: 'Started' as const,
         taskStatuses: {},
         updatedAt: new Date().toISOString()
@@ -226,7 +240,7 @@ export default function StudentTargetView({
     });
 
     try {
-      await TargetService.updateTaskProgress(targetId, userProfile.uid, taskId, newStatus);
+      await TargetService.updateTaskProgress(targetId, userProfile.id, taskId, newStatus);
     } catch (error) {
       console.error("Error updating task progress:", error);
     }
@@ -240,14 +254,14 @@ export default function StudentTargetView({
     const mockReaction: TargetReaction = {
       id: Math.random().toString(),
       targetId,
-      userId: userProfile.uid,
+      userId: userProfile.id,
       type,
       createdAt: new Date().toISOString()
     };
     
     setReactions(prev => {
       const current = prev[targetId] || [];
-      const filtered = current.filter(r => r.userId !== userProfile.uid);
+      const filtered = current.filter(r => r.userId !== userProfile.id);
       return {
         ...prev,
         [targetId]: [...filtered, mockReaction]
@@ -255,7 +269,7 @@ export default function StudentTargetView({
     });
 
     try {
-      await TargetService.addReaction(targetId, userProfile.uid, type);
+      await TargetService.addReaction(targetId, userProfile.id, type);
     } catch (err) {
       console.error("Error saving reaction", err);
     }
@@ -318,7 +332,7 @@ export default function StudentTargetView({
 
   const hasReacted = (targetId: string, type: 'Like' | 'Fire' | 'Clap' | 'Heart') => {
     const list = reactions[targetId] || [];
-    return list.some(r => r.userId === userProfile?.uid && r.type === type);
+    return list.some(r => r.userId === userProfile?.id && r.type === type);
   };
 
   const getRelativeDateLabel = (dateStr: string) => {
@@ -356,6 +370,78 @@ export default function StudentTargetView({
     const themeClass = getThemePalette(target.theme);
     const isDarkTheme = target.theme && target.theme !== 'slate';
     const isTargetCompleted = progress[target.id]?.status === 'Completed';
+
+    const targetDateStr = safeSplitDate(target.createdAt);
+    const prevDateStr = (() => {
+      try {
+        const d = new Date(targetDateStr + "T00:00:00");
+        d.setDate(d.getDate() - 1);
+        return d.toISOString().split('T')[0];
+      } catch (e) {
+        return '';
+      }
+    })();
+
+    const registrationDateStr = (userProfile?.registrationDate || userProfile?.createdAt || '').split('T')[0];
+    const isFirstDay = prevDateStr < registrationDateStr;
+
+    const prevMissionSubmitted = isFirstDay || studentReports.some(r => r.date === prevDateStr);
+    const currentMissionSubmitted = studentReports.some(r => r.date === targetDateStr);
+
+    const canMarkDone = prevMissionSubmitted && currentMissionSubmitted;
+
+    const tDay = parseTargetDay(target);
+    const isFutureTarget = tDay !== null && tDay > prepDay;
+    const isLocked = isFutureTarget && !prevMissionSubmitted;
+
+    if (isLocked) {
+      return (
+        <div key={target.id} className="flex flex-col gap-1 max-w-[90%] sm:max-w-[85%] self-start animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
+          <div className="flex items-center gap-2 px-2 ml-1">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+              {target.missionDay || 'MISSION'} • {getRelativeDateLabel(target.createdAt)} (LOCKED)
+            </span>
+          </div>
+          
+          <div className="rounded-2xl p-5 shadow-sm border bg-slate-50 border-slate-200 relative">
+            <div className="space-y-4">
+              {/* Header */}
+              <div className="opacity-50">
+                <h3 className="text-base sm:text-lg font-black tracking-tight leading-tight text-slate-400">
+                  {target.title}
+                </h3>
+                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mt-1">
+                  BY {target.creatorName || (target as any).mentorName || 'ADI MADHU'}
+                </p>
+              </div>
+
+              {/* Locked Overlay Body */}
+              <div className="py-6 flex flex-col items-center justify-center text-center space-y-3">
+                <div className="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 shadow-inner">
+                  <Lock size={20} className="stroke-[2.5]" />
+                </div>
+                <div>
+                  <h4 className="text-slate-700 font-extrabold text-xs">Target Locked</h4>
+                  <p className="text-slate-500 text-[10px] font-semibold max-w-xs mx-auto leading-relaxed mt-1">
+                    This target will unlock automatically as soon as you submit your daily mission proof for {getRelativeDateLabel(prevDateStr)}.
+                  </p>
+                </div>
+                <button 
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    navigate('/app/create-submission', { state: { targetId: target.id } }); 
+                  }}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black uppercase px-4 py-2 rounded-xl transition-all shadow-md shadow-emerald-600/10 active:scale-95 flex items-center gap-1.5"
+                >
+                  <span>Submit {getRelativeDateLabel(prevDateStr)} Proof</span>
+                  <ArrowRight size={12} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div key={target.id} className="flex flex-col gap-1 max-w-[90%] sm:max-w-[85%] self-start animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -506,15 +592,20 @@ export default function StudentTargetView({
                   </button>
                 ))}
               </div>
-              <div className="flex items-center gap-2">
-                <button 
-                  onClick={async (e) => { 
-                    e.stopPropagation();
-                    if (!todayMissionReport) {
-                      if (confirm("Mission Submission Required. Please submit today's Mission proof before marking today's Target as completed. Go to Mission Submission?")) {
-                        navigate('/app/create-submission', { state: { targetId: target.id } });
+              <div className="flex flex-col items-end gap-1">
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={async (e) => { 
+                      e.stopPropagation();
+                      if (!canMarkDone) {
+                        if (!prevMissionSubmitted) {
+                          alert(`Please submit the previous day's daily mission proof first!`);
+                        } else {
+                          alert(`Please submit today's daily mission proof first!`);
+                        }
+                        return;
                       }
-                    } else {
+                      
                       if (confirm(isTargetCompleted ? "Your target is already completed. Do you want to update/re-save completion?" : "Confirm Target Completion? Have you completed today's Target?")) {
                         try {
                           const now = new Date();
@@ -533,28 +624,36 @@ export default function StudentTargetView({
                           alert("Failed to mark target as completed.");
                         }
                       }
-                    }
-                  }}
-                  className={`text-[9px] font-black uppercase flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition-all active:scale-95 border ${
-                    isTargetCompleted 
-                      ? isDarkTheme 
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' 
-                        : 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                      : isDarkTheme 
-                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent' 
-                        : 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent'
-                  }`}
-                >
-                  {isTargetCompleted ? '✓ Completed' : '✓ Mark as Completed'}
-                </button>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); navigate('/app/create-submission', { state: { targetId: target.id } }); }}
-                  className={`text-[9px] font-black uppercase flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition-all active:scale-95 ${
-                    isDarkTheme ? 'bg-white text-slate-900' : 'bg-slate-900 text-white'
-                  }`}
-                >
-                  Proof <ArrowRight size={10} />
-                </button>
+                    }}
+                    className={`text-[9px] font-black uppercase flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition-all active:scale-95 border ${
+                      isTargetCompleted 
+                        ? isDarkTheme 
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' 
+                          : 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                        : !canMarkDone
+                          ? 'bg-slate-300 text-slate-500 border-slate-400 cursor-not-allowed opacity-50'
+                          : isDarkTheme 
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent' 
+                            : 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent'
+                    }`}
+                    disabled={isTargetCompleted ? false : !canMarkDone}
+                  >
+                    {isTargetCompleted ? '✓ Completed' : '✓ Mark as Completed'}
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); navigate('/app/create-submission', { state: { targetId: target.id } }); }}
+                    className={`text-[9px] font-black uppercase flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition-all active:scale-95 ${
+                      isDarkTheme ? 'bg-white text-slate-900' : 'bg-slate-900 text-white'
+                    }`}
+                  >
+                    Proof <ArrowRight size={10} />
+                  </button>
+                </div>
+                {!canMarkDone && (
+                  <p className={`text-[8px] font-bold mt-0.5 ${isDarkTheme ? 'text-rose-300' : 'text-rose-600'}`}>
+                    🔒 Required: {!prevMissionSubmitted ? "previous day's" : "this day's"} mission proof.
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -601,7 +700,10 @@ export default function StudentTargetView({
   }, [targets, bookmarkedIds]);
 
   const todayTargets = React.useMemo(() => {
-    return targets.filter(t => parseTargetDay(t) === prepDay);
+    return targets.filter(t => {
+      const tDay = parseTargetDay(t);
+      return tDay === prepDay || tDay === prepDay + 1;
+    });
   }, [targets, prepDay]);
 
   return (
