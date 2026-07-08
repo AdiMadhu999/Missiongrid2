@@ -18,7 +18,7 @@ interface MentorLoginFormProps {
 export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, error, setError, loading, setLoading }) => {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
-  const [loginMethod, setLoginMethod] = useState<'sms' | 'pin'>('sms');
+  const [loginMethod, setLoginMethod] = useState<'sms' | 'pin'>('pin');
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [tempUser, setTempUser] = useState<any>(null);

@@ -168,11 +168,11 @@ export const AuthService = {
       
       // For student or if mentor doesn't need secondary verification, sign in immediately.
       // For mentors requiring OTP/PIN, we wait until the second step to sign them in so we don't bypass 2FA UI.
-      if (role !== 'mentor' && role !== 'examiner') {
+      if (role !== 'mentor' || verificationMethod === 'pin') {
         await signInWithCustomToken(auth, data.customToken);
-      } else if (role === 'mentor' && data.user.mobile === '7407463884' && verificationMethod === 'pin') {
-        await signInWithCustomToken(auth, data.customToken);
-        data.user.mentorDirectLogin = true;
+        if (role === 'mentor') {
+            data.user.mentorDirectLogin = true;
+        }
       }
       
       return { ...data.user, customToken: data.customToken };
