@@ -336,7 +336,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (hasEssentialChanges && !user.isAnonymous) {
               console.log(`[Premium Validation Engine] Auto-syncing status for ${userId}:`, updateObj);
               updateDoc(doc(db, 'users', userId), updateObj)
-                .catch(e => console.error("Failed to update premium info in Firestore:", e));
+                .catch(e => {
+                    console.error("[Premium Validation Engine] FAILED to update premium info in Firestore for " + userId + ":", e);
+                    debugLogger.add('ERROR', '[Premium Validation Engine] FAILED update', { userId, error: e });
+                });
             }
           }
 
@@ -412,6 +415,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
 
         const executeQueryByUid = async () => {
+          debugLogger.add('INFO', 'Executing query by UID');
           try {
             const qPriv = query(collection(db, 'users_private'), where('uid', '==', user.uid), limit(1));
             const privSnap = await getDocs(qPriv);

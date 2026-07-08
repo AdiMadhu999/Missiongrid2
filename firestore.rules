@@ -9,10 +9,10 @@ service cloud.firestore {
 
     function isMentor() {
       return isSignedIn() && (
+        request.auth.token.get('email', '') == 'missionselectionofficial999@gmail.com' ||
         request.auth.token.email == 'missionselectionofficial999@gmail.com' ||
         request.auth.token.phone_number == '+917407463884' ||
-        request.auth.uid == '7407463884' ||
-        request.auth.uid == 'Y3D6P6u4G3MvE6O6t7bQ4e1x5T82' ||
+        request.auth.uid == 'QdG9A40mhqT7tCLfQPjatoI6mlJ2' ||
         request.auth.token.get('mentorAccess', false) == true ||
         request.auth.token.get('role', '') in ['mentor', 'primary-mentor', 'primarymentor', 'staff', 'admin', 'examiner', 'Mentor', 'Primary-mentor']
       );
