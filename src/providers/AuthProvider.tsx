@@ -6,6 +6,7 @@ import { User } from '../models/user';
 import { getStudentCode } from '../utils/privacy';
 import { safeStorage } from '../lib/storage';
 import { apiFetch } from '../utils/api';
+import { debugLogger } from '../utils/debugLogger';
 
 interface AuthContextType {
   currentUser: FirebaseUser | null;
