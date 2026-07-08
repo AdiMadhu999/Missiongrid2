@@ -821,6 +821,19 @@ export const updateUserProfile = async (idOrMobile: string, data: Partial<User>)
     await setDoc(privateRef, privateUpdate, { merge: true });
   }
 
+  // Update user_roles mapping if role was modified (only mentors can do this due to restrictedFields)
+  if (data.role) {
+    try {
+       const uidToUpdate = pubSnap.exists() ? pubSnap.data().uid : null;
+       if (uidToUpdate) {
+          await setDoc(doc(db, 'user_roles', uidToUpdate), { role: data.role }, { merge: true });
+          console.log(`[UserTrace] Synced role ${data.role} to user_roles/${uidToUpdate}`);
+       }
+    } catch (e) {
+       console.warn('Failed to sync role to user_roles:', e);
+    }
+  }
+
   // 2. Clear caches to ensure subsequent queries see updated state
   clearUsersCache();
 

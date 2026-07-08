@@ -26,6 +26,7 @@ const StudentManagementModal = ({
   const [batchId, setBatchId] = useState(user.batchId || '');
   const [name, setName] = useState(user.name || '');
   const [status, setStatus] = useState(user.status || 'active');
+  const [role, setRole] = useState(user.role || 'student');
   const [testAccess, setTestAccess] = useState<'free' | 'premium'>(
     user.isPremium ? 'premium' : ((user as any).testAccess || 'free')
   );
@@ -122,6 +123,7 @@ const StudentManagementModal = ({
 
       await updateUserProfile(studentId, { 
         name,
+        role,
         batchId, 
         currentBatch: batchName,
         status, 
@@ -441,6 +443,22 @@ const StudentManagementModal = ({
                       value={name}
                       onChange={e => setName(e.target.value)}
                     />
+                  </div>
+
+                                    <div>
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">User Role (Security Priority)</label>
+                    <select 
+                      className="w-full bg-slate-100 border border-transparent rounded-2xl py-3 px-4 text-xs font-black outline-none focus:bg-white focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all text-slate-800 cursor-pointer"
+                      value={role}
+                      onChange={e => setRole(e.target.value)}
+                    >
+                      <option value="student">Student</option>
+                      <option value="aspirant">Aspirant</option>
+                      <option value="mentor">Mentor</option>
+                      <option value="primary-mentor">Primary Mentor</option>
+                      <option value="examiner">Examiner</option>
+                      <option value="staff">Staff</option>
+                    </select>
                   </div>
 
                   <div>
