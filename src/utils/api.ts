@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { debugLogger } from './debugLogger';
 
 export const DEFAULT_LIVE_HOST = 'https://mission-selection-43729399220.asia-south1.run.app';
 
@@ -66,9 +67,26 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
     }
   }
 
+  // Instrument logging
+  debugLogger.add('REQUEST', `Fetching ${urlString}`, {
+      method: init?.method || 'GET',
+      body: init?.body
+  });
+
   try {
-    return await fetch(input, { ...init, credentials: 'include' });
+    const response = await fetch(input, { ...init, credentials: 'include' });
+    
+    // Read response for logging (cloning to avoid consuming body)
+    const clonedResponse = response.clone();
+    const data = await clonedResponse.text();
+    
+    debugLogger.add('RESPONSE', `Status: ${response.status}`, {
+        body: data
+    });
+    
+    return response;
   } catch (err) {
+    debugLogger.add('ERROR', `Failed requesting ${String(input)}`, { error: err instanceof Error ? err.message : String(err) });
     console.error(`[API Fetch Error] Failed requesting ${String(input)}:`, err);
     throw err;
   }

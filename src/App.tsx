@@ -11,6 +11,7 @@ import { AppProvider, useAppConfig } from './providers/AppProvider';
 import { PremiumModal } from './components/PremiumModal';
 import { ProtectedRoute, RoleRoute } from './components/ProtectedRoute';
 import { UpdateChecker } from './components/UpdateChecker';
+import { DebugConsole } from './components/DebugConsole';
 
 import Splash from './screens/Splash';
 import Login from './screens/Login';
@@ -77,6 +78,7 @@ export default function App() {
                 <GlobalLogoTapHandler />
                 <PremiumModalWrapper />
                 <UpdateChecker />
+                <DebugConsole />
                 <React.Suspense fallback={<LazyFallbackLoader />}>
                   <Routes>
                     <Route path="/" element={<Splash />} />
