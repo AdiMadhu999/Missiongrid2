@@ -13,7 +13,7 @@ try {
     execSync('git add -A');
     
     console.log("Committing changes...");
-    execSync('git commit -m "fix(apk): disable CapacitorHttp to fix network blocks and increment version to 1.0.54 (code 54)"');
+    execSync('git commit -m "feat(ci): add codemagic.yaml configuration for Capacitor Android release builds"');
     
     console.log("Setting remote URL...");
     const remoteUrl = `https://x-access-token:${token}@github.com/${owner}/${repo}.git`;
