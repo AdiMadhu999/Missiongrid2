@@ -4,12 +4,18 @@ const config: CapacitorConfig = {
   appId: 'com.adimadhu.missiongrid',
   appName: 'MissionGrid',
   webDir: 'dist',
+  server: {
+    hostname: 'mission-selection-ultimate.firebaseapp.com',
+    androidScheme: 'https',
+    cleartext: true,
+    allowNavigation: ['*']
+  },
   plugins: {
     CapacitorHttp: {
-      enabled: true
+      enabled: false
     },
     CapacitorCookies: {
-      enabled: true
+      enabled: false
     }
   }
 };
