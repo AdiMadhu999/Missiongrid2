@@ -512,11 +512,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
 
         const loadProfile = async () => {
-          if (savedUserId) {
+          const userIdFromClaims = claims.userId as string;
+          const effectiveUserId = savedUserId || userIdFromClaims;
+          if (effectiveUserId) {
             try {
-              const privSnap = await getDoc(doc(db, 'users_private', savedUserId));
+              const privSnap = await getDoc(doc(db, 'users_private', effectiveUserId));
               if (privSnap.exists()) {
-                await fetchUserData(savedUserId, privSnap.data());
+                await fetchUserData(effectiveUserId, privSnap.data());
               } else {
                 console.log("Direct private doc not found, falling back to UID query.");
                 await executeQueryByUid();

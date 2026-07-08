@@ -2234,6 +2234,19 @@ app.post("/api/auth/login", async (req, res) => {
 
     const uid = privateData.uid || userId;
     
+    // Ensure uid is synced to both private and public user documents in Firestore
+    try {
+      await db.collection("users_private").doc(userId).set({
+        uid: uid
+      }, { merge: true });
+      await db.collection("users").doc(userId).set({
+        uid: uid
+      }, { merge: true });
+      console.log(`[Login] Successfully synced uid ${uid} to public and private profiles of user ${userId}`);
+    } catch (syncErr: any) {
+      console.warn(`[Login] Non-fatal: Failed to sync uid to Firestore during login:`, syncErr);
+    }
+    
     // Generate Custom Claims
     const batchId = publicData.batchId || "";
     const accountStatus = publicData.status || "active";
