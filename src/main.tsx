@@ -32,7 +32,12 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       window.location.hostname.includes('-dev-') || 
       window.location.port === '3000'
     );
-    const isPreviewRunning = !isNativePlatform && window.location.hostname.includes('run.app');
+    const isPreviewRunning = !isNativePlatform && (
+      window.location.hostname.includes('run.app') ||
+      window.location.hostname.includes('googleusercontent.com') ||
+      window.location.hostname.includes('aistudio.google') ||
+      window.location.hostname.includes('usercontent.com')
+    );
 
     // If running inside native Android/iOS Capacitor app, or deployed outside Cloud Run container, point to the live server
     if (isNativePlatform || (!isLocalDev && !isPreviewRunning)) {

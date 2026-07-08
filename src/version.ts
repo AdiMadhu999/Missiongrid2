@@ -1,3 +1,3 @@
 export const APP_VERSION = "1.0.53";
-export const GIT_COMMIT = "cd760b9";
-export const BUILD_TIMESTAMP = "7/8/2026, 1:10:44 AM UTC";
+export const GIT_COMMIT = "357af79";
+export const BUILD_TIMESTAMP = "7/8/2026, 2:05:27 AM UTC";

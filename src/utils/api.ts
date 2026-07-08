@@ -52,6 +52,7 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
     if (isNativePlatform || (!isLocalDev && !isPreviewRunning)) {
       const relativePath = urlString.startsWith('http') ? new URL(urlString).pathname : urlString;
       const finalUrl = `${liveHost}${relativePath}`;
+      console.log(`[API Routing] Redirecting cross-origin request: ${urlString} -> ${finalUrl}`);
 
       if (typeof input === 'string') {
         input = finalUrl;
