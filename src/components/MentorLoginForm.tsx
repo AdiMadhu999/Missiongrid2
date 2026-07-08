@@ -40,9 +40,9 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
     }
   }, [loginCooldown]);
 
-  const logAuthAttempt = async (mobile: string, status: string, details?: string) => {
+  const logAuthAttempt =  (mobile: string, status: string, details?: string) => {
     try {
-      await addDoc(collection(db, 'mentor_auth_logs'), {
+      addDoc(collection(db, 'mentor_auth_logs'), {
         mobile,
         status,
         details,
@@ -70,7 +70,7 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
         if (!recaptchaVerifier) return setError('ReCAPTCHA not initialized');
         await AuthService.sendOtp(mobile, recaptchaVerifier);
         setCooldown(60);
-        await logAuthAttempt(mobile, 'OTP_RESENT', 'OTP resent successfully');
+        logAuthAttempt(mobile, 'OTP_RESENT', 'OTP resent successfully');
     } catch (err: any) {
         setError('Failed to resend OTP: ' + err.message);
     } finally {
@@ -93,16 +93,16 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
       try {
         if (loginMethod === 'sms') {
           await AuthService.verifyOnlyOtp(otp, tempUser);
-          await logAuthAttempt(mobile, 'SUCCESS', 'SMS OTP verified');
+          logAuthAttempt(mobile, 'SUCCESS', 'SMS OTP verified');
           onSuccess(tempUser);
         } else {
           // Option B: Verify Mentor Security PIN directly
           const user = await AuthService.verifyMentorSecurityPin(mobile, otp, tempUser);
-          await logAuthAttempt(mobile, 'SUCCESS', 'Security PIN verified');
+          logAuthAttempt(mobile, 'SUCCESS', 'Security PIN verified');
           onSuccess(user);
         }
       } catch (err: any) {
-        await logAuthAttempt(mobile, 'FAILURE', loginMethod === 'sms' ? 'Invalid SMS OTP' : 'Invalid Security PIN');
+        logAuthAttempt(mobile, 'FAILURE', loginMethod === 'sms' ? 'Invalid SMS OTP' : 'Invalid Security PIN');
         setError(err.message || (loginMethod === 'sms' ? 'Invalid SMS OTP' : 'Invalid Security PIN'));
         setLoginCooldown(30); // Cooldown on failure
       } finally {
@@ -120,7 +120,7 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
 
       const user = await AuthService.loginWithMobileAndPassword(mobile, sanitizedPassword, 'mentor', loginMethod);
       if (user.mentorDirectLogin) {
-        await logAuthAttempt(mobile, 'SUCCESS', 'Security PIN verified instantly');
+        logAuthAttempt(mobile, 'SUCCESS', 'Security PIN verified instantly');
         onSuccess(user);
         return;
       }
@@ -130,14 +130,14 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
         if (!recaptchaVerifier) return setError('ReCAPTCHA not initialized');
         await AuthService.sendOtp(mobile, recaptchaVerifier);
         setCooldown(60);
-        await logAuthAttempt(mobile, 'PENDING_OTP', 'Password correct, OTP sent');
+        logAuthAttempt(mobile, 'PENDING_OTP', 'Password correct, OTP sent');
       } else {
-        await logAuthAttempt(mobile, 'PENDING_PIN', 'Proceeding to Security PIN verification');
+        logAuthAttempt(mobile, 'PENDING_PIN', 'Proceeding to Security PIN verification');
       }
       
       setShowOtpInput(true);
     } catch (err: any) {
-      await logAuthAttempt(mobile, 'FAILURE', err.message);
+      logAuthAttempt(mobile, 'FAILURE', err.message);
       setError(err.message);
       setLoginCooldown(30); // Cooldown on failure
     } finally {

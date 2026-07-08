@@ -46,7 +46,7 @@ export default function Splash() {
         >
           <div className="w-full h-full rounded-[24px] overflow-hidden">
             <img 
-              src="/app_logo.jpg?v=1" 
+              src="/app_logo.jpg" 
               alt="Mission Logo" 
               className="w-full h-full object-cover" 
               referrerPolicy="no-referrer"

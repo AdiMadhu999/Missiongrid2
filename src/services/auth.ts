@@ -41,7 +41,7 @@ let confirmationResult: ConfirmationResult | null = null;
 
 const logSecurityEvent = async (studentId: string, type: 'login' | 'active_check' | 'registration' | 'manual_change', ip: string, deviceInfo: string, details: string) => {
   try {
-    await addDoc(collection(db, 'security_history'), {
+    addDoc(collection(db, 'security_history'), {
       studentId,
       type,
       ipAddress: ip,
@@ -89,7 +89,7 @@ const updateDeviceAudit = async (userId: string, mobile: string) => {
         await updateDoc(userPrivRef, updates);
         
         if (oldIP !== ipAddress || oldDevice !== userAgent) {
-          await logSecurityEvent(userId, 'login', ipAddress, userAgent, `Login from new IP/Device: IP: ${ipAddress}, Device: ${userAgent}`);
+          logSecurityEvent(userId, 'login', ipAddress, userAgent, `Login from new IP/Device: IP: ${ipAddress}, Device: ${userAgent}`);
         }
       }
     }
@@ -98,9 +98,9 @@ const updateDeviceAudit = async (userId: string, mobile: string) => {
   }
 };
 
-const logOtpAttempt = async (mobile: string, status: string, message: string, uid?: string) => {
+const logOtpAttempt =  (mobile: string, status: string, message: string, uid?: string) => {
   try {
-    await addDoc(collection(db, 'otp_logs'), {
+    addDoc(collection(db, 'otp_logs'), {
       mobile,
       timestamp: new Date().toISOString(),
       status,
@@ -205,12 +205,12 @@ export const AuthService = {
         const tenDigits = sanitized.length > 10 ? sanitized.slice(-10) : sanitized;
         const formattedMobile = `+91${tenDigits}`;
         confirmationResult = await signInWithPhoneNumber(auth, formattedMobile, recaptchaVerifier);
-        await logOtpAttempt(formattedMobile, 'success', 'OTP sent');
+        logOtpAttempt(formattedMobile, 'success', 'OTP sent');
     } catch (err: any) {
         const sanitized = mobile.replace(/\D/g, '');
         const tenDigits = sanitized.length > 10 ? sanitized.slice(-10) : sanitized;
         const formattedMobile = `+91${tenDigits}`;
-        await logOtpAttempt(formattedMobile, 'failed', err.message);
+        logOtpAttempt(formattedMobile, 'failed', err.message);
         throw err;
     }
   },
@@ -221,7 +221,7 @@ export const AuthService = {
             throw new Error('OTP not sent or expired');
         }
         const userCredential = await confirmationResult.confirm(otp);
-        await logOtpAttempt(userCredential.user.phoneNumber || 'unknown', 'success', 'OTP verified');
+        logOtpAttempt(userCredential.user.phoneNumber || 'unknown', 'success', 'OTP verified');
         
         // Re-authenticate with custom token to get custom claims (overriding the basic phone auth session)
         if (tempUser && tempUser.customToken) {
@@ -230,7 +230,7 @@ export const AuthService = {
         
         return userCredential.user.phoneNumber || '';
     } catch (err: any) {
-        await logOtpAttempt('unknown', 'failed', err.message);
+        logOtpAttempt('unknown', 'failed', err.message);
         throw err;
     }
   },
@@ -241,7 +241,7 @@ export const AuthService = {
             throw new Error('OTP not sent or expired');
         }
         const userCredential = await confirmationResult.confirm(otp);
-        await logOtpAttempt(mobile, 'success', 'OTP verified');
+        logOtpAttempt(mobile, 'success', 'OTP verified');
         const uid = userCredential.user.uid;
         
         // Force token refresh and wait briefly to ensure Firestore client picks up the new phone auth token
@@ -340,7 +340,7 @@ export const AuthService = {
             isNew
         };
     } catch (err: any) {
-        await logOtpAttempt(mobile, 'failed', err.message);
+        logOtpAttempt(mobile, 'failed', err.message);
         throw err;
     }
   },

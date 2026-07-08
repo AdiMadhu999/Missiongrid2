@@ -125,7 +125,7 @@ export default function Login() {
             className="h-16 w-16 rounded-xl overflow-hidden shadow-lg mb-2 border border-white/40 transition-transform"
           >
             <img 
-              src="/app_logo.jpg?v=1" 
+              src="/app_logo.jpg" 
               alt="MissionGrid Logo" 
               className="w-full h-full object-cover" 
               referrerPolicy="no-referrer"
