@@ -109,8 +109,8 @@ if (!patched) {
   }
 }
 
-// Intercept logs and forward to server ONLY in development web context
-if (!isNative && isDev) {
+// Intercept logs and forward to server in development or native contexts
+if (isDev || isNative) {
   const originalLog = console.log;
   const originalError = console.error;
   const originalWarn = console.warn;
