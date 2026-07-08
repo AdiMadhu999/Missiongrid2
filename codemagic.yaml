@@ -25,6 +25,8 @@ workflows:
       - name: Build Android Release APK
         script: |
           cd android
+          java -version
+          echo "JAVA_HOME=$JAVA_HOME"
           chmod +x gradlew
           ./gradlew assembleRelease
     artifacts:
