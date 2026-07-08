@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import appLogo from "../assets/images/app_logo_base_1783466372014.jpg";
 import { motion } from 'motion/react';
 import { useAuth } from '../providers/AuthProvider';
 import { APP_VERSION, GIT_COMMIT } from '../version';
@@ -46,7 +47,7 @@ export default function Splash() {
         >
           <div className="w-full h-full rounded-[24px] overflow-hidden">
             <img 
-              src="/app_logo.jpg" 
+              src={appLogo} 
               alt="Mission Logo" 
               className="w-full h-full object-cover" 
               referrerPolicy="no-referrer"

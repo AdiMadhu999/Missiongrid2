@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import appIcon from "../assets/images/app_logo_base_1783466372014.jpg";
 import { useAuth } from '../providers/AuthProvider';
 import PendingApprovalScreen from '../screens/PendingApproval';
 import CompleteProfile from '../screens/CompleteProfile';
@@ -16,7 +17,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
           <div className="absolute inset-0 rounded-[28px] border-4 border-white/20 border-t-white animate-spin"></div>
           <div className="w-full h-full rounded-[24px] overflow-hidden">
             <img 
-              src="/app-icon.jpg" 
+              src={appIcon} 
               alt="Mission Logo" 
               className="w-full h-full object-cover opacity-50" 
               referrerPolicy="no-referrer"
@@ -79,7 +80,7 @@ export function RoleRoute({ children, allowedRoles }: { children: React.ReactNod
           <div className="absolute inset-0 rounded-[28px] border-4 border-white/20 border-t-white animate-spin"></div>
           <div className="w-full h-full rounded-[24px] overflow-hidden">
             <img 
-              src="/app-icon.jpg" 
+              src={appIcon} 
               alt="Mission Logo" 
               className="w-full h-full object-cover opacity-50" 
               referrerPolicy="no-referrer"

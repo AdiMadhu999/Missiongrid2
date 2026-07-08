@@ -23,6 +23,7 @@ import {
   ArrowUpRight
 } from "lucide-react";
 import { Test, Question } from "../models/mission";
+import appIcon from "../assets/images/app_logo_base_1783466372014.jpg";
 import MathRenderer from "./MathRenderer";
 
 interface PrintableTestProps {
@@ -787,7 +788,7 @@ export default function PrintableTest({
               {/* MissionGrid Logo */}
               <div className="flex items-center gap-2">
                 <img
-                  src="/app-icon.jpg"
+                  src={appIcon}
                   alt="MissionGrid Logo"
                   referrerPolicy="no-referrer"
                   className="w-14 h-14 rounded-xl border border-slate-200 shadow-xs object-cover"
@@ -936,7 +937,7 @@ export default function PrintableTest({
               </div>
               <div className="flex items-center gap-2">
                 <img
-                  src="/app-icon.jpg"
+                  src={appIcon}
                   alt="MissionGrid Logo"
                   referrerPolicy="no-referrer"
                   className="w-8 h-8 rounded-lg border border-slate-200 object-cover"
@@ -1200,7 +1201,7 @@ export default function PrintableTest({
                 </p>
               </div>
               <img
-                src="/app-icon.jpg"
+                src={appIcon}
                 alt="MissionGrid Logo"
                 referrerPolicy="no-referrer"
                 className="w-10 h-10 rounded-lg border border-slate-200 object-cover"
@@ -1391,7 +1392,7 @@ export default function PrintableTest({
               </div>
               <div className="flex items-center gap-2">
                 <img
-                  src="/app-icon.jpg"
+                  src={appIcon}
                   alt="MissionGrid Logo"
                   referrerPolicy="no-referrer"
                   className="w-8 h-8 rounded-lg border border-slate-200 object-cover"
@@ -1470,7 +1471,7 @@ export default function PrintableTest({
               </div>
               <div className="flex items-center gap-2">
                 <img
-                  src="/app-icon.jpg"
+                  src={appIcon}
                   alt="MissionGrid Logo"
                   referrerPolicy="no-referrer"
                   className="w-10 h-10 rounded-lg border border-slate-200 object-cover"
@@ -1700,7 +1701,7 @@ export default function PrintableTest({
               </div>
               <div className="flex items-center gap-2">
                 <img
-                  src="/app-icon.jpg"
+                  src={appIcon}
                   alt="MissionGrid Logo"
                   referrerPolicy="no-referrer"
                   className="w-10 h-10 rounded-lg border border-slate-200 object-cover"

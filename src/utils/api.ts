@@ -74,7 +74,14 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
   });
 
   try {
-    const response = await fetch(input, { ...init, credentials: 'include' });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    let response;
+    try {
+      response = await fetch(input, { ...init, credentials: 'include', signal: controller.signal });
+    } finally {
+      clearTimeout(timeoutId);
+    }
     
     // Read response for logging (cloning to avoid consuming body)
     const clonedResponse = response.clone();

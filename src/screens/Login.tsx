@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
+import appLogo from "../assets/images/app_logo_base_1783466372014.jpg";
 import { motion } from 'motion/react';
 import { APP_VERSION, GIT_COMMIT, BUILD_TIMESTAMP } from "../version";
 import { Download } from 'lucide-react';
@@ -125,7 +126,7 @@ export default function Login() {
             className="h-16 w-16 rounded-xl overflow-hidden shadow-lg mb-2 border border-white/40 transition-transform"
           >
             <img 
-              src="/app_logo.jpg" 
+              src={appLogo} 
               alt="MissionGrid Logo" 
               className="w-full h-full object-cover" 
               referrerPolicy="no-referrer"
