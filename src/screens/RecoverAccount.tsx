@@ -130,7 +130,7 @@ export default function RecoverAccount() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white/85 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/50 space-y-6"
+          className="bg-white/85  p-8 rounded-3xl shadow-2xl border border-white/50 space-y-6"
         >
           <div className="flex flex-col items-center text-center space-y-2">
             <div className="p-3 bg-indigo-100 text-indigo-700 rounded-2xl">

@@ -147,7 +147,7 @@ export default function Register() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white/85 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/50 text-center space-y-6"
+          className="bg-white/85  p-8 rounded-3xl shadow-2xl border border-white/50 text-center space-y-6"
         >
           <div className="flex items-center justify-between">
             <Link to="/login" className="text-indigo-950 hover:text-indigo-600 transition-colors">

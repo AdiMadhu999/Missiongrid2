@@ -76,7 +76,7 @@ export default function ForgotPin() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white/85 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/50"
+          className="bg-white/85  p-8 rounded-3xl shadow-2xl border border-white/50"
         >
           <h2 className="text-2xl font-black text-indigo-950 mb-6">Forgot Password</h2>
           <form className="space-y-6" onSubmit={step === 'send-otp' ? handleSendOtp : step === 'verify-otp' ? handleVerifyOtp : handleSetPassword}>

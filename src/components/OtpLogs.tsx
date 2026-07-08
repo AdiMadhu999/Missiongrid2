@@ -28,7 +28,7 @@ export const OtpLogs: React.FC = () => {
   }, [isRealTime, fetchLogs]);
 
   return (
-    <div className="bg-white/95 backdrop-blur-md p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
+    <div className="bg-white/95  p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
       <div className="flex items-center justify-between">
         <h4 className="font-black text-slate-900 text-sm uppercase tracking-wider">Recent OTP Logs</h4>
         <div className="flex gap-2">

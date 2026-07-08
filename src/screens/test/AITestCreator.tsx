@@ -3317,7 +3317,7 @@ Please fix all validation errors before publishing.`);
                )}
 
                {/* STICKY BOTTOM FIXED MOBILE ACTION DRAWER */}
-               <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur border-t border-slate-800 p-4 pt-3.5 shadow-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-[calc(16px+env(safe-area-inset-bottom))]">
+               <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95  border-t border-slate-800 p-4 pt-3.5 shadow-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-[calc(16px+env(safe-area-inset-bottom))]">
                   {/* Left Side: Secondary Utilities */}
                   <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
                      <button 
@@ -3799,7 +3799,7 @@ Please fix all validation errors before publishing.`);
                 {/* Submit test outcomes sheet overlay modal */}
                 <AnimatePresence key="test-creator-submit-presence">
                   {showPreviewSubmitConfirm && (
-                    <div key="test-creator-submit-confirm-backdrop" className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div key="test-creator-submit-confirm-backdrop" className="fixed inset-0 bg-slate-950/80  z-50 flex items-center justify-center p-4">
                       <motion.div 
                         key="test-creator-submit-confirm-modal"
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -3870,7 +3870,7 @@ Please fix all validation errors before publishing.`);
          {/* PROMPT PREVIEW OVERLAY MODAL (Req 20) */}
          <AnimatePresence key="test-creator-prompt-presence">
             {showPromptPreview && (
-              <div key="test-creator-prompt-preview-backdrop" className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+              <div key="test-creator-prompt-preview-backdrop" className="fixed inset-0 z-50 bg-slate-950/90  flex items-center justify-center p-4">
                  <motion.div 
                    key="test-creator-prompt-preview-modal"
                    initial={{ scale: 0.95, opacity: 0 }}
@@ -3981,7 +3981,7 @@ Please fix all validation errors before publishing.`);
          {/* MISSIONGRID QUESTION LIBRARY INTEGRATION MODAL */}
          <AnimatePresence key="test-creator-publish-options-presence">
             {isPublishModalOpen && (
-              <div key="test-creator-publish-options-backdrop" className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+              <div key="test-creator-publish-options-backdrop" className="fixed inset-0 z-50 bg-slate-950/90  flex items-center justify-center p-4 overflow-y-auto">
                  <motion.div 
                    key="test-creator-publish-options-modal"
                    initial={{ scale: 0.95, opacity: 0 }}

@@ -23,7 +23,7 @@ const LeaveManagementModal = ({ users, onClose, onUpdated }: { users: User[], on
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[70] p-4 font-sans">
+        <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[70] p-4 font-sans">
             <motion.div className="bg-white rounded-[2.5rem] p-8 w-full max-w-sm shadow-2xl border border-slate-100 max-h-[80vh] flex flex-col">
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-black text-slate-900 tracking-tight">Leave Management</h3>

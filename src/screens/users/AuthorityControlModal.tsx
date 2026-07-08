@@ -132,7 +132,7 @@ export default function AuthorityControlModal({ user, onClose, onSaved }: Author
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs p-4 flex items-center justify-center z-[80] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 -xs p-4 flex items-center justify-center z-[80] overflow-y-auto">
       <div className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 max-h-[calc(100vh-2rem)] flex flex-col my-auto">
         
         {/* Modal Header */}

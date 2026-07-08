@@ -145,7 +145,7 @@ export default function Login() {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl shadow-xl border border-white/60 relative overflow-hidden"
+          className="bg-white/90  p-4 sm:p-5 rounded-2xl shadow-xl border border-white/60 relative overflow-hidden"
         >
           {/* Top aesthetic color bar reflecting active role */}
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${theme.btnGradient}`} />

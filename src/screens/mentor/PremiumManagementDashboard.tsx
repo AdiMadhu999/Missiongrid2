@@ -688,7 +688,7 @@ export const PremiumManagementDashboard: React.FC<PremiumManagementDashboardProp
 
       {/* 4. MENTOR CONTROL DRAWER / DIALOG MODAL */}
       {selectedStudent && actionType && actionType !== 'history' && (
-        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-950/60 -xs flex items-center justify-center p-4">
           <div className="bg-white rounded-[2rem] border border-slate-150 p-6 sm:p-8 w-full max-w-md shadow-2xl relative overflow-hidden">
             <button
               onClick={() => {
@@ -824,7 +824,7 @@ export const PremiumManagementDashboard: React.FC<PremiumManagementDashboardProp
 
       {/* 5. AUDIT HISTORY LOG DRAWER */}
       {selectedStudent && actionType === 'history' && (
-        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-end p-0">
+        <div className="fixed inset-0 z-50 bg-slate-950/60 -xs flex items-center justify-end p-0">
           <div className="bg-white h-full w-full max-w-md shadow-2xl flex flex-col font-sans animate-slide-left relative">
             {/* Header */}
             <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center">

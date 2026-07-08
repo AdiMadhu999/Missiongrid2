@@ -1001,7 +1001,7 @@ export default function TestResultView({ testId, attemptId, onBack, onPracticeIn
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="relative z-10 w-full max-w-lg bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 p-6 sm:p-10 rounded-3xl shadow-2xl text-center space-y-8 animate-in fade-in zoom-in-95 duration-300">
+        <div className="relative z-10 w-full max-w-lg bg-slate-800/50  border border-slate-700/50 p-6 sm:p-10 rounded-3xl shadow-2xl text-center space-y-8 animate-in fade-in zoom-in-95 duration-300">
           
           {/* Animated Success Badge */}
           <div className="flex justify-center">
@@ -2597,7 +2597,7 @@ export default function TestResultView({ testId, attemptId, onBack, onPracticeIn
       {/* Share Achievement Modal */}
       <AnimatePresence>
         {showShareModal && (
-          <div key="share-achievement-modal-backdrop" className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 overflow-y-auto">
+          <div key="share-achievement-modal-backdrop" className="fixed inset-0 bg-slate-900/60  z-[100] flex items-center justify-center p-4 overflow-y-auto">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -2660,15 +2660,15 @@ export default function TestResultView({ testId, attemptId, onBack, onPracticeIn
                     </div>
 
                     <div className="grid grid-cols-3 gap-2">
-                       <div className="bg-white/50 backdrop-blur-sm rounded-xl p-2 border border-slate-100">
+                       <div className="bg-white/50  rounded-xl p-2 border border-slate-100">
                           <div className="text-[8px] text-slate-400 font-black uppercase">Correct</div>
                           <div className="text-sm font-black text-emerald-600">{attempt.correct}</div>
                        </div>
-                       <div className="bg-white/50 backdrop-blur-sm rounded-xl p-2 border border-slate-100">
+                       <div className="bg-white/50  rounded-xl p-2 border border-slate-100">
                           <div className="text-[8px] text-slate-400 font-black uppercase">Wrong</div>
                           <div className="text-sm font-black text-rose-500">{attempt.wrong}</div>
                        </div>
-                       <div className="bg-white/50 backdrop-blur-sm rounded-xl p-2 border border-slate-100">
+                       <div className="bg-white/50  rounded-xl p-2 border border-slate-100">
                           <div className="text-[8px] text-slate-400 font-black uppercase">Rank</div>
                           <div className="text-sm font-black text-indigo-600">#{attempt.rank || 'N/A'}</div>
                        </div>

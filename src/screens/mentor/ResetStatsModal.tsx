@@ -40,7 +40,7 @@ const ResetStatsModal = ({ onClose }: { onClose: () => void }) => {
 
   if (confirmState === 'cycle') {
       return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[80] p-4 font-sans">
+        <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[80] p-4 font-sans">
             <motion.div className="bg-white rounded-[2.5rem] p-8 w-full max-w-sm shadow-2xl border border-amber-100">
                 <h3 className="text-xl font-black text-amber-600 mb-4 flex items-center gap-2"><RefreshCw /> Confirm New Cycle</h3>
                 <p className="text-sm text-slate-600 mb-6 font-medium">Are you sure you want to start a new 10 days cycle? Cycle points will be reset to 0.</p>
@@ -55,7 +55,7 @@ const ResetStatsModal = ({ onClose }: { onClose: () => void }) => {
 
   if (confirmState === 'global') {
       return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[80] p-4 font-sans">
+        <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[80] p-4 font-sans">
             <motion.div className="bg-white rounded-[2.5rem] p-8 w-full max-w-sm shadow-2xl border border-rose-100">
                 <h3 className="text-xl font-black text-rose-600 mb-4 flex items-center gap-2"><AlertTriangle /> WARNING</h3>
                 <p className="text-sm text-slate-600 mb-6 font-medium">This will wipe all global mission points, history, and baseline statistics globally. This action is absolutely irreversible. Are you sure?</p>
@@ -69,7 +69,7 @@ const ResetStatsModal = ({ onClose }: { onClose: () => void }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[70] p-4 font-sans">
+    <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[70] p-4 font-sans">
         <motion.div className="bg-white rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl border border-slate-100">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">Reset Operations</h3>

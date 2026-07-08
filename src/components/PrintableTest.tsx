@@ -512,7 +512,7 @@ export default function PrintableTest({
       )}
 
       {/* Screen view backdrop/modal container */}
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 no-print overflow-y-auto">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 -xs p-4 no-print overflow-y-auto">
         <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-2xl w-full overflow-hidden flex flex-col my-8 animate-in fade-in zoom-in-95 duration-200">
           
           {/* Header */}

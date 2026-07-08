@@ -1063,7 +1063,7 @@ const TestHeader = React.memo(({
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden relative">
          {!isFullscreen && !bypassedFullscreen && (
-           <div className="absolute inset-0 z-[100] bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
+           <div className="absolute inset-0 z-[100] bg-slate-900/95  flex flex-col items-center justify-center p-6 text-center">
              <div className="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center mb-6 animate-pulse">
                <Maximize className="w-10 h-10 text-indigo-400" />
              </div>
@@ -1138,7 +1138,7 @@ const TestHeader = React.memo(({
                          <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button 
                               onClick={() => window.open(url, '_blank')}
-                              className="p-2 bg-white/90 backdrop-blur shadow-sm rounded-lg text-slate-700 hover:bg-white"
+                              className="p-2 bg-white/90  shadow-sm rounded-lg text-slate-700 hover:bg-white"
                             >
                               <Eye className="w-4 h-4" />
                             </button>
@@ -1347,7 +1347,7 @@ const TestHeader = React.memo(({
          </div>
       </div>
       {showConfirmModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 ">
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
             <h3 className="text-xl font-bold text-slate-900 mb-2">Submit Test</h3>
             <p className="text-slate-600 mb-6">Are you sure you want to submit your test? You won't be able to change your answers after this.</p>

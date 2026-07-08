@@ -276,7 +276,7 @@ export default function PublicLiveTestLanding() {
 
         {/* Right Column: Interactive Card */}
         <div className="w-full lg:w-[400px] flex flex-col justify-center">
-          <div className="bg-slate-900/60 border border-white/10 rounded-[2rem] p-6 sm:p-8 shadow-2xl backdrop-blur-md relative overflow-hidden flex flex-col justify-between">
+          <div className="bg-slate-900/60 border border-white/10 rounded-[2rem] p-6 sm:p-8 shadow-2xl  relative overflow-hidden flex flex-col justify-between">
             {/* Countdown Banner if scheduled */}
             {isScheduledInFuture && (
               <div className="absolute top-0 left-0 right-0 bg-amber-500/20 text-amber-400 border-b border-amber-500/35 text-center py-2.5 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-1.5 animate-pulse">

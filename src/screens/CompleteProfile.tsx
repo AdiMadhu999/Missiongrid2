@@ -128,7 +128,7 @@ export default function CompleteProfile() {
 
       <div className="relative z-10 w-full max-w-sm mx-auto space-y-8">
         <div className="text-center">
-            <div className="w-20 h-20 bg-white/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 backdrop-blur-xl border border-white/20 shadow-2xl">
+            <div className="w-20 h-20 bg-white/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6  border border-white/20 shadow-2xl">
                 <ShieldCheck size={40} className="text-cyan-400" />
             </div>
             <h1 className="text-3xl font-black text-white tracking-tight">Mission Activation</h1>
@@ -138,7 +138,7 @@ export default function CompleteProfile() {
         <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/10 backdrop-blur-3xl border border-white/20 p-8 rounded-[2.5rem] shadow-2xl"
+            className="bg-white/10 -3xl border border-white/20 p-8 rounded-[2.5rem] shadow-2xl"
         >
             {step === 1 ? (
                 <form onSubmit={handleSubmit} className="space-y-6">

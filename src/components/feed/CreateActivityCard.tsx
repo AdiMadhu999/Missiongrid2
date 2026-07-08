@@ -9,7 +9,7 @@ export const CreateActivityCard = () => {
     const isMentor = userProfile?.role === 'mentor';
 
     return (
-        <div className="p-4 bg-white/60 backdrop-blur-md shadow-sm rounded-2xl border border-white/50 mb-6">
+        <div className="p-4 bg-white/60  shadow-sm rounded-2xl border border-white/50 mb-6">
             <div className="flex items-center gap-3 bg-slate-100/50 rounded-2xl p-2 border border-transparent focus-within:border-indigo-200 focus-within:bg-white transition-all">
                 <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center font-black text-slate-500 text-sm border-2 border-white shadow-sm shrink-0">
                     {userProfile?.name?.charAt(0) || 'U'}

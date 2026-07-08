@@ -384,7 +384,7 @@ export default function TargetFormModal({ target, onClose, onSaved }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center px-2 py-4 md:p-6 text-slate-800 pt-[env(safe-area-inset-top)]">
+    <div className="fixed inset-0 z-50 bg-slate-900/40  flex items-center justify-center px-2 py-4 md:p-6 text-slate-800 pt-[env(safe-area-inset-top)]">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

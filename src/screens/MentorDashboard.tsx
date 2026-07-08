@@ -139,7 +139,7 @@ export default function MentorDashboard() {
     <div className="p-4 bg-gradient-to-tr from-slate-100 via-slate-50 to-indigo-50/40 min-h-screen pb-32 space-y-6 font-sans">
       
       {/* 1. WELCOME SECTION */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white/95 backdrop-blur-md p-6 rounded-[2.5rem] border border-slate-200/80 shadow-md shadow-indigo-100/20 relative overflow-hidden">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white/95  p-6 rounded-[2.5rem] border border-slate-200/80 shadow-md shadow-indigo-100/20 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="flex items-center justify-between w-full md:w-auto relative z-10">
           <div>
@@ -359,7 +359,7 @@ export default function MentorDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         
         {/* 5. COMMUNITY OVERVIEW */}
-        <div className="bg-white/95 backdrop-blur-md p-6 rounded-[2.5rem] border border-violet-100 shadow-sm shadow-indigo-100/10 space-y-4">
+        <div className="bg-white/95  p-6 rounded-[2.5rem] border border-violet-100 shadow-sm shadow-indigo-100/10 space-y-4">
           <div className="flex items-center justify-between">
             <h4 className="font-black text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
               <MessageSquare size={18} className="text-violet-600" />
@@ -450,7 +450,7 @@ export default function MentorDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         
         {/* 7. ALERT CENTER */}
-        <div className="bg-white/95 backdrop-blur-md p-6 rounded-[2.5rem] border border-rose-100 shadow-sm shadow-rose-100/5 space-y-4">
+        <div className="bg-white/95  p-6 rounded-[2.5rem] border border-rose-100 shadow-sm shadow-rose-100/5 space-y-4">
           <h4 className="font-black text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
             <ShieldAlert size={18} className="text-rose-600" />
             Alert Center
@@ -504,7 +504,7 @@ export default function MentorDashboard() {
         </div>
 
         {/* 9. PREMIUM MANAGEMENT */}
-        <div className="bg-white/95 backdrop-blur-md p-6 rounded-[2.5rem] border border-emerald-100 shadow-sm shadow-emerald-100/5 space-y-4">
+        <div className="bg-white/95  p-6 rounded-[2.5rem] border border-emerald-100 shadow-sm shadow-emerald-100/5 space-y-4">
           <div className="flex items-center justify-between">
             <h4 className="font-black text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
               <DollarSign size={18} className="text-emerald-600" />

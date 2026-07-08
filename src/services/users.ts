@@ -366,12 +366,14 @@ export const getUsers = async (): Promise<User[]> => {
     roleLower === 'examiner';
 
   const privateDocsMap = new Map<string, any>();
+  let privateDocsQueried = false;
   if (isMentorUser) {
     try {
       const privSnap = await getDocs(query(collection(db, 'users_private'), limit(50)));
       privSnap.forEach(d => {
         privateDocsMap.set(d.id, d.data());
       });
+      privateDocsQueried = true;
     } catch (e) {
       console.warn("Could not query all users_private in bulk, falling back:", e);
     }
@@ -382,7 +384,7 @@ export const getUsers = async (): Promise<User[]> => {
     let privateData = privateDocsMap.get(d.id) || {};
     
     // Fallback if bulk query fails but caller is mentor
-    if (isMentorUser && privateDocsMap.size === 0) {
+    if (isMentorUser && !privateDocsQueried) {
       try {
         const privSnap = await getDoc(doc(db, 'users_private', d.id));
         if (privSnap.exists()) {
@@ -392,6 +394,7 @@ export const getUsers = async (): Promise<User[]> => {
         // Ignored
       }
     }
+
     const finalProfile = { ...data, ...privateData, id: d.id } as User;
     if (!finalProfile.studentCode) {
       finalProfile.studentCode = getStudentCode(finalProfile);
@@ -448,6 +451,7 @@ export const getUsersByRole = async (role: string): Promise<User[]> => {
     roleLower === 'examiner';
 
   const privateDocsMap = new Map<string, any>();
+  let bulkPrivateFailed = false;
   if (isMentorUser) {
     try {
       const privSnap = await getDocs(query(collection(db, 'users_private'), limit(50)));
@@ -456,6 +460,7 @@ export const getUsersByRole = async (role: string): Promise<User[]> => {
       });
     } catch (e) {
       console.warn("Could not query all users_private in bulk, falling back:", e);
+      bulkPrivateFailed = true;
     }
   }
 
@@ -464,7 +469,7 @@ export const getUsersByRole = async (role: string): Promise<User[]> => {
     let privateData = privateDocsMap.get(d.id) || {};
     
     // Fallback if bulk query fails but caller is mentor
-    if (isMentorUser && privateDocsMap.size === 0) {
+    if (isMentorUser && bulkPrivateFailed) {
       try {
         const privSnap = await getDoc(doc(db, 'users_private', d.id));
         if (privSnap.exists()) {

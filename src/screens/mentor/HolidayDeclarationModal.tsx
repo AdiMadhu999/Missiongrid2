@@ -19,7 +19,7 @@ const HolidayDeclarationModal = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[70] p-4 font-sans">
+    <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[70] p-4 font-sans">
         <motion.div className="bg-white rounded-[2.5rem] p-8 w-full max-w-sm shadow-2xl border border-slate-100">
             <h3 className="text-xl font-black text-slate-900 mb-6">Declare Holiday</h3>
             <input type="date" className="w-full bg-slate-50 border rounded-2xl p-4 mb-4 outline-none" value={date} onChange={e => setDate(e.target.value)} />

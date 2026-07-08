@@ -26,7 +26,7 @@ export default function MainLayout() {
       </div>
       {!hideNav && (
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[40] px-3 pb-4 sm:pb-6 pt-2 bg-gradient-to-t from-white via-white/95 to-transparent pointer-events-none">
-        <nav className="mx-auto bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.15)] rounded-[2.5rem] flex items-center justify-between p-1.5 overflow-x-auto no-scrollbar gap-0.5 pointer-events-auto">
+        <nav className="mx-auto bg-white  border border-slate-200/60 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.15)] rounded-[2.5rem] flex items-center justify-between p-1.5 overflow-x-auto no-scrollbar gap-0.5 pointer-events-auto">
           
           {role === 'student' ? (
             <>

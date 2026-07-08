@@ -113,7 +113,7 @@ const UserCreationModal = ({ onClose, onCreated, mentor }: { onClose: () => void
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[70] p-4 font-sans">
+        <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[70] p-4 font-sans">
             <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -199,7 +199,7 @@ const BatchOrchestrationModal = ({ mentor, onClose }: { mentor: any, onClose: ()
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[70] p-4 font-sans">
+    <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[70] p-4 font-sans">
       <motion.div className="bg-white rounded-[2.5rem] p-8 w-full max-w-sm shadow-2xl border border-slate-100">
         <h3 className="text-xl font-black text-slate-900 mb-6">Batch Orchestration</h3>
         <div className="space-y-4 mb-8">
@@ -257,7 +257,7 @@ const PointsModal = ({ user, onClose, onSaved }: { user: User, onClose: () => vo
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[60] p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[60] p-4 overflow-y-auto">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -331,7 +331,7 @@ const WarningModal = ({ user, onClose, onSaved, mentor }: { user: User, onClose:
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[60] p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[60] p-4 overflow-y-auto">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -371,7 +371,7 @@ const WarningHistoryModal = ({ user, onClose }: { user: User, onClose: () => voi
   }, [user]);
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[60] p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[60] p-4 overflow-y-auto">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -445,7 +445,7 @@ const RulesModal = ({ onClose, mentor, onBatchOrchestration, onLeaveManagement, 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[60] p-4 font-sans">
+    <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[60] p-4 font-sans">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

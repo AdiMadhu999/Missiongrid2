@@ -174,14 +174,7 @@ export default function StudentDashboard() {
     enabled: !!uId,
     persistKey: uId ? `student_warnings_cache_${uId}` : undefined,
     subscribeFn: (callback) => {
-      const qWarnings = query(
-        collection(db, 'warnings'),
-        or(
-          where('uid', '==', uId),
-          where('studentId', '==', uId)
-        ),
-        limit(50)
-      );
+      const qWarnings = query(collection(db, 'warnings'), where('studentId', '==', uId), limit(50));
       return onSnapshot(
         qWarnings,
         (snap) => {
@@ -203,14 +196,7 @@ export default function StudentDashboard() {
     enabled: !!uId,
     persistKey: uId ? `student_leaves_cache_${uId}` : undefined,
     subscribeFn: (callback) => {
-      const qLeaves = query(
-        collection(db, 'leaveRequests'),
-        or(
-          where('uid', '==', uId),
-          where('studentId', '==', uId)
-        ),
-        limit(50)
-      );
+      const qLeaves = query(collection(db, 'leaveRequests'), where('studentId', '==', uId), limit(50));
       return onSnapshot(
         qLeaves,
         (snap) => {
@@ -745,7 +731,7 @@ export default function StudentDashboard() {
       {/* 1. CHANNEL SELECTION MODAL */}
       <AnimatePresence>
         {showJoinModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[110] p-4 font-sans text-slate-900 leading-normal">
+          <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[110] p-4 font-sans text-slate-900 leading-normal">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -854,7 +840,7 @@ export default function StudentDashboard() {
       {/* 2. PREMIUM PERSUASION MODAL */}
       <AnimatePresence>
         {showPremiumUpgradeModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[110] p-4 font-sans text-slate-900">
+          <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[110] p-4 font-sans text-slate-900">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -933,7 +919,7 @@ export default function StudentDashboard() {
       {/* 3. RULE REGISTER MODAL */}
       <AnimatePresence>
         {showRulesModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-[110] p-4 font-sans text-slate-900">
+          <div className="fixed inset-0 bg-black/60 -xs flex items-center justify-center z-[110] p-4 font-sans text-slate-900">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
