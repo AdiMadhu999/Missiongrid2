@@ -101,16 +101,32 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Read version from gradle build file
+          APP_VER=$(grep versionName android/app/build.gradle | awk '{print $2}' | tr -d '"')
+          cp android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/app-release-${APP_VER}.apk
+          
+          # Delete and recreate the 'latest' release to ensure it points to the newest code and contains the correct APKs
           gh release delete latest -y || true
           git tag -d latest || true
           git push origin :refs/tags/latest || true
           
-          APP_VER=$(grep versionName android/app/build.gradle | awk '{print $2}' | tr -d '"')
-          cp android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/app-release-${APP_VER}.apk
           gh release create latest \
             android/app/build/outputs/apk/release/app-release-${APP_VER}.apk \
             android/app/build/outputs/apk/debug/app-debug.apk \
             android/app/build/outputs/apk/release/app-release.apk \
             --target main \
             --title "Latest APK Build" \
-            --notes "Automated build of the latest code on the main branch."
+            --notes "Automated build of the latest code on the main branch (Version ${APP_VER})."
+
+          # Also create/update a release matching the exact version tag (e.g. v1.0.54) with the APKs
+          gh release delete v${APP_VER} -y || true
+          git tag -d v${APP_VER} || true
+          git push origin :refs/tags/v${APP_VER} || true
+          
+          gh release create v${APP_VER} \
+            android/app/build/outputs/apk/release/app-release-${APP_VER}.apk \
+            android/app/build/outputs/apk/debug/app-debug.apk \
+            android/app/build/outputs/apk/release/app-release.apk \
+            --target main \
+            --title "Release v${APP_VER}" \
+            --notes "Automated release of the MissionGrid Android application version ${APP_VER}."
