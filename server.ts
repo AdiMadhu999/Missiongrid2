@@ -2269,7 +2269,8 @@ app.post("/api/auth/login", async (req, res) => {
       accountStatus,
       mentorAccess,
       premiumStatus,
-      permissionLevel
+      permissionLevel,
+      email: publicData.email
     };
 
     // Create custom token
