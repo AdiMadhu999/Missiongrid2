@@ -67,7 +67,7 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
   }
 
   try {
-    return await fetch(input, init);
+    return await fetch(input, { ...init, credentials: 'include' });
   } catch (err) {
     console.error(`[API Fetch Error] Failed requesting ${String(input)}:`, err);
     throw err;
