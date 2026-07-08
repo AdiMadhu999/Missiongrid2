@@ -180,13 +180,19 @@ export const AuthService = {
   },
 
   verifyMentorSecurityPin: async (mobile: string, securityPin: string, tempUser?: any): Promise<any> => {
+    console.log('[DEBUG-AUTH] Initiating verifyMentorSecurityPin');
     if (tempUser && tempUser.customToken) {
-      // The pin was already verified by the backend in loginWithMobileAndPassword
-      // if this is the PIN flow (and they just re-enter it or we verify it again, but tempUser implies they passed).
-      // Actually, let's just sign them in with the custom token we already minted!
-      await signInWithCustomToken(auth, tempUser.customToken);
-      return tempUser;
+      console.log('[DEBUG-AUTH] tempUser found, calling signInWithCustomToken');
+      try {
+          await signInWithCustomToken(auth, tempUser.customToken);
+          console.log('[DEBUG-AUTH] signInWithCustomToken successful');
+          return tempUser;
+      } catch (e) {
+          console.error('[DEBUG-AUTH] signInWithCustomToken failed', e);
+          throw e;
+      }
     }
+    console.error('[DEBUG-AUTH] Missing tempUser session');
     throw new Error("Missing temporary user session. Please restart login.");
   },
   
