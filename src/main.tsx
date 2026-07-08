@@ -4,6 +4,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import App from './App.tsx';
 import './index.css';
 import { Capacitor } from '@capacitor/core';
+import { getLiveHost } from './utils/api';
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,7 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 
     // If running inside native Android/iOS Capacitor app, or deployed outside Cloud Run container, point to the live server
     if (isNativePlatform || (!isLocalDev && !isPreviewRunning)) {
-      const liveHost = 'https://ais-pre-4lc74fjhivgouuxt4jkrwg-977053100479.asia-southeast1.run.app';
+      const liveHost = getLiveHost();
       const relativePath = urlString.startsWith('http') ? new URL(urlString).pathname : urlString;
       
       if (typeof input === 'string') {

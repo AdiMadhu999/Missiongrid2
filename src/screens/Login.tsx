@@ -8,6 +8,7 @@ import { useAuth } from '../providers/AuthProvider';
 import { updateUserProfile } from '../services/users';
 import { PremiumService } from '../services/premium';
 import { MentorLoginForm } from '../components/MentorLoginForm';
+import { getLiveHost, setLiveHost, DEFAULT_LIVE_HOST } from '../utils/api';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,7 +27,13 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Removed useEffect for RecaptchaVerifier initialization
+  // Connection settings overrides
+  const [logoClicks, setLogoClicks] = useState(0);
+  const [lastClickTime, setLastClickTime] = useState(0);
+  const [showDevModal, setShowDevModal] = useState(false);
+  const [customHost, setCustomHost] = useState(getLiveHost());
+  const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
+  const [testMessage, setTestMessage] = useState('');
 
   // Auto-redirect if already logged in
   if (userProfile) {
@@ -37,6 +44,61 @@ export default function Login() {
     }
     return <Navigate to="/app" replace />;
   }
+
+  const handleLogoClick = () => {
+    const now = Date.now();
+    if (now - lastClickTime < 3000) {
+      const newClicks = logoClicks + 1;
+      setLogoClicks(newClicks);
+      if (newClicks >= 5) {
+        setCustomHost(getLiveHost());
+        setShowDevModal(true);
+        setLogoClicks(0);
+      }
+    } else {
+      setLogoClicks(1);
+    }
+    setLastClickTime(now);
+  };
+
+  const handleTestConnection = async () => {
+    setTestStatus('testing');
+    setTestMessage('Sending connection probe to check-mobile...');
+    try {
+      const probeUrl = customHost.endsWith('/') ? `${customHost}api/auth/check-mobile` : `${customHost}/api/auth/check-mobile`;
+      const response = await fetch(probeUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile: '9999999999' })
+      });
+      
+      const text = await response.text();
+      // Status 200 or 400 means the server is reachable and active (since we sent a generic test mobile)
+      if (response.status === 200 || response.status === 400) {
+        setTestStatus('success');
+        setTestMessage(`✅ SUCCESS! Backend is reachable!\nStatus: ${response.status}\nResponse: ${text.substring(0, 150)}`);
+      } else {
+        setTestStatus('error');
+        setTestMessage(`❌ FAILED! Host responded with status ${response.status}.\nResponse: ${text.substring(0, 150)}`);
+      }
+    } catch (err: any) {
+      setTestStatus('error');
+      setTestMessage(`❌ CONNECTION FAILED!\nError: ${err.message || String(err)}\n\nThis means the mobile device cannot resolve or route to this server URL, or the server is down, or the request was blocked by a network policy/CORS.`);
+    }
+  };
+
+  const handleSaveHost = () => {
+    setLiveHost(customHost);
+    setShowDevModal(false);
+    window.location.reload();
+  };
+
+  const handleResetHost = () => {
+    setCustomHost(DEFAULT_LIVE_HOST);
+    setLiveHost(DEFAULT_LIVE_HOST);
+    setTestStatus('idle');
+    setTestMessage('');
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,7 +185,10 @@ export default function Login() {
           transition={{ duration: 0.3 }}
           className="flex flex-col items-center mb-4"
         >
-          <div className="h-16 w-16 rounded-xl overflow-hidden shadow-lg mb-2 border border-white/40">
+          <div 
+            onClick={handleLogoClick}
+            className="h-16 w-16 rounded-xl overflow-hidden shadow-lg mb-2 border border-white/40 cursor-pointer active:scale-95 transition-transform"
+          >
             <img 
               src="/app_logo.jpg?v=1" 
               alt="MissionGrid Logo" 
@@ -292,6 +357,87 @@ export default function Login() {
           </p>
         </div>
       </div>
+
+      {showDevModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white/95 backdrop-blur-xl w-full max-w-md p-6 rounded-2xl shadow-2xl border border-white/50 text-slate-800 space-y-4"
+          >
+            <div>
+              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                ⚙️ Connection Settings
+              </h3>
+              <p className="text-xs text-slate-500 font-bold mt-1 uppercase tracking-wider">
+                MissionGrid API Host Override
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+                API Backend Host URL
+              </label>
+              <input 
+                type="text"
+                value={customHost}
+                onChange={(e) => setCustomHost(e.target.value)}
+                placeholder="https://your-backend.run.app"
+                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl py-2.5 px-3 text-xs font-medium font-mono focus:ring-2 focus:ring-indigo-500 outline-none"
+              />
+              <p className="text-[9px] font-bold text-slate-400">
+                Default: {DEFAULT_LIVE_HOST}
+              </p>
+            </div>
+
+            {testStatus !== 'idle' && (
+              <div className={`p-3 rounded-xl border text-xs font-mono whitespace-pre-wrap max-h-40 overflow-y-auto leading-relaxed ${
+                testStatus === 'testing' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' :
+                testStatus === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' :
+                'bg-rose-50 border-rose-200 text-rose-800'
+              }`}>
+                {testMessage}
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <button
+                type="button"
+                onClick={handleTestConnection}
+                disabled={testStatus === 'testing'}
+                className="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-[11px] font-extrabold text-slate-700 rounded-xl transition-all"
+              >
+                {testStatus === 'testing' ? 'Testing...' : '🔍 Test Probe'}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetHost}
+                className="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-[11px] font-extrabold text-slate-700 rounded-xl transition-all"
+              >
+                🔄 Reset Default
+              </button>
+            </div>
+
+            <div className="flex gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setShowDevModal(false)}
+                className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600 rounded-xl transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveHost}
+                className="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-xs font-black text-white rounded-xl shadow-lg hover:shadow-indigo-500/20 active:translate-y-0.5 transition-all"
+              >
+                Save & Apply
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

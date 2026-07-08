@@ -1,6 +1,26 @@
 import { Capacitor } from '@capacitor/core';
 
-export const LIVE_HOST = 'https://ais-pre-4lc74fjhivgouuxt4jkrwg-977053100479.asia-southeast1.run.app';
+export const DEFAULT_LIVE_HOST = 'https://ais-pre-4lc74fjhivgouuxt4jkrwg-977053100479.asia-southeast1.run.app';
+
+export const getLiveHost = (): string => {
+  try {
+    return localStorage.getItem('custom_api_host') || DEFAULT_LIVE_HOST;
+  } catch (e) {
+    return DEFAULT_LIVE_HOST;
+  }
+};
+
+export const setLiveHost = (host: string): void => {
+  try {
+    if (!host) {
+      localStorage.removeItem('custom_api_host');
+    } else {
+      localStorage.setItem('custom_api_host', host.trim().replace(/\/$/, ''));
+    }
+  } catch (e) {
+    console.error('[API] Failed to save custom API host:', e);
+  }
+};
 
 export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   let urlString = '';
@@ -11,6 +31,8 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
   } else if (input && typeof input === 'object' && 'url' in input) {
     urlString = (input as Request).url;
   }
+
+  const liveHost = getLiveHost();
 
   if (urlString.startsWith('/api/') || (urlString.startsWith(window.location.origin) && urlString.includes('/api/'))) {
     const isNativePlatform = Capacitor.isNativePlatform();
@@ -29,7 +51,7 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
     // If running inside native Android/iOS Capacitor app, or deployed outside Cloud Run container, point to the live server
     if (isNativePlatform || (!isLocalDev && !isPreviewRunning)) {
       const relativePath = urlString.startsWith('http') ? new URL(urlString).pathname : urlString;
-      const finalUrl = `${LIVE_HOST}${relativePath}`;
+      const finalUrl = `${liveHost}${relativePath}`;
 
       if (typeof input === 'string') {
         input = finalUrl;
@@ -41,6 +63,12 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
       }
     }
   }
-  return fetch(input, init);
+
+  try {
+    return await fetch(input, init);
+  } catch (err) {
+    console.error(`[API Fetch Error] Failed requesting ${String(input)}:`, err);
+    throw err;
+  }
 };
 
