@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const srcIcon = 'src/assets/images/app_logo_1783375653854.jpg';
+const srcIcon = 'src/assets/images/app_logo_base_1783466372014.jpg';
 const resDir = 'android/app/src/main/res';
 
 const sizes = {
