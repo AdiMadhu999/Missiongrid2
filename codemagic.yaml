@@ -1,0 +1,19 @@
+workflows:
+  android-build:
+    name: Capacitor Android Release Build
+    environment:
+      node: latest
+      java: 17
+    scripts:
+      - name: Install npm dependencies
+        script: npm install
+      - name: Build React App
+        script: npm run build
+      - name: Sync Capacitor
+        script: npx cap sync android
+      - name: Build Android Release APK
+        script: |
+          cd android
+          ./gradlew assembleRelease
+    artifacts:
+      - android/app/build/outputs/apk/release/*.apk
