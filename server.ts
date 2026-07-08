@@ -2208,7 +2208,7 @@ app.post("/api/auth/login", async (req, res) => {
         matchRole = dbRole === 'examiner' || ['mentor', 'primary-mentor', 'primarymentor', 'admin'].includes(dbRole);
     } else {
         // default to student UI
-        matchRole = ['student', 'aspirant'].includes(dbRole) || (dbRole === role.toLowerCase());
+        matchRole = true; // Let frontend handle UI based on actual dbRole
     }
 
     if (!matchRole) {
