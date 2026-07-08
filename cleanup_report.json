@@ -1,0 +1,18 @@
+{
+  "mentorAccounts": [],
+  "studentsRemoved": 0,
+  "examinersRemoved": 0,
+  "testAttemptsRemoved": 0,
+  "submissionRecordsRemoved": 0,
+  "leaderboardRecordsRemoved": 0,
+  "remainingCollections": [
+    "users",
+    "users_private",
+    "user_roles",
+    "mentors",
+    "tests",
+    "questions",
+    "test_folders"
+  ],
+  "readyForV2": true
+}

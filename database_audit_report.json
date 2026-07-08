@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-07-04T04:57:10.308Z",
+  "databaseId": "(default)",
+  "projectId": "mission-selection-ultimate",
+  "usersSummary": {
+    "totalUsers": 4,
+    "mentors": 4,
+    "students": 0,
+    "examiners": 0,
+    "others": 0,
+    "privateProfiles": 11,
+    "roleMappings": 4,
+    "mentorsRegistered": 47
+  },
+  "structuralSummary": {
+    "totalTests": 252,
+    "drafts": 73,
+    "published": 176,
+    "live": 3,
+    "public": 5,
+    "testFolders": 5
+  },
+  "operationalSummary": {
+    "totalOperationalDocs": 2,
+    "test_attempts": 0,
+    "dailyMissionReports": 0,
+    "studentStats": 0,
+    "otp_logs": 2,
+    "leaves": 0,
+    "notifications": 0,
+    "activity_logs": 0
+  },
+  "v2Readiness": {
+    "isReadyForV2": false,
+    "checks": {
+      "mentorPresent": {
+        "status": "PASSED",
+        "description": "At least one active mentor user is registered"
+      },
+      "studentsRemoved": {
+        "status": "PASSED",
+        "description": "All student and aspirant accounts are removed"
+      },
+      "examinersRemoved": {
+        "status": "PASSED",
+        "description": "All examiner accounts are removed"
+      },
+      "operationalDataClean": {
+        "status": "FAILED",
+        "description": "All operational, session, and log collections are completely clean"
+      }
+    }
+  },
+  "mentorsDetails": [
+    {
+      "id": "CI23Ol7a0M3feDCjv9T8",
+      "name": "Adi Madhu",
+      "role": "mentor",
+      "status": "active",
+      "mobile": "N/A"
+    },
+    {
+      "id": "iKBOCdP0by4mUzdSHkVr",
+      "name": "Adi Madhu",
+      "role": "mentor",
+      "status": "active",
+      "mobile": "N/A"
+    },
+    {
+      "id": "ltumA7k44ZDKXqFgvlFn",
+      "name": "Adi Madhu",
+      "role": "mentor",
+      "status": "active",
+      "mobile": "N/A"
+    },
+    {
+      "id": "sdF5VbXPMBBhveFA5ngV",
+      "name": "Adi Madhu",
+      "role": "mentor",
+      "status": "active",
+      "mobile": "N/A"
+    }
+  ]
+}

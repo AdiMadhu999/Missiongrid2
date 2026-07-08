@@ -1,0 +1,271 @@
+{
+  "entities": {
+    "UserPublic": {
+      "title": "Public Profile Information",
+      "description": "Public directory details accessible to other users in the system.",
+      "type": "object",
+      "properties": {
+        "studentCode": { "type": "string", "description": "Unique Client Student ID" },
+        "name": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "role": { "type": "string" },
+        "status": { "type": "string" },
+        "batchId": { "type": "string" },
+        "category": { "type": "string" },
+        "missionPoints": { "type": "number" },
+        "currentRank": { "type": "number" },
+        "currentStreak": { "type": "number" },
+        "uid": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "missionGridStudentId": { "type": "string" },
+        "isPremium": { "type": "boolean" },
+        "premiumStatus": { "type": "string" },
+        "premiumStartDate": { "type": "string" },
+        "premiumExpiryDate": { "type": "string" },
+        "consecutiveMissedMissions": { "type": "number" },
+        "lastMissionSubmissionDate": { "type": "string" },
+        "manualPremiumOverride": { "type": "boolean" }
+      },
+      "required": ["name", "role", "status"]
+    },
+    "UserPrivate": {
+      "title": "Private Security Information",
+      "description": "PII and Authentication details.",
+      "type": "object",
+      "properties": {
+        "mobile": { "type": "string" },
+        "pin": { "type": "string" },
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["mobile", "pin", "userId"]
+    },
+    "UserRoleMapping": {
+      "title": "User Role Mapping",
+      "description": "Map of UID to Role and User Document ID.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "role": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "role"]
+    },
+    "Test": {
+      "title": "Test Paper",
+      "description": "A test paper containing questions and metadata.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "subject": { "type": "string" },
+        "questions": { "type": "array" },
+        "status": { "type": "string" },
+        "batchIds": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "questions", "status"]
+    },
+    "TestAttempt": {
+      "title": "Test Attempt",
+      "description": "A student's attempt at a test.",
+      "type": "object",
+      "properties": {
+        "testId": { "type": "string" },
+        "userId": { "type": "string" },
+        "status": { "type": "string" },
+        "marks": { "type": "number" },
+        "answers": { "type": "object" },
+        "startedAt": { "type": "string" },
+        "submittedAt": { "type": "string" }
+      },
+      "required": ["testId", "userId", "status", "startedAt"]
+    },
+    "DailyMissionReport": {
+      "title": "Daily Mission Report",
+      "description": "Daily work submission.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "date": { "type": "string" },
+        "status": { "type": "string" },
+        "submittedAt": { "type": "string" }
+      },
+      "required": ["userId", "date", "status", "submittedAt"]
+    },
+    "TestFolder": {
+      "title": "Test Folder",
+      "description": "Categorization folder for tests.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "color": { "type": "string" },
+        "icon": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "StudentStats": {
+      "title": "Student Statistics",
+      "description": "Aggregated performance metrics for a student.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "missionPoints": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["studentId", "missionPoints"]
+    },
+    "OtpLog": {
+      "title": "OTP Verification Log",
+      "description": "Log of OTP verification attempts.",
+      "type": "object",
+      "properties": {
+        "mobile": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string" },
+        "message": { "type": "string" },
+        "uid": { "type": "string" }
+      },
+      "required": ["mobile", "timestamp", "status"]
+    },
+    "Question": {
+      "title": "Question Library Item",
+      "description": "A centralized question entry stored in the library for future reuse.",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "type": { "type": "string" },
+        "subject": { "type": "string" },
+        "chapter": { "type": "string" },
+        "topic": { "type": "string" },
+        "difficulty": { "type": "string" },
+        "options": { "type": "array" },
+        "correctAnswer": { "type": "string" },
+        "explanation": { "type": "string" },
+        "examApproach": { "type": "string" },
+        "marks": { "type": "number" },
+        "status": { "type": "string" },
+        "tags": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["text", "type", "subject", "status"]
+    },
+    "Discussion": {
+      "title": "Discussion Thread",
+      "description": "A student doubt thread.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "title", "content", "status", "createdAt"]
+    },
+    "DiscussionReply": {
+      "title": "Discussion Reply",
+      "description": "A reply in a discussion thread.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "content", "createdAt"]
+    },
+    "PremiumHistory": {
+      "title": "Premium History Log",
+      "description": "Premium status adjustment log",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "status": { "type": "string" },
+        "isPremium": { "type": "boolean" },
+        "action": { "type": "string" },
+        "updatedBy": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["studentId", "status", "action", "updatedBy", "timestamp"]
+    },
+    "SecurityHistory": {
+      "title": "Security Audit Log",
+      "description": "Student security and login audits",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "type": { "type": "string" },
+        "ipAddress": { "type": "string" },
+        "deviceInfo": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["studentId", "type", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserPublic",
+      "description": "Public user profiles"
+    },
+    "/users_private/{userId}": {
+      "schema": "UserPrivate",
+      "description": "Private user data"
+    },
+    "/user_roles/{uid}": {
+      "schema": "UserRoleMapping",
+      "description": "Role mappings"
+    },
+    "/tests/{testId}": {
+      "schema": "Test",
+      "description": "Test definitions"
+    },
+    "/test_attempts/{attemptId}": {
+      "schema": "TestAttempt",
+      "description": "Student test attempts"
+    },
+    "/dailyMissionReports/{reportId}": {
+      "schema": "DailyMissionReport",
+      "description": "Mission reports"
+    },
+    "/test_folders/{folderId}": {
+      "schema": "TestFolder",
+      "description": "Test categorization"
+    },
+    "/studentStats/{statId}": {
+      "schema": "StudentStats",
+      "description": "Student statistics"
+    },
+    "/otp_logs/{logId}": {
+      "schema": "OtpLog",
+      "description": "OTP verification attempts"
+    },
+    "/questions/{questionId}": {
+      "schema": "Question",
+      "description": "Centralized Question Library items"
+    },
+    "/discussions/{discussionId}": {
+      "schema": "Discussion",
+      "description": "Discussion threads"
+    },
+    "/discussions/{discussionId}/replies/{replyId}": {
+      "schema": "DiscussionReply",
+      "description": "Discussion replies"
+    },
+    "/premium_history/{logId}": {
+      "schema": "PremiumHistory",
+      "description": "Premium status logs"
+    },
+    "/security_history/{logId}": {
+      "schema": "SecurityHistory",
+      "description": "Student security audit logs"
+    }
+  }
+}

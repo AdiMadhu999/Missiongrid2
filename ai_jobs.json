@@ -1,0 +1,1044 @@
+{
+  "job-real-test-1782231487899": {
+    "id": "job-real-test-1782231487899",
+    "createdBy": "tester",
+    "preferences": "fast",
+    "status": "failed",
+    "percent": 0,
+    "logs": [
+      "[4:18:07 PM] Background ingestion thread spawned safely.",
+      "[4:18:07 PM] [HEALTH CHECK] Verifying Gemini API Key Pool status...",
+      "[4:18:09 PM] [CRITICAL ABORT] Fatal error during pipeline execution: AI Service Temporarily Unavailable. All keys in the pool are failing health checks. Please contact administrator."
+    ],
+    "steps": [],
+    "currentStepIndex": 0,
+    "uploadQueue": [
+      {
+        "id": "f1",
+        "name": "test1.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f2",
+        "name": "test2.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f3",
+        "name": "test3.jpg",
+        "type": "image",
+        "data": ""
+      }
+    ],
+    "extractedTexts": {},
+    "chunks": [],
+    "questions": [],
+    "finalResult": null,
+    "dailyBudgetLimit": 250,
+    "createdAt": "2026-06-23T16:18:07.899Z",
+    "updatedAt": "2026-06-23T16:18:09.321Z",
+    "batchResults": {},
+    "questionsBank": [],
+    "error": "AI Service Temporarily Unavailable. All keys in the pool are failing health checks. Please contact administrator."
+  },
+  "job-real-test-1782231789163": {
+    "id": "job-real-test-1782231789163",
+    "createdBy": "tester",
+    "preferences": "fast",
+    "status": "failed",
+    "percent": 35,
+    "logs": [
+      "[4:23:09 PM] Background ingestion thread spawned safely.",
+      "[4:23:09 PM] [HEALTH CHECK] Verifying Gemini API Key Pool status...",
+      "[4:23:11 PM] [HEALTH CHECK] Key Pool response validated.",
+      "[4:23:11 PM] [TELEMETRY] Storage job established. Job ID: job-real-test-1782231789163, User ID: tester, Started Time: 2026-06-23T16:23:11.962Z",
+      "[4:23:11 PM] [START] Analyzing input documents for smart layout strategies...",
+      "[4:23:12 PM] [ANALYZER] Detected primary strategy: \"Standard Educational Extraction\".",
+      "[4:23:12 PM] [ANALYZER] Features detected: [].",
+      "[4:23:12 PM] [START] Translating scanned pages and PDFs into digital characters using streaming checkpoint architecture...",
+      "[4:23:12 PM] [IMAGE] Running Visual OCR on Image: test1.jpg",
+      "[4:23:15 PM] [SAVED] Intermediate checkpoint completed for image test1.jpg. Parsed: 0 initial questions.",
+      "[4:23:15 PM] [START] Running automatic layout healing filters (0 <-> O, 5 <-> S)...",
+      "[4:23:15 PM] [START] Merging structured batches maintaining page order and question numbering...",
+      "[4:23:15 PM] [CRITICAL ABORT] Fatal error during pipeline execution: Validation failed: uploadedFilesCount (3) != processedFilesCount (1)"
+    ],
+    "steps": [],
+    "currentStepIndex": 2,
+    "uploadQueue": [
+      {
+        "id": "f1",
+        "name": "test1.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f2",
+        "name": "test2.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f3",
+        "name": "test3.jpg",
+        "type": "image",
+        "data": ""
+      }
+    ],
+    "extractedTexts": {},
+    "chunks": [],
+    "questions": [],
+    "finalResult": null,
+    "dailyBudgetLimit": 250,
+    "createdAt": "2026-06-23T16:23:09.163Z",
+    "updatedAt": "2026-06-23T16:23:15.157Z",
+    "batchResults": {
+      "f1": [
+        {
+          "batchIndex": 0,
+          "startPage": 1,
+          "endPage": 1,
+          "language": "N/A",
+          "chapterDetected": "N/A",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ]
+    },
+    "questionsBank": [],
+    "userId": "tester",
+    "startedTime": "2026-06-23T16:23:11.962Z",
+    "estimatedPages": 0,
+    "error": "Validation failed: uploadedFilesCount (3) != processedFilesCount (1)"
+  },
+  "job-real-test-1782231809542": {
+    "id": "job-real-test-1782231809542",
+    "createdBy": "tester",
+    "preferences": "fast",
+    "status": "failed",
+    "percent": 35,
+    "logs": [
+      "[4:23:29 PM] Background ingestion thread spawned safely.",
+      "[4:23:29 PM] [HEALTH CHECK] Verifying Gemini API Key Pool status...",
+      "[4:23:33 PM] [HEALTH CHECK] Key Pool response validated.",
+      "[4:23:33 PM] [TELEMETRY] Storage job established. Job ID: job-real-test-1782231809542, User ID: tester, Started Time: 2026-06-23T16:23:33.235Z",
+      "[4:23:33 PM] [START] Analyzing input documents for smart layout strategies...",
+      "[4:23:33 PM] [ANALYZER] Detected primary strategy: \"Standard Educational Extraction\".",
+      "[4:23:33 PM] [ANALYZER] Features detected: [].",
+      "[4:23:33 PM] [START] Translating scanned pages and PDFs into digital characters using streaming checkpoint architecture...",
+      "[4:23:33 PM] [IMAGE] Running Visual OCR on Image: test1.jpg",
+      "[4:23:38 PM] [SAVED] Intermediate checkpoint completed for image test1.jpg. Parsed: 0 initial questions.",
+      "[4:23:38 PM] [START] Running automatic layout healing filters (0 <-> O, 5 <-> S)...",
+      "[4:23:38 PM] [START] Merging structured batches maintaining page order and question numbering...",
+      "[4:23:38 PM] [CRITICAL ABORT] Fatal error during pipeline execution: Validation failed: uploadedFilesCount (3) != processedFilesCount (1)"
+    ],
+    "steps": [],
+    "currentStepIndex": 2,
+    "uploadQueue": [
+      {
+        "id": "f1",
+        "name": "test1.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f2",
+        "name": "test2.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f3",
+        "name": "test3.jpg",
+        "type": "image",
+        "data": ""
+      }
+    ],
+    "extractedTexts": {},
+    "chunks": [],
+    "questions": [],
+    "finalResult": null,
+    "dailyBudgetLimit": 250,
+    "createdAt": "2026-06-23T16:23:29.542Z",
+    "updatedAt": "2026-06-23T16:23:38.065Z",
+    "batchResults": {
+      "f1": [
+        {
+          "batchIndex": 0,
+          "startPage": 1,
+          "endPage": 1,
+          "language": "und",
+          "chapterDetected": "N/A",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ]
+    },
+    "questionsBank": [],
+    "userId": "tester",
+    "startedTime": "2026-06-23T16:23:33.235Z",
+    "estimatedPages": 0,
+    "error": "Validation failed: uploadedFilesCount (3) != processedFilesCount (1)"
+  },
+  "job-real-test-1782231842161": {
+    "id": "job-real-test-1782231842161",
+    "createdBy": "tester",
+    "preferences": "fast",
+    "status": "failed",
+    "percent": 35,
+    "logs": [
+      "[4:24:02 PM] Background ingestion thread spawned safely.",
+      "[4:24:02 PM] [HEALTH CHECK] Verifying Gemini API Key Pool status...",
+      "[4:24:05 PM] [HEALTH CHECK] Key Pool response validated.",
+      "[4:24:05 PM] [TELEMETRY] Storage job established. Job ID: job-real-test-1782231842161, User ID: tester, Started Time: 2026-06-23T16:24:05.631Z",
+      "[4:24:05 PM] [START] Analyzing input documents for smart layout strategies...",
+      "[4:24:06 PM] [ANALYZER] Detected primary strategy: \"Standard Educational Extraction\".",
+      "[4:24:06 PM] [ANALYZER] Features detected: [].",
+      "[4:24:06 PM] [START] Translating scanned pages and PDFs into digital characters using streaming checkpoint architecture...",
+      "[4:24:06 PM] [IMAGE] Running Visual OCR on Image: test1.jpg",
+      "[4:24:08 PM] [SAVED] Intermediate checkpoint completed for image test1.jpg. Parsed: 0 initial questions.",
+      "[4:24:08 PM] [START] Running automatic layout healing filters (0 <-> O, 5 <-> S)...",
+      "[4:24:08 PM] [START] Merging structured batches maintaining page order and question numbering...",
+      "[4:24:08 PM] [CRITICAL ABORT] Fatal error during pipeline execution: Validation failed: uploadedFilesCount (3) != processedFilesCount (1)"
+    ],
+    "steps": [],
+    "currentStepIndex": 2,
+    "uploadQueue": [
+      {
+        "id": "f1",
+        "name": "test1.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f2",
+        "name": "test2.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f3",
+        "name": "test3.jpg",
+        "type": "image",
+        "data": ""
+      }
+    ],
+    "extractedTexts": {},
+    "chunks": [],
+    "questions": [],
+    "finalResult": null,
+    "dailyBudgetLimit": 250,
+    "createdAt": "2026-06-23T16:24:02.161Z",
+    "updatedAt": "2026-06-23T16:24:08.155Z",
+    "batchResults": {
+      "f1": [
+        {
+          "batchIndex": 0,
+          "startPage": 1,
+          "endPage": 1,
+          "language": "English",
+          "chapterDetected": "Scanned Image",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ]
+    },
+    "questionsBank": [],
+    "userId": "tester",
+    "startedTime": "2026-06-23T16:24:05.631Z",
+    "estimatedPages": 0,
+    "error": "Validation failed: uploadedFilesCount (3) != processedFilesCount (1)"
+  },
+  "job-real-test-1782231858785": {
+    "id": "job-real-test-1782231858785",
+    "createdBy": "tester",
+    "preferences": "fast",
+    "status": "failed",
+    "percent": 35,
+    "logs": [
+      "[4:24:18 PM] Background ingestion thread spawned safely.",
+      "[4:24:18 PM] [HEALTH CHECK] Verifying Gemini API Key Pool status...",
+      "[4:24:21 PM] [HEALTH CHECK] Key Pool response validated.",
+      "[4:24:21 PM] [TELEMETRY] Storage job established. Job ID: job-real-test-1782231858785, User ID: tester, Started Time: 2026-06-23T16:24:21.954Z",
+      "[4:24:21 PM] [START] Analyzing input documents for smart layout strategies...",
+      "[4:24:22 PM] [ANALYZER] Detected primary strategy: \"Standard Educational Extraction\".",
+      "[4:24:22 PM] [ANALYZER] Features detected: [].",
+      "[4:24:22 PM] [START] Translating scanned pages and PDFs into digital characters using streaming checkpoint architecture...",
+      "[4:24:22 PM] [DEBUG] Processing file 1/3: test1.jpg, type: image",
+      "[4:24:22 PM] [IMAGE] Running Visual OCR on Image: test1.jpg",
+      "[4:24:24 PM] [SAVED] Intermediate checkpoint completed for image test1.jpg. Parsed: 0 initial questions.",
+      "[4:24:24 PM] [START] Running automatic layout healing filters (0 <-> O, 5 <-> S)...",
+      "[4:24:24 PM] [START] Merging structured batches maintaining page order and question numbering...",
+      "[4:24:24 PM] [CRITICAL ABORT] Fatal error during pipeline execution: Validation failed: uploadedFilesCount (3) != processedFilesCount (1)"
+    ],
+    "steps": [],
+    "currentStepIndex": 2,
+    "uploadQueue": [
+      {
+        "id": "f1",
+        "name": "test1.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f2",
+        "name": "test2.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f3",
+        "name": "test3.jpg",
+        "type": "image",
+        "data": ""
+      }
+    ],
+    "extractedTexts": {},
+    "chunks": [],
+    "questions": [],
+    "finalResult": null,
+    "dailyBudgetLimit": 250,
+    "createdAt": "2026-06-23T16:24:18.785Z",
+    "updatedAt": "2026-06-23T16:24:24.410Z",
+    "batchResults": {
+      "f1": [
+        {
+          "batchIndex": 0,
+          "startPage": 1,
+          "endPage": 1,
+          "language": "unknown",
+          "chapterDetected": "Scanned Image",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ]
+    },
+    "questionsBank": [],
+    "userId": "tester",
+    "startedTime": "2026-06-23T16:24:21.954Z",
+    "estimatedPages": 0,
+    "error": "Validation failed: uploadedFilesCount (3) != processedFilesCount (1)"
+  },
+  "job-real-test-1782239530502": {
+    "id": "job-real-test-1782239530502",
+    "createdBy": "tester",
+    "preferences": "fast",
+    "status": "completed",
+    "percent": 100,
+    "logs": [
+      "[6:32:10 PM] Background ingestion thread spawned safely.",
+      "[6:32:10 PM] [HEALTH CHECK] Verifying Gemini API Key Pool status...",
+      "[6:32:14 PM] [HEALTH CHECK] Key Pool response validated.",
+      "[6:32:14 PM] [TELEMETRY] Storage job established. Job ID: job-real-test-1782239530502, User ID: tester, Started Time: 2026-06-23T18:32:14.434Z",
+      "[6:32:14 PM] [START] Analyzing input documents for smart layout strategies...",
+      "[6:32:15 PM] [ANALYZER] Detected primary strategy: \"Standard Educational Extraction\".",
+      "[6:32:15 PM] [ANALYZER] Features detected: [].",
+      "[6:32:15 PM] [START] Translating scanned pages and PDFs into digital characters using streaming checkpoint architecture...",
+      "[6:32:15 PM] [START_FILE] test1.jpg",
+      "[6:32:15 PM] [IMAGE] Running Visual OCR on Image: test1.jpg",
+      "[6:32:19 PM] [QUESTIONS_EXTRACTED] 0 questions.",
+      "[6:32:19 PM] [QUESTIONS_SAVED] Intermediate checkpoint completed for image test1.jpg.",
+      "[6:32:19 PM] [END_FILE] test1.jpg",
+      "[6:32:19 PM] [START_FILE] test2.jpg",
+      "[6:32:19 PM] [IMAGE] Running Visual OCR on Image: test2.jpg",
+      "[6:32:25 PM] [QUESTIONS_EXTRACTED] 0 questions.",
+      "[6:32:25 PM] [QUESTIONS_SAVED] Intermediate checkpoint completed for image test2.jpg.",
+      "[6:32:25 PM] [END_FILE] test2.jpg",
+      "[6:32:25 PM] [START_FILE] test3.jpg",
+      "[6:32:25 PM] [IMAGE] Running Visual OCR on Image: test3.jpg",
+      "[6:32:27 PM] [QUESTIONS_EXTRACTED] 0 questions.",
+      "[6:32:27 PM] [QUESTIONS_SAVED] Intermediate checkpoint completed for image test3.jpg.",
+      "[6:32:27 PM] [END_FILE] test3.jpg",
+      "[6:32:27 PM] [START] Running automatic layout healing filters (0 <-> O, 5 <-> S)...",
+      "[6:32:27 PM] [START] Merging structured batches maintaining page order and question numbering...",
+      "[6:32:27 PM] [STATS] {\"uploadedFilesCount\":3,\"processedFilesCount\":3,\"generatedQuestionCount\":0,\"savedQuestionCount\":0,\"loadedQuestionCount\":0}",
+      "[6:32:27 PM] [START] Synthesizing full Mock Test and Answer Keys from unified study database...",
+      "[6:32:27 PM] [GEMINI] Running high-coherence test synthesizer...",
+      "[6:32:58 PM] [STAGE: AI Generation] Gemini model high-coherence compilation complete. Synthesized content received.",
+      "[6:32:58 PM] [STAGE: JSON Creation] JSON serialization and repair success.",
+      "[6:32:58 PM] [STAGE: JSON Validation] Validated robust JSON formatting. Parsed raw JSON question count: 10",
+      "[6:32:58 PM] [STAGE: Schema Mapping] Successfully mapped mismatching properties, LaTeX tags, SVG elements into standard formats.",
+      "[6:32:58 PM] [STAGE: Question Array Creation] Clean question array structure initialized. Valid Generated Question Count: 10",
+      "[6:32:58 PM] [STAGE: Database Save] Saved 10 validated questions cleanly to job structure.",
+      "[6:32:58 PM] [RUNTIME VERIFICATION] Asserted Generated Question Count (10) equals Saved Database Question Count (10).",
+      "[6:32:58 PM] [SUCCESS] Extracted 10 premium questions with step-by-step solutions.",
+      "[6:32:58 PM] [SUCCESS] Generation Pipeline completed. Draft is published and ready for review."
+    ],
+    "steps": [
+      "Reading Document...",
+      "OCR...",
+      "Cleaning Text...",
+      "Merging Segments...",
+      "Synthesizing Questions...",
+      "Compiling Answers...",
+      "Completed."
+    ],
+    "currentStepIndex": 6,
+    "uploadQueue": [
+      {
+        "id": "f1",
+        "name": "test1.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f2",
+        "name": "test2.jpg",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "f3",
+        "name": "test3.jpg",
+        "type": "image",
+        "data": ""
+      }
+    ],
+    "extractedTexts": {},
+    "chunks": [],
+    "questions": [
+      {
+        "id": "q-1782239578252-0-c1e",
+        "type": "MCQ",
+        "text": "Choose the word that is a SYNONYM of \"Obdurate\".",
+        "options": [
+          "Adamant",
+          "Amenable",
+          "Flexible",
+          "Compliant"
+        ],
+        "correctAnswers": [
+          "Adamant"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Obdurate\" শব্দের অর্থ হল একগুঁয়ে বা অনমনীয়। এর মানে হল 'Stiff necked'। 'Adamant' এর অর্থও অনমনীয় বা দৃঢ়প্রতিজ্ঞ, তাই এটি একটি সঠিক প্রতিশব্দ। 'Amenable', 'Flexible', এবং 'Compliant' হল এর বিপরীত শব্দ, যার অর্থ সম্মত হতে ইচ্ছুক বা সহজে প্রভাবিত হয় এমন।\nExam Approach Shortcut: 'Obdurate' (অবডিউরেট) শুনলে 'obstinate' (অবস্টিনেট) বা 'stubborn' (স্টাবার্ন) এর কথা মনে আসে, যা এর সরাসরি প্রতিশব্দ। অপশনগুলির মধ্যে থেকে সবচেয়ে কাছাকাছি অর্থপূর্ণ শব্দটি বেছে নিন।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Obdurate\" শব্দের অর্থ হল একগুঁয়ে বা অনমনীয়। এর মানে হল 'Stiff necked'। 'Adamant' এর অর্থও অনমনীয় বা দৃঢ়প্রতিজ্ঞ, তাই এটি একটি সঠিক প্রতিশব্দ। 'Amenable', 'Flexible', এবং 'Compliant' হল এর বিপরীত শব্দ, যার অর্থ সম্মত হতে ইচ্ছুক বা সহজে প্রভাবিত হয় এমন।",
+          "Exam Approach Shortcut: 'Obdurate' (অবডিউরেট) শুনলে 'obstinate' (অবস্টিনেট) বা 'stubborn' (স্টাবার্ন) এর কথা মনে আসে, যা এর সরাসরি প্রতিশব্দ। অপশনগুলির মধ্যে থেকে সবচেয়ে কাছাকাছি অর্থপূর্ণ শব্দটি বেছে নিন।"
+        ],
+        "keyConcept": "Synonyms",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578252-1-yql",
+        "type": "MCQ",
+        "text": "Identify the ANTONYM of \"Plausible\".",
+        "options": [
+          "Credible",
+          "Unlikely",
+          "Possible",
+          "Believable"
+        ],
+        "correctAnswers": [
+          "Unlikely"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Plausible\" শব্দের অর্থ হল বিশ্বাসযোগ্য বা যুক্তিসঙ্গত ('Believable, Reasonable')। 'Credible' ও 'Possible' হল এর প্রতিশব্দ। 'Implausible' বা 'Unlikely' হল এর বিপরীত শব্দ, যার অর্থ অবিশ্বাস্য বা অসম্ভব।\nExam Approach Shortcut: 'Plausible' (প্লাউজিবল) মানে যা সহজে বিশ্বাস করা যায়। এর বিপরীত হবে যা বিশ্বাস করা কঠিন। 'Unlikely' (আনলাইকলি) এই অর্থ প্রকাশ করে।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Plausible\" শব্দের অর্থ হল বিশ্বাসযোগ্য বা যুক্তিসঙ্গত ('Believable, Reasonable')। 'Credible' ও 'Possible' হল এর প্রতিশব্দ। 'Implausible' বা 'Unlikely' হল এর বিপরীত শব্দ, যার অর্থ অবিশ্বাস্য বা অসম্ভব।",
+          "Exam Approach Shortcut: 'Plausible' (প্লাউজিবল) মানে যা সহজে বিশ্বাস করা যায়। এর বিপরীত হবে যা বিশ্বাস করা কঠিন। 'Unlikely' (আনলাইকলি) এই অর্থ প্রকাশ করে।"
+        ],
+        "keyConcept": "Antonyms",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578252-2-xgg",
+        "type": "MCQ",
+        "text": "Which of the following best describes the meaning of \"Quell\"?",
+        "options": [
+          "To incite",
+          "To stir up",
+          "To suppress",
+          "To allow"
+        ],
+        "correctAnswers": [
+          "To suppress"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Quell\" শব্দের অর্থ হল দমন করা বা শেষ করা ('To suppress, Put an end to')। 'Pacify' ও 'Subdue' এর প্রতিশব্দ। 'Incite' বা 'Stir up' হল এর বিপরীত শব্দ, যার অর্থ উত্তেজিত করা।\nExam Approach Shortcut: 'Quell' (কোয়েল) মানে কোনো কিছুকে শান্ত করা বা থামিয়ে দেওয়া। 'To suppress' (টু সাপ্রেস) সরাসরি এই অর্থ প্রকাশ করে।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Quell\" শব্দের অর্থ হল দমন করা বা শেষ করা ('To suppress, Put an end to')। 'Pacify' ও 'Subdue' এর প্রতিশব্দ। 'Incite' বা 'Stir up' হল এর বিপরীত শব্দ, যার অর্থ উত্তেজিত করা।",
+          "Exam Approach Shortcut: 'Quell' (কোয়েল) মানে কোনো কিছুকে শান্ত করা বা থামিয়ে দেওয়া। 'To suppress' (টু সাপ্রেস) সরাসরি এই অর্থ প্রকাশ করে।"
+        ],
+        "keyConcept": "Word Meaning",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578252-3-eg1",
+        "type": "MCQ",
+        "text": "Select the SYNONYM for \"Rampant\".",
+        "options": [
+          "Controlled",
+          "Restricted",
+          "Unrestrained",
+          "Limited"
+        ],
+        "correctAnswers": [
+          "Unrestrained"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Rampant\" শব্দের অর্থ হল অনিয়ন্ত্রিত বা ব্যাপকভাবে প্রচলিত ('Uncontrolled, Widespread')। 'Unrestrained', 'Prevalent', এবং 'Ubiquitous' হল এর প্রতিশব্দ। 'Controlled' বা 'Restricted' হল এর বিপরীত শব্দ।\nExam Approach Shortcut: 'Rampant' (র‍্যাম্প্যান্ট) যখন কোনো কিছু 'rampant' হয়, তখন তা দ্রুত ছড়ায় এবং কোনো নিয়ন্ত্রণ থাকে না। 'Unrestrained' (আনরেস্ট্রেইন্ড) এই অর্থ দেয়।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Rampant\" শব্দের অর্থ হল অনিয়ন্ত্রিত বা ব্যাপকভাবে প্রচলিত ('Uncontrolled, Widespread')। 'Unrestrained', 'Prevalent', এবং 'Ubiquitous' হল এর প্রতিশব্দ। 'Controlled' বা 'Restricted' হল এর বিপরীত শব্দ।",
+          "Exam Approach Shortcut: 'Rampant' (র‍্যাম্প্যান্ট) যখন কোনো কিছু 'rampant' হয়, তখন তা দ্রুত ছড়ায় এবং কোনো নিয়ন্ত্রণ থাকে না। 'Unrestrained' (আনরেস্ট্রেইন্ড) এই অর্থ দেয়।"
+        ],
+        "keyConcept": "Synonyms",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578252-4-gqj",
+        "type": "MCQ",
+        "text": "Find the ANTONYM for \"Scurrilous\".",
+        "options": [
+          "Offensive",
+          "Vulgar",
+          "Polite",
+          "Obscene"
+        ],
+        "correctAnswers": [
+          "Polite"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Scurrilous\" শব্দের অর্থ হল অপমানজনক বা অশ্লীল ('Abusive, Insulting')। 'Offensive', 'Vulgar', এবং 'Obscene' হল এর প্রতিশব্দ। 'Polite' বা 'Respectful' হল এর বিপরীত শব্দ।\nExam Approach Shortcut: 'Scurrilous' (স্কারিলাস) একটি নেতিবাচক শব্দ যা অপমান বা অশালীনতা বোঝায়। এর বিপরীত অবশ্যই একটি ইতিবাচক বা নিরপেক্ষ শব্দ হবে, যেমন 'Polite' (পলাইট)।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Scurrilous\" শব্দের অর্থ হল অপমানজনক বা অশ্লীল ('Abusive, Insulting')। 'Offensive', 'Vulgar', এবং 'Obscene' হল এর প্রতিশব্দ। 'Polite' বা 'Respectful' হল এর বিপরীত শব্দ।",
+          "Exam Approach Shortcut: 'Scurrilous' (স্কারিলাস) একটি নেতিবাচক শব্দ যা অপমান বা অশালীনতা বোঝায়। এর বিপরীত অবশ্যই একটি ইতিবাচক বা নিরপেক্ষ শব্দ হবে, যেমন 'Polite' (পলাইট)।"
+        ],
+        "keyConcept": "Antonyms",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578252-5-n31",
+        "type": "MCQ",
+        "text": "Which word is a SYNONYM of \"Tacit\"?",
+        "options": [
+          "Explicit",
+          "Stated",
+          "Expressed",
+          "Implicit"
+        ],
+        "correctAnswers": [
+          "Implicit"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Tacit\" শব্দের অর্থ হল unspoken বা implicitly understood (বলা না হলেও বোঝা যায়)। 'Implicit', 'Unstated', এবং 'Unspoken' হল এর প্রতিশব্দ। 'Explicit', 'Stated', এবং 'Expressed' হল এর বিপরীত শব্দ।\nExam Approach Shortcut: 'Tacit' (ট্যাসিট) মানে নীরব সম্মতি বা যা মুখে বলা হয়নি কিন্তু বোঝা গেছে। 'Implicit' (ইমপ্লিসিট) এর সাথে এর সরাসরি সম্পর্ক আছে।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Tacit\" শব্দের অর্থ হল unspoken বা implicitly understood (বলা না হলেও বোঝা যায়)। 'Implicit', 'Unstated', এবং 'Unspoken' হল এর প্রতিশব্দ। 'Explicit', 'Stated', এবং 'Expressed' হল এর বিপরীত শব্দ।",
+          "Exam Approach Shortcut: 'Tacit' (ট্যাসিট) মানে নীরব সম্মতি বা যা মুখে বলা হয়নি কিন্তু বোঝা গেছে। 'Implicit' (ইমপ্লিসিট) এর সাথে এর সরাসরি সম্পর্ক আছে।"
+        ],
+        "keyConcept": "Synonyms",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578252-6-tat",
+        "type": "MCQ",
+        "text": "The word \"Ubiquitous\" means:",
+        "options": [
+          "Rare",
+          "Present everywhere",
+          "Scarce",
+          "Limited"
+        ],
+        "correctAnswers": [
+          "Present everywhere"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Ubiquitous\" শব্দের অর্থ হল সর্বত্র বিদ্যমান ('Present everywhere')। 'Omnipresent' এবং 'Pervasive' হল এর প্রতিশব্দ। 'Rare' বা 'Scarce' হল এর বিপরীত শব্দ।\nExam Approach Shortcut: 'Ubiquitous' (ইউবিকুইটাস) মানে 'everywhere' (সর্বত্র)। অপশনগুলিতে 'Present everywhere' সরাসরি এর অর্থ।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Ubiquitous\" শব্দের অর্থ হল সর্বত্র বিদ্যমান ('Present everywhere')। 'Omnipresent' এবং 'Pervasive' হল এর প্রতিশব্দ। 'Rare' বা 'Scarce' হল এর বিপরীত শব্দ।",
+          "Exam Approach Shortcut: 'Ubiquitous' (ইউবিকুইটাস) মানে 'everywhere' (সর্বত্র)। অপশনগুলিতে 'Present everywhere' সরাসরি এর অর্থ।"
+        ],
+        "keyConcept": "Word Meaning",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578252-7-ivo",
+        "type": "MCQ",
+        "text": "Choose the ANTONYM for \"Vex\".",
+        "options": [
+          "Annoy",
+          "Trouble",
+          "Soothe",
+          "Harrass"
+        ],
+        "correctAnswers": [
+          "Soothe"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Vex\" শব্দের অর্থ হল বিরক্ত করা বা সমস্যায় ফেলা ('To annoy, Trouble')। 'Irritate', 'Bother', এবং 'Harrass' হল এর প্রতিশব্দ। 'Appease' বা 'Soothe' হল এর বিপরীত শব্দ, যার অর্থ শান্ত করা বা তুষ্ট করা।\nExam Approach Shortcut: 'Vex' (ভেক্স) মানে কাউকে বিরক্ত করা। এর বিপরীত হবে কাউকে শান্ত করা বা আরাম দেওয়া। 'Soothe' (সুথ) এই কাজ করে।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Vex\" শব্দের অর্থ হল বিরক্ত করা বা সমস্যায় ফেলা ('To annoy, Trouble')। 'Irritate', 'Bother', এবং 'Harrass' হল এর প্রতিশব্দ। 'Appease' বা 'Soothe' হল এর বিপরীত শব্দ, যার অর্থ শান্ত করা বা তুষ্ট করা।",
+          "Exam Approach Shortcut: 'Vex' (ভেক্স) মানে কাউকে বিরক্ত করা। এর বিপরীত হবে কাউকে শান্ত করা বা আরাম দেওয়া। 'Soothe' (সুথ) এই কাজ করে।"
+        ],
+        "keyConcept": "Antonyms",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578252-8-vo9",
+        "type": "MCQ",
+        "text": "Select the SYNONYM for \"Wane\".",
+        "options": [
+          "Grow",
+          "Increase",
+          "Diminish",
+          "Wax"
+        ],
+        "correctAnswers": [
+          "Diminish"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Wane\" শব্দের অর্থ হল হ্রাস পাওয়া বা ক্ষয় হওয়া ('To decrease, Decline')। 'Diminish', 'Ebb', এবং 'Recede' হল এর প্রতিশব্দ। 'Wax', 'Grow', এবং 'Increase' হল এর বিপরীত শব্দ।\nExam Approach Shortcut: 'Wane' (ওয়েন) সাধারণত চাঁদ বা কোনো কিছুর শক্তি কমার ক্ষেত্রে ব্যবহৃত হয়। 'Diminish' (ডিমিনিশ) এর সবচেয়ে কাছাকাছি অর্থ।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Wane\" শব্দের অর্থ হল হ্রাস পাওয়া বা ক্ষয় হওয়া ('To decrease, Decline')। 'Diminish', 'Ebb', এবং 'Recede' হল এর প্রতিশব্দ। 'Wax', 'Grow', এবং 'Increase' হল এর বিপরীত শব্দ।",
+          "Exam Approach Shortcut: 'Wane' (ওয়েন) সাধারণত চাঁদ বা কোনো কিছুর শক্তি কমার ক্ষেত্রে ব্যবহৃত হয়। 'Diminish' (ডিমিনিশ) এর সবচেয়ে কাছাকাছি অর্থ।"
+        ],
+        "keyConcept": "Synonyms",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      },
+      {
+        "id": "q-1782239578253-9-ytl",
+        "type": "MCQ",
+        "text": "Identify the ANTONYM for \"Zealous\".",
+        "options": [
+          "Ardent",
+          "Fervent",
+          "Eager",
+          "Apathetic"
+        ],
+        "correctAnswers": [
+          "Apathetic"
+        ],
+        "points": 2,
+        "negativePoints": -0.5,
+        "explanation": "Detailed Explanation: \"Zealous\" শব্দের অর্থ হল উৎসাহী বা আবেগপ্রবণ ('Enthusiastic, Passionate')। 'Ardent', 'Fervent', এবং 'Eager' হল এর প্রতিশব্দ। 'Apathetic' বা 'Indifferent' হল এর বিপরীত শব্দ, যার অর্থ উদাসীন।\nExam Approach Shortcut: 'Zealous' (জিলস) একটি ইতিবাচক শব্দ যা প্রবল উৎসাহ বোঝায়। এর বিপরীত একটি নেতিবাচক শব্দ হবে যা উৎসাহের অভাব বোঝায়, যেমন 'Apathetic' (অ্যাপ্যাথেটিক)।",
+        "stepwiseSolution": [
+          "Detailed Explanation: \"Zealous\" শব্দের অর্থ হল উৎসাহী বা আবেগপ্রবণ ('Enthusiastic, Passionate')। 'Ardent', 'Fervent', এবং 'Eager' হল এর প্রতিশব্দ। 'Apathetic' বা 'Indifferent' হল এর বিপরীত শব্দ, যার অর্থ উদাসীন।",
+          "Exam Approach Shortcut: 'Zealous' (জিলস) একটি ইতিবাচক শব্দ যা প্রবল উৎসাহ বোঝায়। এর বিপরীত একটি নেতিবাচক শব্দ হবে যা উৎসাহের অভাব বোঝায়, যেমন 'Apathetic' (অ্যাপ্যাথেটিক)।"
+        ],
+        "keyConcept": "Antonyms",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "Word Meanings",
+        "chapter": "Vocabulary",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      }
+    ],
+    "finalResult": {
+      "title": "English Vocabulary Test",
+      "subject": "English",
+      "difficulty": "Medium",
+      "duration": 15,
+      "instructions": "Answer all questions. Each question carries +2 marks for correct answers and -0.5 marks for incorrect answers.",
+      "qualityAudit": {
+        "completenessScore": 90,
+        "ocrConfidence": "High",
+        "duplicateQuestionsFound": [],
+        "formattingCleanups": [
+          "Schema auto-mapped and healed"
+        ],
+        "uncertainQuestionsCount": 0,
+        "overallNotes": "Schema mapped and successfully recovered."
+      }
+    },
+    "dailyBudgetLimit": 250,
+    "createdAt": "2026-06-23T18:32:10.503Z",
+    "updatedAt": "2026-06-23T18:32:58.260Z",
+    "batchResults": {
+      "f1": [
+        {
+          "batchIndex": 0,
+          "startPage": 0,
+          "endPage": 0,
+          "language": "English",
+          "chapterDetected": "Empty",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ],
+      "f2": [
+        {
+          "batchIndex": 0,
+          "startPage": 0,
+          "endPage": 0,
+          "language": "English",
+          "chapterDetected": "Empty",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ],
+      "f3": [
+        {
+          "batchIndex": 0,
+          "startPage": 0,
+          "endPage": 0,
+          "language": "English",
+          "chapterDetected": "Empty",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ]
+    },
+    "questionsBank": [],
+    "userId": "tester",
+    "startedTime": "2026-06-23T18:32:14.434Z",
+    "estimatedPages": 0
+  },
+  "job-real-test-1782239997468": {
+    "id": "job-real-test-1782239997468",
+    "createdBy": "tester",
+    "preferences": "fast",
+    "status": "completed",
+    "percent": 100,
+    "logs": [
+      "[6:39:57 PM] Background ingestion thread spawned safely.",
+      "[6:39:57 PM] [HEALTH CHECK] Verifying Gemini API Key Pool status...",
+      "[6:39:59 PM] [HEALTH CHECK] Key Pool response validated.",
+      "[6:39:59 PM] [TELEMETRY] Storage job established. Job ID: job-real-test-1782239997468, User ID: tester, Started Time: 2026-06-23T18:39:59.725Z",
+      "[6:39:59 PM] [START] Analyzing input documents for smart layout strategies...",
+      "[6:40:00 PM] [ANALYZER] Detected primary strategy: \"Standard Educational Extraction\".",
+      "[6:40:00 PM] [ANALYZER] Features detected: [].",
+      "[6:40:00 PM] [START] Translating scanned pages and PDFs into digital characters using streaming checkpoint architecture...",
+      "[6:40:00 PM] [START_FILE] ui_upload_1.png",
+      "[6:40:00 PM] [IMAGE] Running Visual OCR on Image: ui_upload_1.png",
+      "[6:40:02 PM] [QUESTIONS_EXTRACTED] 0 questions.",
+      "[6:40:02 PM] [QUESTIONS_SAVED] Intermediate checkpoint completed for image ui_upload_1.png.",
+      "[6:40:02 PM] [END_FILE] ui_upload_1.png",
+      "[6:40:02 PM] [START_FILE] ui_upload_2.png",
+      "[6:40:02 PM] [IMAGE] Running Visual OCR on Image: ui_upload_2.png",
+      "[6:40:04 PM] [QUESTIONS_EXTRACTED] 0 questions.",
+      "[6:40:04 PM] [QUESTIONS_SAVED] Intermediate checkpoint completed for image ui_upload_2.png.",
+      "[6:40:04 PM] [END_FILE] ui_upload_2.png",
+      "[6:40:04 PM] [START_FILE] ui_upload_3.png",
+      "[6:40:04 PM] [IMAGE] Running Visual OCR on Image: ui_upload_3.png",
+      "[6:40:07 PM] [QUESTIONS_EXTRACTED] 0 questions.",
+      "[6:40:07 PM] [QUESTIONS_SAVED] Intermediate checkpoint completed for image ui_upload_3.png.",
+      "[6:40:07 PM] [END_FILE] ui_upload_3.png",
+      "[6:40:07 PM] [START_FILE] ui_upload_4.png",
+      "[6:40:07 PM] [IMAGE] Running Visual OCR on Image: ui_upload_4.png",
+      "[6:40:09 PM] [QUESTIONS_EXTRACTED] 0 questions.",
+      "[6:40:09 PM] [QUESTIONS_SAVED] Intermediate checkpoint completed for image ui_upload_4.png.",
+      "[6:40:09 PM] [END_FILE] ui_upload_4.png",
+      "[6:40:09 PM] [START_FILE] ui_upload_5.png",
+      "[6:40:09 PM] [IMAGE] Running Visual OCR on Image: ui_upload_5.png",
+      "[6:40:10 PM] [QUESTIONS_EXTRACTED] 0 questions.",
+      "[6:40:10 PM] [QUESTIONS_SAVED] Intermediate checkpoint completed for image ui_upload_5.png.",
+      "[6:40:10 PM] [END_FILE] ui_upload_5.png",
+      "[6:40:10 PM] [START] Running automatic layout healing filters (0 <-> O, 5 <-> S)...",
+      "[6:40:10 PM] [START] Merging structured batches maintaining page order and question numbering...",
+      "[6:40:10 PM] [STATS] {\"uploadedFilesCount\":5,\"processedFilesCount\":5,\"generatedQuestionCount\":0,\"savedQuestionCount\":0,\"loadedQuestionCount\":0}",
+      "[6:40:10 PM] [START] Synthesizing full Mock Test and Answer Keys from unified study database...",
+      "[6:40:10 PM] [GEMINI] Running high-coherence test synthesizer...",
+      "[6:40:25 PM] [STAGE: AI Generation] Gemini model high-coherence compilation complete. Synthesized content received.",
+      "[6:40:25 PM] [STAGE: JSON Creation] JSON serialization and repair success.",
+      "[6:40:25 PM] [STAGE: JSON Validation] Validated robust JSON formatting. Parsed raw JSON question count: 1",
+      "[6:40:25 PM] [STAGE: Schema Mapping] Successfully mapped mismatching properties, LaTeX tags, SVG elements into standard formats.",
+      "[6:40:25 PM] [STAGE: Question Array Creation] Clean question array structure initialized. Valid Generated Question Count: 1",
+      "[6:40:25 PM] [STAGE: Database Save] Saved 1 validated questions cleanly to job structure.",
+      "[6:40:25 PM] [RUNTIME VERIFICATION] Asserted Generated Question Count (1) equals Saved Database Question Count (1).",
+      "[6:40:25 PM] [SUCCESS] Extracted 1 premium questions with step-by-step solutions.",
+      "[6:40:25 PM] [SUCCESS] Generation Pipeline completed. Draft is published and ready for review."
+    ],
+    "steps": [
+      "Reading Document...",
+      "OCR...",
+      "Cleaning Text...",
+      "Merging Segments...",
+      "Synthesizing Questions...",
+      "Compiling Answers...",
+      "Completed."
+    ],
+    "currentStepIndex": 6,
+    "uploadQueue": [
+      {
+        "id": "ui_upload_1",
+        "name": "ui_upload_1.png",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "ui_upload_2",
+        "name": "ui_upload_2.png",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "ui_upload_3",
+        "name": "ui_upload_3.png",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "ui_upload_4",
+        "name": "ui_upload_4.png",
+        "type": "image",
+        "data": ""
+      },
+      {
+        "id": "ui_upload_5",
+        "name": "ui_upload_5.png",
+        "type": "image",
+        "data": ""
+      }
+    ],
+    "extractedTexts": {},
+    "chunks": [],
+    "questions": [
+      {
+        "id": "q-1782240025065-0-tpt",
+        "type": "MCQ",
+        "text": "Based on the input context provided for generating this test, what was the nature of the study material or OCR transcription uploaded?",
+        "options": [
+          "A detailed PDF document on advanced physics.",
+          "A series of images containing historical texts.",
+          "An empty context, indicating no specific content was uploaded.",
+          "A comprehensive set of notes on economic theories."
+        ],
+        "correctAnswers": [
+          "An empty context, indicating no specific content was uploaded."
+        ],
+        "points": 2,
+        "negativePoints": 0.5,
+        "explanation": "The AI was instructed to analyze the complete uploaded PDF, image, screenshot, notes, book, or document from the 'MERGED STUDY AND OCR CONTEXT' before generating output.\nUpon analyzing the 'MERGED STUDY AND OCR CONTEXT', it was found to be empty.\nTherefore, the correct answer is that an empty context was provided, meaning no specific content was available for analysis and question generation.",
+        "stepwiseSolution": [
+          "The AI was instructed to analyze the complete uploaded PDF, image, screenshot, notes, book, or document from the 'MERGED STUDY AND OCR CONTEXT' before generating output.",
+          "Upon analyzing the 'MERGED STUDY AND OCR CONTEXT', it was found to be empty.",
+          "Therefore, the correct answer is that an empty context was provided, meaning no specific content was available for analysis and question generation."
+        ],
+        "keyConcept": "Content analysis and test generation constraints.",
+        "diagramMetadata": {
+          "dimensions": {},
+          "labels": [],
+          "requiresDiagram": false,
+          "shapeType": ""
+        },
+        "diagram_svg": "",
+        "formula_latex": "",
+        "topic": "System Self-Reflection",
+        "chapter": "System Operational Context",
+        "difficulty": "Medium",
+        "confidenceScore": "High"
+      }
+    ],
+    "finalResult": {
+      "title": "Generated Mock Test (No Content Provided)",
+      "subject": "General",
+      "difficulty": "Easy",
+      "duration": 5,
+      "instructions": "Please note: No specific content was provided for generating this test. The question below reflects this situation.",
+      "qualityAudit": {
+        "completenessScore": 90,
+        "ocrConfidence": "High",
+        "duplicateQuestionsFound": [],
+        "formattingCleanups": [
+          "Schema auto-mapped and healed"
+        ],
+        "uncertainQuestionsCount": 0,
+        "overallNotes": "Schema mapped and successfully recovered."
+      }
+    },
+    "dailyBudgetLimit": 250,
+    "createdAt": "2026-06-23T18:39:57.468Z",
+    "updatedAt": "2026-06-23T18:40:25.073Z",
+    "batchResults": {
+      "ui_upload_1": [
+        {
+          "batchIndex": 0,
+          "startPage": 0,
+          "endPage": 0,
+          "language": "English",
+          "chapterDetected": "Empty",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ],
+      "ui_upload_2": [
+        {
+          "batchIndex": 0,
+          "startPage": 0,
+          "endPage": 0,
+          "language": "English",
+          "chapterDetected": "Empty",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ],
+      "ui_upload_3": [
+        {
+          "batchIndex": 0,
+          "startPage": 0,
+          "endPage": 0,
+          "language": "English",
+          "chapterDetected": "Empty",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ],
+      "ui_upload_4": [
+        {
+          "batchIndex": 0,
+          "startPage": 0,
+          "endPage": 0,
+          "language": "English",
+          "chapterDetected": "Empty",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ],
+      "ui_upload_5": [
+        {
+          "batchIndex": 0,
+          "startPage": 0,
+          "endPage": 0,
+          "language": "English",
+          "chapterDetected": "Empty",
+          "extractedContent": "",
+          "questionsParsed": [],
+          "tablesFound": [],
+          "answerKeys": []
+        }
+      ]
+    },
+    "questionsBank": [],
+    "userId": "tester",
+    "startedTime": "2026-06-23T18:39:59.725Z",
+    "estimatedPages": 0
+  }
+}
