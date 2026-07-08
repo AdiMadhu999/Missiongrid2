@@ -50,7 +50,8 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
 
     // If running inside native Android/iOS Capacitor app, or deployed outside Cloud Run container, point to the live server
     if (isNativePlatform || (!isLocalDev && !isPreviewRunning)) {
-      const relativePath = urlString.startsWith('http') ? new URL(urlString).pathname : urlString;
+      const urlObj = urlString.startsWith('http') ? new URL(urlString) : null;
+      const relativePath = urlObj ? `${urlObj.pathname}${urlObj.search}` : urlString;
       const finalUrl = `${liveHost}${relativePath}`;
       console.log(`[API Routing] Redirecting cross-origin request: ${urlString} -> ${finalUrl}`);
 

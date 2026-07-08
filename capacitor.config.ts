@@ -7,6 +7,14 @@ const config: CapacitorConfig = {
   server: {
     hostname: 'mission-selection-ultimate.firebaseapp.com',
     androidScheme: 'https'
+  },
+  plugins: {
+    CapacitorHttp: {
+      enabled: false
+    },
+    CapacitorCookies: {
+      enabled: false
+    }
   }
 };
 

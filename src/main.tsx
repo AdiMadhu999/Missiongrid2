@@ -42,7 +42,8 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
     // If running inside native Android/iOS Capacitor app, or deployed outside Cloud Run container, point to the live server
     if (isNativePlatform || (!isLocalDev && !isPreviewRunning)) {
       const liveHost = getLiveHost();
-      const relativePath = urlString.startsWith('http') ? new URL(urlString).pathname : urlString;
+      const urlObj = urlString.startsWith('http') ? new URL(urlString) : null;
+      const relativePath = urlObj ? `${urlObj.pathname}${urlObj.search}` : urlString;
       
       if (typeof input === 'string') {
         input = `${liveHost}${relativePath}`;
