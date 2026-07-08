@@ -135,24 +135,36 @@ export const AuthService = {
     const sanitizedMobile = tenDigits;
 
     try {
+      const loginPayload = { mobile: sanitizedMobile, pin: password, role, verificationMethod };
+      console.log('[DEBUG-AUTH] Initiating login request');
+      console.log('[DEBUG-AUTH] URL: /api/auth/login');
+      console.log('[DEBUG-AUTH] Method: POST');
+      console.log('[DEBUG-AUTH] Payload:', JSON.stringify(loginPayload));
+
       const response = await apiFetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile: sanitizedMobile, pin: password, role, verificationMethod })
+        body: JSON.stringify(loginPayload)
       });
+      
+      console.log('[DEBUG-AUTH] Request completed');
+      console.log('[DEBUG-AUTH] Status:', response.status, response.statusText);
 
       if (!response.ok) {
         let errorMsg = "Authentication failed.";
         try {
           const errData = await response.json();
           errorMsg = errData.error || errorMsg;
+          console.log('[DEBUG-AUTH] Error response body:', JSON.stringify(errData));
         } catch(e) {
           errorMsg = await response.text();
+          console.log('[DEBUG-AUTH] Error response text:', errorMsg);
         }
         throw new Error(errorMsg);
       }
 
       const data = await response.json();
+      console.log('[DEBUG-AUTH] Success response:', JSON.stringify(data));
       
       // For student or if mentor doesn't need secondary verification, sign in immediately.
       // For mentors requiring OTP/PIN, we wait until the second step to sign them in so we don't bypass 2FA UI.
