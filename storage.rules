@@ -1,0 +1,62 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Check if the user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Check if the user is a mentor by querying Firestore
+    function isMentor() {
+      return isSignedIn() && (
+        request.auth.token.get('email', '').lower() == 'missionselectionofficial999@gmail.com' ||
+        request.auth.token.get('phone_number', '') == '+917407463884' ||
+        request.auth.uid == '7407463884' ||
+        (firestore.exists(/databases/(default)/documents/user_roles/$(request.auth.uid)) && 
+         firestore.get(/databases/(default)/documents/user_roles/$(request.auth.uid)).data.get('role', '').lower() in ['mentor', 'primary-mentor', 'primarymentor', 'staff', 'admin', 'examiner'])
+      );
+    }
+
+    // Check if the authenticated user is the owner of the userId
+    function isOwner(userId) {
+      return isSignedIn() && (
+        request.auth.uid == userId ||
+        (firestore.exists(/databases/(default)/documents/user_roles/$(request.auth.uid)) &&
+         firestore.get(/databases/(default)/documents/user_roles/$(request.auth.uid)).data.get('userId', '') == userId) ||
+        (firestore.exists(/databases/(default)/documents/users_private/$(userId)) &&
+         firestore.get(/databases/(default)/documents/users_private/$(userId)).data.get('uid', '') == request.auth.uid)
+      );
+    }
+
+    match /submissions/{userId}/{allPaths=**} {
+      allow read: if isSignedIn() && (isOwner(userId) || isMentor());
+      allow write: if isSignedIn() && isOwner(userId);
+    }
+
+    match /intimations/{userId}/{allPaths=**} {
+      allow read: if isSignedIn() && (isOwner(userId) || isMentor());
+      allow write: if isSignedIn() && isOwner(userId);
+    }
+
+    match /leaves/{userId}/{allPaths=**} {
+      allow read: if isSignedIn() && (isOwner(userId) || isMentor());
+      allow write: if isSignedIn() && isOwner(userId);
+    }
+
+    match /targets/{targetId}/{allPaths=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isMentor();
+    }
+    
+    match /profile_pictures/{userId}/{allPaths=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isOwner(userId);
+    }
+
+    // Default deny for safety
+    match /{allPaths=**} {
+      allow read, write: if isSignedIn() && isMentor();
+    }
+  }
+}
