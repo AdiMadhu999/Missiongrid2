@@ -51,8 +51,8 @@ export default function Login() {
       setError("Please enter a valid 10-digit mobile number");
       return;
     }
-    if (!password || password.length !== 6) {
-      setError("Security PIN must be exactly 6 digits");
+    if (!password || !/^\d+$/.test(password)) {
+      setError("Security PIN must be a number");
       return;
     }
 
@@ -293,14 +293,12 @@ export default function Login() {
                         id="password"
                         name="password"
                         type="password" 
-                        maxLength={6} 
-                        pattern="\d{6}" 
                         inputMode="numeric"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="block w-full rounded-xl border-slate-200 bg-white py-2.5 px-3 text-slate-900 font-medium text-sm border shadow-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
-                        placeholder="Enter 6-digit PIN"
+                        placeholder="Enter Security PIN"
                       />
                   </div>
 

@@ -10,7 +10,7 @@ import { useAuth } from '../providers/AuthProvider';
 import { BatchService } from '../services/batch';
 import { getPublicUsers } from '../services/users';
 import { db } from '../services/firebase';
-import { collection, getDocs, query, where, limit } from 'firebase/firestore';
+import { collection, getDocs, query, where, limit, getCountFromServer } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'motion/react';
 import { safeStorage } from '../lib/storage';
 import { OtpLogs } from '../components/OtpLogs';
@@ -63,8 +63,8 @@ export default function MentorDashboard() {
       collection(db, 'premium_requests'),
       where('status', '==', 'Pending')
     );
-    getDocs(q).then(snap => {
-      setPendingRequestsCount(snap.size);
+    getCountFromServer(q).then(snap => {
+      setPendingRequestsCount(snap.data().count);
     }).catch(err => {
       console.error('Error fetching pending requests count:', err);
     });

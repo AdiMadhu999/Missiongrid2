@@ -74,8 +74,8 @@ export default function UnifiedRegistration() {
       setError("PINs do not match.");
       return;
     }
-    if (password.length !== 6 || !/^\d{6}$/.test(password)) {
-      setError("Security PIN must be exactly 6 digits.");
+    if (!/^\d+$/.test(password)) {
+      setError("Security PIN must be a number.");
       return;
     }
     if (!name.trim() || !mobile.trim() || !selectedBatchId) {
@@ -127,14 +127,14 @@ export default function UnifiedRegistration() {
             <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Full Name" className="w-full p-3 border rounded-xl" required />
             <input type="tel" value={mobile} onChange={e => setMobile(e.target.value)} placeholder="Mobile Number" className="w-full p-3 border rounded-xl" required />
             <div className="relative w-full">
-              <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="6-Digit Security PIN" maxLength={6} inputMode="numeric" className="w-full p-3 border rounded-xl pr-10" required />
+              <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="Security PIN (Number)" inputMode="numeric" className="w-full p-3 border rounded-xl pr-10" required />
               <button type="button" className="absolute right-3 top-3.5 text-gray-500" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             
             <div className="relative w-full">
-              <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm 6-Digit PIN" maxLength={6} inputMode="numeric" className="w-full p-3 border rounded-xl pr-10" required />
+              <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm Security PIN" inputMode="numeric" className="w-full p-3 border rounded-xl pr-10" required />
               <button type="button" className="absolute right-3 top-3.5 text-gray-500" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>

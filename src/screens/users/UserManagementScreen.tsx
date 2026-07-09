@@ -111,9 +111,9 @@ export default function UserManagementScreen() {
   }
 
   const handleResetPin = async (user: User) => {
-    const newPin = prompt("Enter new 6-digit PIN for " + user.name);
-    if (!newPin || newPin.length !== 6) {
-        alert("Please enter a valid 6-digit PIN");
+    const newPin = prompt("Enter new Security PIN (Number) for " + user.name);
+    if (!newPin || !/^\d+$/.test(newPin)) {
+        alert("Please enter a valid numeric PIN");
         return;
     }
     try {

@@ -159,8 +159,8 @@ export default function ProfileSettingsModal({
     if (newPassword !== confirmPassword) {
       return alert('PINs do not match');
     }
-    if (newPassword.length < 4) {
-      return alert('PIN should be at least 4 digits');
+    if (!/^\d+$/.test(newPassword)) {
+      return alert('PIN must be a number');
     }
     setLoading(true);
     try {
@@ -377,7 +377,7 @@ export default function ProfileSettingsModal({
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter 4-6 digit PIN"
+                  placeholder="Enter Security PIN (Number)"
                   className="w-full rounded-xl border-slate-200 focus:border-primary-500 focus:ring-primary-500 transition-colors"
                 />
               </div>

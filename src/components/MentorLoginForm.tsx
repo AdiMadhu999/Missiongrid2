@@ -22,8 +22,8 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
       setError("Please enter a valid 10-digit mobile number");
       return;
     }
-    if (!securityPin || securityPin.length !== 6) {
-      setError("Security PIN must be exactly 6 digits.");
+    if (!securityPin || !/^\d+$/.test(securityPin)) {
+      setError("Security PIN must be a number.");
       return;
     }
     setLoading(true);
@@ -74,7 +74,7 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
 
       <div>
         <label htmlFor="mentor-pin" className="block text-[10px] font-extrabold text-indigo-900 uppercase tracking-wider mb-1">
-          6-Digit Security PIN
+          Security PIN
         </label>
         <div className="relative">
             <input
@@ -83,8 +83,6 @@ export const MentorLoginForm: React.FC<MentorLoginFormProps> = ({ onSuccess, err
               required
               value={securityPin}
               onChange={(e) => setSecurityPin(e.target.value)}
-              maxLength={6}
-              pattern="\d{6}"
               inputMode="numeric"
               className="block w-full rounded-xl border-indigo-200 bg-white py-2.5 px-3 pr-10 text-slate-900 font-medium text-sm border shadow-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 tracking-widest"
               placeholder="••••••"

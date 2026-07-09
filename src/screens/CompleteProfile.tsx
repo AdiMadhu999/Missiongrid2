@@ -70,7 +70,7 @@ export default function CompleteProfile() {
     e.preventDefault();
     if (!name.trim()) return setError('Candidate Name is required.');
     if (!newPin) return setError('Password is required.');
-    if (newPin.length < 6) return setError('Password must be at least 6 characters.');
+    if (!/^\d+$/.test(newPin)) return setError('PIN must be a number.');
     if (newPin !== confirmPin) return setError('Password confirmation mismatch.');
     if (!selectedBatchId) return setError('Please select a batch.');
 
@@ -245,7 +245,7 @@ export default function CompleteProfile() {
                     </div>
 
                     <div>
-                        <label className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2 block px-1">Create Password (min. 6 characters)</label>
+                        <label className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2 block px-1">Create Security PIN (Number)</label>
                         <div className="relative mb-3">
                             <Key className="absolute left-3 top-3.5 text-white/20" size={18}/>
                             <input 

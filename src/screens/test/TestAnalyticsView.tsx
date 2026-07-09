@@ -6,7 +6,7 @@ import {
   ChevronDown, BookOpen, Search, Star, AlertTriangle, HelpCircle, Mail, RotateCw, CheckCircle2,
   TrendingDown, FileText, ChevronRight
 } from 'lucide-react';
-import { onSnapshot, collection, query, where, doc, getDocs } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, doc, getDocs, limit } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import { formatIST } from '../../utils/date';
 
@@ -65,12 +65,14 @@ export default function TestAnalyticsView({ testId, onBack }: Props) {
       
       try {
         // Fetch batches (one-time is fine, usually not many)
-        const bSnap = await getDocs(collection(db, 'batches'));
-        const bMap: Record<string, any> = {};
-        bSnap.docs.forEach(d => {
-          bMap[d.id] = { id: d.id, ...d.data() };
-        });
-        setBatches(bMap);
+        let bMap = { ...batches };
+        if (Object.keys(bMap).length === 0) {
+          const bSnap = await getDocs(collection(db, 'batches'));
+          bSnap.docs.forEach(d => {
+            bMap[d.id] = { id: d.id, ...d.data() };
+          });
+          setBatches(bMap);
+        }
 
         // Fetch ONLY users who have attempts
         const uniqueUserIds = Array.from(new Set(rawAttempts.map(a => a.userId)));
@@ -108,7 +110,7 @@ export default function TestAnalyticsView({ testId, onBack }: Props) {
       console.warn("TestAnalyticsView: Failed to subscribe to test document in real-time:", err);
     });
 
-    const qAttempts = query(collection(db, 'test_attempts'), where('testId', '==', activeTestId));
+    const qAttempts = query(collection(db, 'test_attempts'), where('testId', '==', activeTestId), limit(200));
     const unsubAttempts = onSnapshot(qAttempts, (snap) => {
       const atts = snap.docs.map(d => ({ id: d.id, ...d.data() } as TestAttempt));
       setRawAttempts(atts);

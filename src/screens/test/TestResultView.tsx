@@ -3,7 +3,7 @@ import { useAuth } from '../../providers/AuthProvider';
 import { TestService } from '../../services/test';
 import { updateUserProfile } from '../../services/users';
 import { Test, TestAttempt } from '../../models/mission';
-import { onSnapshot, collection, query, where, doc, getDoc, getDocs } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, doc, getDoc, getDocs, getCountFromServer, limit } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import MathDiagram from '../../components/MathDiagram';
 import MathRenderer from '../../components/MathRenderer';
@@ -44,6 +44,8 @@ export default function TestResultView({ testId, attemptId, onBack, onPracticeIn
   const [uidToUser, setUidToUser] = useState<Record<string, any>>({});
   const [batches, setBatches] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
+  const [serverRank, setServerRank] = useState<number | null>(null);
+  const [serverTotalRanked, setServerTotalRanked] = useState<number | null>(null);
   const [isCreatingPractice, setIsCreatingPractice] = useState(false);
   
   const [activeTab, setActiveTab] = useState<'analysis' | 'solutions' | 'leaderboard'>('analysis');
@@ -117,21 +119,101 @@ export default function TestResultView({ testId, attemptId, onBack, onPracticeIn
       console.warn("TestResultView: Failed to subscribe to test document in real-time:", err);
     });
 
-    const qAttempts = query(collection(db, 'test_attempts'), where('testId', '==', resolvedTestId));
-    const unsubAttempts = onSnapshot(qAttempts, (snap) => {
-      const atts = snap.docs.map(d => ({ id: d.id, ...d.data() } as TestAttempt));
-      setRawAttempts(atts);
-      setLoading(false);
-    }, (err) => {
-      console.error("Attempts subscription error:", err);
-      setLoading(false);
-    });
+    let active = true;
+
+    const loadAttemptsAndStats = async () => {
+      try {
+        const attemptsMap = new Map<string, TestAttempt>();
+
+        // 1. Fetch current user's attempts specifically
+        const qUser = query(
+          collection(db, 'test_attempts'),
+          where('testId', '==', resolvedTestId),
+          where('userId', '==', currentUser.uid)
+        );
+        const userSnap = await getDocs(qUser);
+        userSnap.forEach(d => {
+          attemptsMap.set(d.id, { id: d.id, ...d.data() } as TestAttempt);
+        });
+
+        // Fetch target attempt if specified and not in map
+        if (attemptId && !attemptsMap.has(attemptId)) {
+          const specSnap = await getDoc(doc(db, 'test_attempts', attemptId));
+          if (specSnap.exists()) {
+            attemptsMap.set(specSnap.id, { id: specSnap.id, ...specSnap.data() } as TestAttempt);
+          }
+        }
+
+        // 2. Fetch up to 200 other attempts as a sample for stats/leaderboard
+        const qSample = query(
+          collection(db, 'test_attempts'),
+          where('testId', '==', resolvedTestId),
+          limit(200)
+        );
+        const sampleSnap = await getDocs(qSample);
+        sampleSnap.forEach(d => {
+          attemptsMap.set(d.id, { id: d.id, ...d.data() } as TestAttempt);
+        });
+
+        if (!active) return;
+
+        const allFetchedAttempts = Array.from(attemptsMap.values());
+        setRawAttempts(allFetchedAttempts);
+
+        // Find correct target score to use for rank query
+        let targetScore = 0;
+        let hasTarget = false;
+        if (attemptId && attemptsMap.has(attemptId)) {
+          targetScore = attemptsMap.get(attemptId)?.marks || 0;
+          hasTarget = true;
+        } else {
+          const userAtts = allFetchedAttempts.filter(a => a.userId === currentUser.uid && !a.isPracticeAttempt);
+          if (userAtts.length > 0) {
+            targetScore = userAtts.sort((a, b) => (b.attemptNumber || 1) - (a.attemptNumber || 1))[0].marks || 0;
+            hasTarget = true;
+          }
+        }
+
+        // 3. Count global rank and total participants on the server (low memory, extremely fast)
+        try {
+          const qTotal = query(
+            collection(db, 'test_attempts'),
+            where('testId', '==', resolvedTestId),
+            where('status', 'in', ['submitted', 'evaluated'])
+          );
+          const totalSnap = await getCountFromServer(qTotal);
+          setServerTotalRanked(totalSnap.data().count);
+
+          if (hasTarget) {
+            const qHigher = query(
+              collection(db, 'test_attempts'),
+              where('testId', '==', resolvedTestId),
+              where('status', 'in', ['submitted', 'evaluated']),
+              where('marks', '>', targetScore)
+            );
+            const higherSnap = await getCountFromServer(qHigher);
+            setServerRank(higherSnap.data().count + 1);
+          }
+        } catch (countErr) {
+          console.warn("Server rank count query failed (missing index fallback):", countErr);
+        }
+
+      } catch (err) {
+        console.error("Error fetching attempts sample and stats:", err);
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadAttemptsAndStats();
 
     return () => {
+      active = false;
       unsubTest();
-      unsubAttempts();
     };
-  }, [resolvedTestId, currentUser, authLoading]);
+  }, [resolvedTestId, attemptId, currentUser, authLoading]);
 
   // Handle users and batches separately (triggered by rawAttempts changes)
   useEffect(() => {
@@ -140,12 +222,14 @@ export default function TestResultView({ testId, attemptId, onBack, onPracticeIn
       
       try {
         // Fetch batches (one-time fetch)
-        const bSnap = await getDocs(collection(db, 'batches'));
-        const bMap: Record<string, any> = {};
-        bSnap.docs.forEach(d => {
-          bMap[d.id] = { id: d.id, ...d.data() };
-        });
-        setBatches(bMap);
+        let bMap = { ...batches };
+        if (Object.keys(bMap).length === 0) {
+          const bSnap = await getDocs(collection(db, 'batches'));
+          bSnap.docs.forEach(d => {
+            bMap[d.id] = { id: d.id, ...d.data() };
+          });
+          setBatches(bMap);
+        }
 
         // Fetch ONLY users who have attempts for this test
         const uniqueUserIds = Array.from(new Set(rawAttempts.map(a => a.userId)));
@@ -249,6 +333,13 @@ export default function TestResultView({ testId, attemptId, onBack, onPracticeIn
 
     if (!targetAtt) return null;
 
+    // Apply server-computed rank if available to support lakhs of students
+    if (serverRank !== null && targetAtt && targetAtt.userId === currentUser?.uid) {
+      targetAtt.rank = serverRank;
+      const finalTotalRanked = serverTotalRanked || totalR;
+      targetAtt.percentile = finalTotalRanked > 0 ? ((finalTotalRanked - serverRank) / finalTotalRanked) * 100 : 100;
+    }
+
     // 6. Batch specific metrics
     const batchIdStr = targetAtt.batchId || '';
     const batchAttempts = activeAttempts.filter(a => a.batchId === batchIdStr);
@@ -282,10 +373,10 @@ export default function TestResultView({ testId, attemptId, onBack, onPracticeIn
       batchAverageScore: batchAvgScore,
       batchAverageAccuracy: batchAvgAccuracy,
       rankDiff: computedRankDiff,
-      totalRanked: totalR,
+      totalRanked: serverTotalRanked || totalR,
       topPerformers: activeAttempts.slice(0, 5)
     };
-  }, [rawAttempts, users, uidToUser, batches, attemptId, currentUser]);
+  }, [rawAttempts, users, uidToUser, batches, attemptId, currentUser, serverRank, serverTotalRanked]);
 
   // Destructure for ease of use
   const { 

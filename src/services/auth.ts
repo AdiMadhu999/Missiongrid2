@@ -249,12 +249,24 @@ export const AuthService = {
         }
 
         if (privateSnap.exists()) {
+            const existingPrivateData = privateSnap.data();
+            const isPinValid = verifyPin(password, existingPrivateData?.pin || '');
+            if (isPinValid) {
+                console.log(`[Idempotent Registration] Mobile ${sanitizedMobile} already exists and PIN matches. Returning existing profile.`);
+                const publicSnap = await getDoc(doc(db, 'users', privateSnap.id));
+                return {
+                    ...publicSnap.data(),
+                    ...existingPrivateData,
+                    id: privateSnap.id,
+                    uid: existingPrivateData?.uid || uid
+                };
+            }
             throw new Error("An account already exists with this mobile number.");
         }
 
         const newUser = await createUserProfile({
             mobile: sanitizedMobile,
-            uid: sanitizedMobile,
+            uid: uid,
             role: 'student',
             name: name || 'Student',
             pin: password,
@@ -276,7 +288,11 @@ export const AuthService = {
             uid: uid
         };
     } catch (err: any) {
-        console.error("Direct registration failed:", err);
+        if (err.message !== "An account already exists with this mobile number.") {
+            console.error("Direct registration failed:", err);
+        } else {
+            console.warn("Direct registration attempt for existing mobile number:", err.message);
+        }
         throw err;
     }
   },
