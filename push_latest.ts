@@ -13,7 +13,7 @@ try {
     execSync('git add -A');
     
     console.log("Committing changes...");
-    execSync('git commit -m "perf(optimization): optimize applet load with lazy loading and high-performance user search indexing"');
+    execSync('git commit -m "fix(android): repair corrupted binary headers for all Android launcher and splash PNG resources"');
     
     console.log("Setting remote URL...");
     const remoteUrl = `https://x-access-token:${token}@github.com/${owner}/${repo}.git`;
