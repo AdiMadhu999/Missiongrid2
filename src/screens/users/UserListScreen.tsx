@@ -159,7 +159,7 @@ export default function UserListScreen() {
             {loading ? <div className="flex justify-center p-20"><Loader2 className="animate-spin text-indigo-600 w-10 h-10"/></div> : (
                 <div className="space-y-4">
                     {filteredUsers.map((user, idx) => (
-                        <div key={`${user.id || user.mobile || 'user'}-${idx}`} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                        <div key={`${user.id || user.mobile || 'user'}-${idx}`} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4 content-visibility-auto gpu-accelerated">
                             <div className="flex items-center gap-4">
                                 <input 
                                     type="checkbox" 

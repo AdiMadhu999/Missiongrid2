@@ -15,6 +15,9 @@ export default defineConfig(() => {
     optimizeDeps: {
       include: ['react', 'react-dom', 'react-router-dom', 'motion/react'],
     },
+    esbuild: {
+      drop: ['console', 'debugger'] as ('console' | 'debugger')[],
+    },
     build: {
       target: 'es2020',
       minify: 'esbuild' as const,
@@ -25,6 +28,10 @@ export default defineConfig(() => {
             'vendor-react': ['react', 'react-dom', 'react-router-dom'],
             'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
             'vendor-motion': ['motion/react'],
+            'vendor-charts': ['recharts'],
+            'vendor-math': ['katex', 'react-katex', 'react-markdown'],
+            'vendor-pdf': ['pdf-lib'],
+            'vendor-query': ['@tanstack/react-query'],
           }
         }
       }

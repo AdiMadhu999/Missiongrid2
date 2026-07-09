@@ -136,3 +136,32 @@ button, a {
   z-index: -9999 !important;
 }
 
+/* ⚡ HIGH PERFORMANCE WEB OPTIMIZATIONS ⚡ */
+
+/* Optimize heavy scrolling lists with modern CSS content-visibility */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 150px;
+}
+
+/* Force hardware GPU acceleration on intensive items for butter-smooth animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* Fully responsive touch interaction with zero input lag */
+.touch-active-tactile {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
+}
+
+.touch-active-tactile:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
+
+

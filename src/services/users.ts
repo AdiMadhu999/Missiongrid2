@@ -35,6 +35,7 @@ import { getStudentCode, sanitizeUserForRole } from '../utils/privacy';
 import { StudentUpdatesService } from './studentUpdates';
 import { hashPin } from '../utils/security';
 import { safeStorage } from '../lib/storage';
+import { dedupeRequest } from '../utils/dedupe';
 
 // Cache to store resolved user references to avoid duplicate Firestore lookups
 const resolveUserDocCache = new Map<string, { publicRef: any; privateRef: any; userId: string; legacy: boolean }>();
@@ -352,61 +353,68 @@ export const getUsers = async (): Promise<User[]> => {
     return usersCache.data;
   }
 
-  const q = query(collection(db, 'users'), limit(50));
-  const snap = await getDocs(q);
-
-  const cachedProfile = getCachedCurrentUserProfile();
-  const roleLower = (cachedProfile?.role || '').toLowerCase();
-  const isMentorUser = 
-    roleLower === 'mentor' || 
-    roleLower === 'primary-mentor' || 
-    roleLower === 'primarymentor' || 
-    roleLower === 'staff' || 
-    roleLower === 'admin' ||
-    roleLower === 'examiner';
-
-  const privateDocsMap = new Map<string, any>();
-  let privateDocsQueried = false;
-  if (isMentorUser) {
-    try {
-      const privSnap = await getDocs(query(collection(db, 'users_private'), limit(50)));
-      privSnap.forEach(d => {
-        privateDocsMap.set(d.id, d.data());
-      });
-      privateDocsQueried = true;
-    } catch (e) {
-      console.warn("Could not query all users_private in bulk, falling back:", e);
+  return dedupeRequest('getUsers', async () => {
+    // Re-check cache inside the deduplicated execution
+    if (usersCache && (Date.now() - usersCache.timestamp < CACHE_DURATION_MS)) {
+      return usersCache.data;
     }
-  }
 
-  const promises = snap.docs.map(async (d) => {
-    const data = d.data();
-    let privateData = privateDocsMap.get(d.id) || {};
-    
-    // Fallback if bulk query fails but caller is mentor
-    if (isMentorUser && !privateDocsQueried) {
+    const q = query(collection(db, 'users'), limit(50));
+    const snap = await getDocs(q);
+
+    const cachedProfile = getCachedCurrentUserProfile();
+    const roleLower = (cachedProfile?.role || '').toLowerCase();
+    const isMentorUser = 
+      roleLower === 'mentor' || 
+      roleLower === 'primary-mentor' || 
+      roleLower === 'primarymentor' || 
+      roleLower === 'staff' || 
+      roleLower === 'admin' ||
+      roleLower === 'examiner';
+
+    const privateDocsMap = new Map<string, any>();
+    let privateDocsQueried = false;
+    if (isMentorUser) {
       try {
-        const privSnap = await getDoc(doc(db, 'users_private', d.id));
-        if (privSnap.exists()) {
-          privateData = privSnap.data();
-        }
+        const privSnap = await getDocs(query(collection(db, 'users_private'), limit(50)));
+        privSnap.forEach(d => {
+          privateDocsMap.set(d.id, d.data());
+        });
+        privateDocsQueried = true;
       } catch (e) {
-        // Ignored
+        console.warn("Could not query all users_private in bulk, falling back:", e);
       }
     }
 
-    const finalProfile = { ...data, ...privateData, id: d.id } as User;
-    if (!finalProfile.studentCode) {
-      finalProfile.studentCode = getStudentCode(finalProfile);
-    }
-    return finalProfile;
+    const promises = snap.docs.map(async (d) => {
+      const data = d.data();
+      let privateData = privateDocsMap.get(d.id) || {};
+      
+      // Fallback if bulk query fails but caller is mentor
+      if (isMentorUser && !privateDocsQueried) {
+        try {
+          const privSnap = await getDoc(doc(db, 'users_private', d.id));
+          if (privSnap.exists()) {
+            privateData = privSnap.data();
+          }
+        } catch (e) {
+          // Ignored
+        }
+      }
+
+      const finalProfile = { ...data, ...privateData, id: d.id } as User;
+      if (!finalProfile.studentCode) {
+        finalProfile.studentCode = getStudentCode(finalProfile);
+      }
+      return finalProfile;
+    });
+
+    const list = await Promise.all(promises);
+    const sanitized = await getSanitizedUsersList(list);
+
+    usersCache = { data: sanitized, timestamp: Date.now() };
+    return sanitized;
   });
-
-  const list = await Promise.all(promises);
-  const sanitized = await getSanitizedUsersList(list);
-
-  usersCache = { data: sanitized, timestamp: Date.now() };
-  return sanitized;
 };
 
 export const getPublicUsers = async (): Promise<User[]> => {
@@ -415,20 +423,26 @@ export const getPublicUsers = async (): Promise<User[]> => {
     return publicUsersCache.data;
   }
 
-  const q = query(collection(db, 'users'), limit(50));
-  const snap = await getDocs(q);
-  const list: User[] = [];
-  for (const d of snap.docs) {
-    const data = d.data();
-    const finalProfile = { ...data, id: d.id } as User;
-    if (!finalProfile.studentCode) {
-      finalProfile.studentCode = getStudentCode(finalProfile);
+  return dedupeRequest('getPublicUsers', async () => {
+    if (publicUsersCache && (Date.now() - publicUsersCache.timestamp < CACHE_DURATION_MS)) {
+      return publicUsersCache.data;
     }
-    list.push(finalProfile);
-  }
 
-  publicUsersCache = { data: list, timestamp: Date.now() };
-  return list;
+    const q = query(collection(db, 'users'), limit(50));
+    const snap = await getDocs(q);
+    const list: User[] = [];
+    for (const d of snap.docs) {
+      const data = d.data();
+      const finalProfile = { ...data, id: d.id } as User;
+      if (!finalProfile.studentCode) {
+        finalProfile.studentCode = getStudentCode(finalProfile);
+      }
+      list.push(finalProfile);
+    }
+
+    publicUsersCache = { data: list, timestamp: Date.now() };
+    return list;
+  });
 };
 
 export const getUsersByRole = async (role: string): Promise<User[]> => {
@@ -437,60 +451,66 @@ export const getUsersByRole = async (role: string): Promise<User[]> => {
     return usersByRoleCache[role].data;
   }
 
-  const q = query(collection(db, 'users'), where('role', '==', role), limit(50));
-  const snap = await getDocs(q);
-
-  const cachedProfile = getCachedCurrentUserProfile();
-  const roleLower = (cachedProfile?.role || '').toLowerCase();
-  const isMentorUser = 
-    roleLower === 'mentor' || 
-    roleLower === 'primary-mentor' || 
-    roleLower === 'primarymentor' || 
-    roleLower === 'staff' || 
-    roleLower === 'admin' ||
-    roleLower === 'examiner';
-
-  const privateDocsMap = new Map<string, any>();
-  let bulkPrivateFailed = false;
-  if (isMentorUser) {
-    try {
-      const privSnap = await getDocs(query(collection(db, 'users_private'), limit(50)));
-      privSnap.forEach(d => {
-        privateDocsMap.set(d.id, d.data());
-      });
-    } catch (e) {
-      console.warn("Could not query all users_private in bulk, falling back:", e);
-      bulkPrivateFailed = true;
+  return dedupeRequest(`getUsersByRole:${role}`, async () => {
+    if (usersByRoleCache[role] && (Date.now() - usersByRoleCache[role].timestamp < CACHE_DURATION_MS)) {
+      return usersByRoleCache[role].data;
     }
-  }
 
-  const promises = snap.docs.map(async (d) => {
-    const data = d.data();
-    let privateData = privateDocsMap.get(d.id) || {};
-    
-    // Fallback if bulk query fails but caller is mentor
-    if (isMentorUser && bulkPrivateFailed) {
+    const q = query(collection(db, 'users'), where('role', '==', role), limit(50));
+    const snap = await getDocs(q);
+
+    const cachedProfile = getCachedCurrentUserProfile();
+    const roleLower = (cachedProfile?.role || '').toLowerCase();
+    const isMentorUser = 
+      roleLower === 'mentor' || 
+      roleLower === 'primary-mentor' || 
+      roleLower === 'primarymentor' || 
+      roleLower === 'staff' || 
+      roleLower === 'admin' ||
+      roleLower === 'examiner';
+
+    const privateDocsMap = new Map<string, any>();
+    let bulkPrivateFailed = false;
+    if (isMentorUser) {
       try {
-        const privSnap = await getDoc(doc(db, 'users_private', d.id));
-        if (privSnap.exists()) {
-          privateData = privSnap.data();
-        }
+        const privSnap = await getDocs(query(collection(db, 'users_private'), limit(50)));
+        privSnap.forEach(d => {
+          privateDocsMap.set(d.id, d.data());
+        });
       } catch (e) {
-        // Ignored
+        console.warn("Could not query all users_private in bulk, falling back:", e);
+        bulkPrivateFailed = true;
       }
     }
-    const finalProfile = { ...data, ...privateData, id: d.id } as User;
-    if (!finalProfile.studentCode) {
-      finalProfile.studentCode = getStudentCode(finalProfile);
-    }
-    return finalProfile;
+
+    const promises = snap.docs.map(async (d) => {
+      const data = d.data();
+      let privateData = privateDocsMap.get(d.id) || {};
+      
+      // Fallback if bulk query fails but caller is mentor
+      if (isMentorUser && bulkPrivateFailed) {
+        try {
+          const privSnap = await getDoc(doc(db, 'users_private', d.id));
+          if (privSnap.exists()) {
+            privateData = privSnap.data();
+          }
+        } catch (e) {
+          // Ignored
+        }
+      }
+      const finalProfile = { ...data, ...privateData, id: d.id } as User;
+      if (!finalProfile.studentCode) {
+        finalProfile.studentCode = getStudentCode(finalProfile);
+      }
+      return finalProfile;
+    });
+
+    const list = await Promise.all(promises);
+    const sanitized = await getSanitizedUsersList(list);
+
+    usersByRoleCache[role] = { data: sanitized, timestamp: Date.now() };
+    return sanitized;
   });
-
-  const list = await Promise.all(promises);
-  const sanitized = await getSanitizedUsersList(list);
-
-  usersByRoleCache[role] = { data: sanitized, timestamp: Date.now() };
-  return sanitized;
 };
 
 export const getUsersByBatch = async (batchId: string): Promise<User[]> => {

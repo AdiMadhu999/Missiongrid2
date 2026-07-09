@@ -41,16 +41,35 @@ export function useCachedQuery<T>({
   const queryResult = useQuery<T>({
     queryKey,
     queryFn: async () => {
-      const data = await queryFn();
-      if (persistKey) {
-        safeStorage.setItem(persistKey, JSON.stringify(data));
+      try {
+        const data = await queryFn();
+        if (persistKey) {
+          safeStorage.setItem(persistKey, JSON.stringify(data));
+        }
+        return data;
+      } catch (err) {
+        // If query fails, attempt to fallback to persistent local cache
+        if (persistKey) {
+          const cached = safeStorage.getItem(persistKey);
+          if (cached) {
+            try {
+              console.log(`[useCachedQuery] Query failed. Falling back to cached data for key "${persistKey}"`);
+              return JSON.parse(cached) as T;
+            } catch (e) {
+              // Ignore parse error and let the original error throw
+            }
+          }
+        }
+        throw err;
       }
-      return data;
     },
     staleTime,
     gcTime,
     enabled,
-    initialData: getInitialData(),
+    initialData: () => getInitialData(),
+    refetchOnWindowFocus: false, // Turn off refetch on focus to prevent unneeded mobile network traffic
+    refetchOnReconnect: 'always', // Force re-fetching only when connection is restored
+    retry: navigator.onLine ? 1 : 0, // Minimize network retries when offline
   });
 
   // Handle real-time Firestore subscriptions securely and robustly

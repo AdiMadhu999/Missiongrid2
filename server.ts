@@ -777,6 +777,8 @@ const sanitizeDeep = (obj: any, keyName?: string): any => {
 };
 
 const app = express();
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
 
 app.get("/app-release.apk", (req, res) => {
   const queryStr = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
@@ -790,7 +792,14 @@ app.get("/app-debug.apk", (req, res) => {
   res.redirect(`https://mission-selection-ultimate.web.app/app-debug.apk${queryStr}${sep}t=${Date.now()}`);
 });
 
-app.use(compression());
+app.use(compression({
+  level: 6,
+  threshold: 512,
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) return false;
+    return compression.filter(req, res);
+  }
+}));
 
 // Handle CORS requests from the Capacitor native app origins or any client
 app.use((req, res, next) => {

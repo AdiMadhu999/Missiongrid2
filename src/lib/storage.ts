@@ -1,8 +1,13 @@
 /**
  * Safe localStorage wrapper to prevent QuotaExceededError crashes
+ * backed by an ultra-fast in-memory cache to eliminate synchronous disk I/O lag.
  */
+const memoryCache: Record<string, string> = {};
+
 export const safeStorage = {
   setItem: (key: string, value: string) => {
+    // Write instantly to RAM
+    memoryCache[key] = value;
     try {
       localStorage.setItem(key, value);
     } catch (e: any) {
@@ -15,9 +20,11 @@ export const safeStorage = {
           const keys = Object.keys(localStorage);
           const cacheKeys = keys.filter(k => k.includes('_cache') || k.startsWith('recents_') || k.startsWith('bookmarks_'));
           
-          // Sort by length (approximate size) and remove the largest ones first? 
-          // Or just clear all cache keys to be safe.
-          cacheKeys.forEach(k => localStorage.removeItem(k));
+          // Clear memory cache keys
+          cacheKeys.forEach(k => {
+            delete memoryCache[k];
+            localStorage.removeItem(k);
+          });
           
           // Try setting it again after clearing
           localStorage.setItem(key, value);
@@ -29,8 +36,16 @@ export const safeStorage = {
   },
   
   getItem: (key: string) => {
+    // Serve from RAM instantly if present
+    if (memoryCache[key] !== undefined) {
+      return memoryCache[key];
+    }
     try {
-      return localStorage.getItem(key);
+      const value = localStorage.getItem(key);
+      if (value !== null) {
+        memoryCache[key] = value; // Warm the memory cache
+      }
+      return value;
     } catch (e) {
       console.warn(`LocalStorage getItem failed for key "${key}":`, e);
       return null;
@@ -38,6 +53,7 @@ export const safeStorage = {
   },
   
   removeItem: (key: string) => {
+    delete memoryCache[key];
     try {
       localStorage.removeItem(key);
     } catch (e) {
@@ -45,3 +61,4 @@ export const safeStorage = {
     }
   }
 };
+

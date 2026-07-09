@@ -184,7 +184,7 @@ export default function StudentTestList() {
               <div 
                 key={attempt.id}
                 onClick={() => handleViewResult(attempt.id)}
-                className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors"
+                className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center cursor-pointer hover:border-indigo-300 transition-colors content-visibility-auto gpu-accelerated"
               >
                 <div className="flex gap-4 items-center">
                   <div className={`p-3 rounded-xl ${attempt.status === 'evaluated' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
@@ -296,7 +296,7 @@ export default function StudentTestList() {
               <div 
                 key={attempt.id}
                 onClick={() => handleViewResult(attempt.id)}
-                className="shrink-0 w-44 bg-white p-3 rounded-2xl border border-slate-200/60 shadow-xs cursor-pointer hover:shadow-md transition-all active:scale-95 group"
+                className="shrink-0 w-44 bg-white p-3 rounded-2xl border border-slate-200/60 shadow-xs cursor-pointer hover:shadow-md transition-all active:scale-95 group content-visibility-auto gpu-accelerated"
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex gap-1.5">
@@ -366,7 +366,7 @@ export default function StudentTestList() {
             <div
               key={folder.id}
               onClick={() => setActiveFolderId(folder.id)}
-              className="p-3 rounded-xl border-2 shadow-sm flex items-center gap-3 cursor-pointer hover:shadow-md transition-all duration-150 active:scale-95 bg-white relative overflow-hidden group hover:border-opacity-50"
+              className="p-3 rounded-xl border-2 shadow-sm flex items-center gap-3 cursor-pointer hover:shadow-md transition-all duration-150 active:scale-95 bg-white relative overflow-hidden group hover:border-opacity-50 content-visibility-auto gpu-accelerated"
               style={{
                 background: `linear-gradient(145deg, ${folder.color}05, ${folder.color}15)`,
                 borderColor: `${folder.color}30`,
@@ -523,7 +523,7 @@ export default function StudentTestList() {
             return (
               <div
                 key={test.id}
-                className={`bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/60 flex flex-col hover:shadow-md transition-shadow ${isExpired ? "opacity-75 grayscale-[0.5]" : ""}`}
+                className={`bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/60 flex flex-col hover:shadow-md transition-shadow content-visibility-auto gpu-accelerated ${isExpired ? "opacity-75 grayscale-[0.5]" : ""}`}
               >
                 {isUpcoming && (
                   <div className="mb-2 flex items-center space-x-1.5 text-[9px] font-black text-amber-700 bg-amber-50 px-2 py-1 rounded-lg inline-flex self-start uppercase tracking-wider border border-amber-100">

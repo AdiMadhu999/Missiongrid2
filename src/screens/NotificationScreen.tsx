@@ -36,7 +36,7 @@ export const NotificationScreen = () => {
             </header>
             <div className="px-2 pt-4 space-y-2">
                 {notifications.map(notif => (
-                    <div key={notif.id} className={`p-4 rounded-2xl flex gap-3 ${notif.read ? 'bg-white' : 'bg-indigo-50 border-l-4 border-indigo-500'}`}>
+                    <div key={notif.id} className={`p-4 rounded-2xl flex gap-3 content-visibility-auto gpu-accelerated ${notif.read ? 'bg-white' : 'bg-indigo-50 border-l-4 border-indigo-500'}`}>
                         <div className='bg-slate-100 p-2 rounded-full h-fit'><Bell className='w-4 h-4 text-slate-600'/></div>
                         <div className='flex-1'>
                             <p className="font-bold text-sm text-slate-900">{notif.title}</p>

@@ -460,7 +460,7 @@ export default function MentorTestList() {
             return (
               <div
                 key={folder.id}
-                className="p-2.5 rounded-xl border-2 shadow-sm flex flex-col relative group overflow-hidden transition-all duration-150 hover:shadow-md active:scale-95 hover:border-opacity-50"
+                className="p-2.5 rounded-xl border-2 shadow-sm flex flex-col relative group overflow-hidden transition-all duration-150 hover:shadow-md active:scale-95 hover:border-opacity-50 content-visibility-auto gpu-accelerated"
                 style={{
                   background: `linear-gradient(145deg, ${folder.color}05, ${folder.color}15)`,
                   borderColor: `${folder.color}30`,
@@ -694,7 +694,7 @@ export default function MentorTestList() {
         {filteredTests.map((test, idx) => (
           <div
             key={`${test.id || "m-test"}-${idx}`}
-            className="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/60 hover:shadow-md transition-all relative group flex flex-col"
+            className="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/60 hover:shadow-md transition-all relative group flex flex-col content-visibility-auto gpu-accelerated"
           >
             <div className="flex items-start justify-between gap-3 mb-2">
               <div className="flex-1 min-w-0">

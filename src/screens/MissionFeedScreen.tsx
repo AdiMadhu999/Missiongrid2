@@ -125,17 +125,17 @@ export default function MissionFeedScreen({ feedType = 'all' }: MissionFeedScree
   const showHeroCard = (feedType === 'all' || feedType === 'guide') && tests.length > 0 && (filterType === 'All' || filterType === 'Tests') && !searchQuery;
   const testsToFeed = showHeroCard ? tests.slice(1) : tests;
 
-  let baseItems: any[] = [];
-  if (feedType === 'doubt') {
-    baseItems = [...doubts];
-  } else if (feedType === 'guide') {
-    baseItems = [...posts, ...testsToFeed];
-  } else {
-    baseItems = [...posts, ...doubts, ...testsToFeed];
-  }
+  const processedItems = React.useMemo(() => {
+    let baseItems: any[] = [];
+    if (feedType === 'doubt') {
+      baseItems = [...doubts];
+    } else if (feedType === 'guide') {
+      baseItems = [...posts, ...testsToFeed];
+    } else {
+      baseItems = [...posts, ...doubts, ...testsToFeed];
+    }
 
-  const filteredItems = baseItems
-    .filter(item => {
+    const filtered = baseItems.filter(item => {
         const title = (item as any).title || (item as any).testName || '';
         const content = (item as any).content || '';
         const author = (item as any).authorName || '';
@@ -155,31 +155,31 @@ export default function MissionFeedScreen({ feedType = 'all' }: MissionFeedScree
         return matchesSearch && matchesFilter;
     });
 
-  const sortedItems = filteredItems
-        .sort((a, b) => {
-            const getMillis = (dateVal: any): number => {
-                if (!dateVal) return 0;
-                if (typeof dateVal.toMillis === 'function') return dateVal.toMillis();
-                if (typeof dateVal.toDate === 'function') return dateVal.toDate().getTime();
-                const d = new Date(dateVal);
-                return isNaN(d.getTime()) ? 0 : d.getTime();
-            };
-            const dateA = getMillis(a.createdAt);
-            const dateB = getMillis(b.createdAt);
-            return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
-        });
+    const sorted = [...filtered].sort((a, b) => {
+        const getMillis = (dateVal: any): number => {
+            if (!dateVal) return 0;
+            if (typeof dateVal.toMillis === 'function') return dateVal.toMillis();
+            if (typeof dateVal.toDate === 'function') return dateVal.toDate().getTime();
+            const d = new Date(dateVal);
+            return isNaN(d.getTime()) ? 0 : d.getTime();
+        };
+        const dateA = getMillis(a.createdAt);
+        const dateB = getMillis(b.createdAt);
+        return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
+    });
 
-  let privateDoubtCount = 0;
-  const processedItems = sortedItems.map(item => {
-      if (item.type === 'Doubt' && item.privacy === 'private') {
-           const isAuthorized = item.authorId === userProfile?.id || item.mentorId === userProfile?.id || userProfile?.role === 'mentor';
-           if (!isAuthorized) {
-               privateDoubtCount++;
-               return { ...item, type: 'PrivateDoubtPlaceholder', placeholderNumber: privateDoubtCount };
-           }
-      }
-      return item;
-  });
+    let privateDoubtCount = 0;
+    return sorted.map(item => {
+        if (item.type === 'Doubt' && item.privacy === 'private') {
+             const isAuthorized = item.authorId === userProfile?.id || item.mentorId === userProfile?.id || userProfile?.role === 'mentor';
+             if (!isAuthorized) {
+                 privateDoubtCount++;
+                 return { ...item, type: 'PrivateDoubtPlaceholder', placeholderNumber: privateDoubtCount };
+             }
+        }
+        return item;
+    });
+  }, [posts, doubts, testsToFeed, searchQuery, filterType, userProfile?.id, userProfile?.role, sortBy, feedType]);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -311,15 +311,35 @@ export default function MissionFeedScreen({ feedType = 'all' }: MissionFeedScree
                 <EmptyState message="No matching activities found." />
             ) : (
                 processedItems.map(item => {
+                    let card = null;
                     if (item.type === 'MentorPost') {
                         const post = item as MentorPost;
-                        if (post.postType === 'article') return <ArticleCard key={post.id} item={post} />;
-                        if (post.postType === 'voiceNote') return <VoiceNoteCard key={post.id} item={post} />;
-                        return <MentorPostCard key={post.id} item={post} />;
+                        if (post.postType === 'article') {
+                            card = <ArticleCard item={post} />;
+                        } else if (post.postType === 'voiceNote') {
+                            card = <VoiceNoteCard item={post} />;
+                        } else {
+                            card = <MentorPostCard item={post} />;
+                        }
+                    } else if (item.type === 'Doubt') {
+                        card = <DoubtCard item={item as Doubt} />;
+                    } else if (item.type === 'PrivateDoubtPlaceholder') {
+                        card = (
+                            <div className="p-4 mb-3 bg-white border border-slate-100 rounded-2xl shadow-sm text-center text-slate-500 text-sm font-bold">
+                                Personal Guide No {item.placeholderNumber}
+                            </div>
+                        );
+                    } else if (item.type === 'DailyTest') {
+                        card = <DailyTestCard item={item as DailyTest} />;
                     }
-                    if (item.type === 'Doubt') return <DoubtCard key={item.id} item={item as Doubt} />;
-                    if (item.type === 'PrivateDoubtPlaceholder') return <div key={item.id} className="p-4 mb-3 bg-white border border-slate-100 rounded-2xl shadow-sm text-center text-slate-500 text-sm font-bold">Personal Guide No {item.placeholderNumber}</div>;
-                    if (item.type === 'DailyTest') return <DailyTestCard key={item.id} item={item as DailyTest} />;
+
+                    if (card) {
+                        return (
+                            <div key={item.id} className="content-visibility-auto gpu-accelerated">
+                                {card}
+                            </div>
+                        );
+                    }
                     return null;
                 })
             )}

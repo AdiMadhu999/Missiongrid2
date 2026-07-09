@@ -170,24 +170,13 @@ createRoot(document.getElementById('root')!).render(
 );
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(registrations => {
-    for (let registration of registrations) {
-      registration.unregister().then(() => {
-        console.log('[SW] Unregistered active service worker.');
-      }).catch(err => {
-        console.warn('[SW] Failed to unregister:', err);
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((reg) => {
+        console.log('[SW] Service Worker registered successfully with scope:', reg.scope);
+      })
+      .catch((err) => {
+        console.error('[SW] Service Worker registration failed:', err);
       });
-    }
-  }).catch(err => {
-    console.warn('[SW] Failed to get registrations:', err);
-  });
-}
-
-// Clear caches to be absolutely sure we don't load stale compiled modules
-if ('caches' in window) {
-  caches.keys().then(names => {
-    for (let name of names) {
-      caches.delete(name).catch(() => {});
-    }
   });
 }

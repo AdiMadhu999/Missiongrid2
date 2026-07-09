@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useSearchParams } from 'react-router-dom';
-import { Home, Target, BookOpen, Award, Shield, ClipboardCheck, ClipboardList, Rss, User, FileText, HelpCircle } from 'lucide-react';
+import { Home, Target, BookOpen, Award, Shield, ClipboardCheck, ClipboardList, Rss, User, FileText, HelpCircle, WifiOff } from 'lucide-react';
 import { useAuth } from '../providers/AuthProvider';
 
 export default function MainLayout() {
   const { userProfile } = useAuth();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  
   const role = (userProfile?.role || '').toLowerCase();
   const isMentor = role === 'mentor' || role === 'primary-mentor' || role === 'staff' || role === 'admin' || role === 'examiner';
 
@@ -22,8 +24,27 @@ export default function MainLayout() {
                   location.pathname.includes('attempt') ||
                   isTestEditMode;
 
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-transparent">
+      {isOffline && (
+        <div className="bg-amber-500 text-white text-xs font-bold py-2 px-4 flex items-center justify-center gap-2 sticky top-0 z-[999] shadow-sm animate-in slide-in-from-top duration-300">
+          <WifiOff size={14} className="animate-pulse" />
+          <span>You are offline. Operating seamlessly in offline-first mode.</span>
+        </div>
+      )}
       <div className={`flex-grow relative ${hideNav ? 'pb-0' : 'pb-28'}`}>
         <Outlet />
       </div>

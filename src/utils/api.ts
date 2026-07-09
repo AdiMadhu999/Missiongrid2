@@ -1,6 +1,7 @@
 import { Capacitor } from '@capacitor/core';
 import { debugLogger } from './debugLogger';
 import { auth } from '../services/firebase';
+import { dedupeRequest } from './dedupe';
 
 export const DEFAULT_LIVE_HOST = 'https://mission-selection-43729399220.asia-south1.run.app';
 
@@ -89,7 +90,10 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
       body: init?.body
   });
 
-  try {
+  const method = init?.method || 'GET';
+  const isGet = method.toUpperCase() === 'GET';
+
+  const executeFetch = async () => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
     let response;
@@ -108,6 +112,16 @@ export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Pr
     });
     
     return response;
+  };
+
+  try {
+    if (isGet) {
+      const dedupeKey = `apiFetch:${urlString}:${JSON.stringify(init?.headers || {})}`;
+      const res = await dedupeRequest(dedupeKey, executeFetch);
+      return res.clone();
+    } else {
+      return await executeFetch();
+    }
   } catch (err) {
     debugLogger.add('ERROR', `Failed requesting ${String(input)}`, { error: err instanceof Error ? err.message : String(err) });
     console.error(`[API Fetch Error] Failed requesting ${String(input)}:`, err);

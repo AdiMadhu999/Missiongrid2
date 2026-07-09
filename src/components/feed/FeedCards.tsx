@@ -111,7 +111,7 @@ const CardActions = ({ item, type }: { item: any, type: 'mentorPost' | 'doubt' |
     );
 };
 
-export const DoubtCard = ({ item }: { item: any }) => {
+export const DoubtCard = React.memo(({ item }: { item: any }) => {
     const { userProfile } = useAuth();
     const isMentor = userProfile?.role === 'mentor';
     const [expanded, setExpanded] = useState(false);
@@ -185,18 +185,18 @@ export const DoubtCard = ({ item }: { item: any }) => {
             )}
         </div>
     );
-};
+});
 
-export const MissionReportCard = ({ item }: { item: any }) => (
+export const MissionReportCard = React.memo(({ item }: { item: any }) => (
         <div className="p-2 bg-white rounded-xl shadow-sm border border-slate-100">
             <CardHeader item={item} collectionName="missionReports" />
             <p className="text-sm text-slate-800 mb-2">Submitted a mission report.</p>
             <button className="w-full text-center bg-green-50 text-green-700 py-2 rounded-xl text-xs font-bold">View Mission Report</button>
             <CardActions item={item} type="article" />
         </div>
-);
+));
 
-export const DailyTestCard = ({ item }: { item: any }) => {
+export const DailyTestCard = React.memo(({ item }: { item: any }) => {
     const isExpired = item.expiryDate && new Date(item.expiryDate.toDate()) < new Date();
     const [expanded, setExpanded] = useState(false);
     const navigate = useNavigate();
@@ -231,9 +231,9 @@ export const DailyTestCard = ({ item }: { item: any }) => {
             <CardActions item={item} type="dailyTest" />
         </div>
     );
-};
+});
 
-export const MentorPostCard = ({ item }: { item: any }) => {
+export const MentorPostCard = React.memo(({ item }: { item: any }) => {
     const { userProfile } = useAuth();
     const isMentor = userProfile?.role === 'mentor';
     const [expanded, setExpanded] = useState(false);
@@ -292,7 +292,7 @@ export const MentorPostCard = ({ item }: { item: any }) => {
                        return (
                            <div className="w-full h-full flex items-center justify-center">
                                <a href={item.youtubeLink} target="_blank" onClick={(e) => e.stopPropagation()} className="flex items-center gap-2 text-red-600 font-bold hover:underline">
-                                  <Play className="w-6 h-6 fill-red-600" /> Watch YouTube Video
+                                   <Play className="w-6 h-6 fill-red-600" /> Watch YouTube Video
                                </a>
                            </div>
                        );
@@ -318,9 +318,9 @@ export const MentorPostCard = ({ item }: { item: any }) => {
             <CardActions item={item} type="mentorPost" />
         </div>
     );
-};
+});
 
-export const ArticleCard = ({ item }: { item: any }) => {
+export const ArticleCard = React.memo(({ item }: { item: any }) => {
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -344,9 +344,9 @@ export const ArticleCard = ({ item }: { item: any }) => {
             <CardActions item={item} type="article" />
         </div>
     );
-};
+});
 
-export const VoiceNoteCard = ({ item }: { item: any }) => {
+export const VoiceNoteCard = React.memo(({ item }: { item: any }) => {
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -391,4 +391,4 @@ export const VoiceNoteCard = ({ item }: { item: any }) => {
             <CardActions item={item} type="voiceNote" />
         </div>
     );
-};
+});
