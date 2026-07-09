@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { initializeFirestore, getFirestore, persistentLocalCache, persistentSingleTabManager, setLogLevel } from 'firebase/firestore';
+import { initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager, setLogLevel } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { Capacitor } from '@capacitor/core';
 import firebaseConfig from '../../firebase-applet-config.json';
@@ -15,7 +15,7 @@ let dbInstance;
 try {
   dbInstance = initializeFirestore(app, {
     localCache: persistentLocalCache({
-      tabManager: persistentSingleTabManager({})
+      tabManager: persistentMultipleTabManager()
     }),
     experimentalForceLongPolling: Capacitor.isNativePlatform() ? true : undefined
   }, '(default)');
