@@ -1,3 +1,5 @@
+const VERSION = '1.0.56';
+
 self.addEventListener('install', (e) => {
   self.skipWaiting();
 });

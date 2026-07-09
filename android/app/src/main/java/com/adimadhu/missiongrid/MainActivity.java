@@ -6,10 +6,10 @@ import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
 import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +40,7 @@ public class MainActivity extends BridgeActivity {
                 WebView webView = this.bridge.getWebView();
                 if (webView != null) {
                     webView.clearCache(true);
+                    webView.evaluateJavascript("if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(r=>{for(var i=0;i<r.length;i++)r[i].unregister();});}if('caches' in window){caches.keys().then(n=>{for(var i=0;i<n.length;i++)caches.delete(n[i]);});}", null);
                 }
                 prefs.edit().putInt("versionCode", currentVersionCode).apply();
             }
