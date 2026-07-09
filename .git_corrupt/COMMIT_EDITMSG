@@ -1,0 +1,1 @@
+fix(android): completely bypass stale WebView and Service Worker caches by fixing version auto-reset and forcing aggressive cache purging on update

@@ -1,0 +1,16 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[user]
+	name = Adi Madhu
+	email = missionselectionofficial999@gmail.com
+[credential]
+	helper = store --file=/app/applet/.git-credentials
+[remote "origin"]
+	url = https://github.com/AdiMadhu999/Missiongrid2.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
