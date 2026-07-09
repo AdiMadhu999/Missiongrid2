@@ -254,7 +254,7 @@ export const AuthService = {
 
         const newUser = await createUserProfile({
             mobile: sanitizedMobile,
-            uid: uid,
+            uid: sanitizedMobile,
             role: 'student',
             name: name || 'Student',
             pin: password,

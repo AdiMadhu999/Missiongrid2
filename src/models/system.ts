@@ -33,4 +33,5 @@ export interface SystemSettings {
   currentCycleStartDate?: string;
   currentCycleNumber?: number;
   appVersion?: string;
+  premiumGatewayEnabled?: boolean;
 }

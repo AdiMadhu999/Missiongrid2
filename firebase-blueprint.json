@@ -209,6 +209,34 @@
         "details": { "type": "string" }
       },
       "required": ["studentId", "type", "timestamp"]
+    },
+    "PremiumRequest": {
+      "title": "Premium Request",
+      "description": "Student request for premium extension",
+      "type": "object",
+      "properties": {
+        "mobile": { "type": "string" },
+        "studentName": { "type": "string" },
+        "studentId": { "type": "string" },
+        "transactionId": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "currentExpiry": { "type": "string" },
+        "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected"] }
+      },
+      "required": ["mobile", "studentName", "transactionId", "status"]
+    },
+    "PaymentOption": {
+      "title": "Payment Option",
+      "description": "Configurable payment packages and UPI details created by Mentor",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "price": { "type": "string" },
+        "upiId": { "type": "string" },
+        "instructions": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["title", "price", "upiId", "instructions"]
     }
   },
   "firestore": {
@@ -267,6 +295,14 @@
     "/security_history/{logId}": {
       "schema": "SecurityHistory",
       "description": "Student security audit logs"
+    },
+    "/premium_requests/{requestId}": {
+      "schema": "PremiumRequest",
+      "description": "Student premium extension requests"
+    },
+    "/payment_options/{optionId}": {
+      "schema": "PaymentOption",
+      "description": "Configurable premium payment options created by mentors"
     }
   }
 }

@@ -698,7 +698,7 @@ const requireMentor = async (req: express.Request, res: express.Response, next: 
 
     const isMentorByToken = (email === "missionselectionofficial999@gmail.com") ||
                             (phone === "+917407463884") ||
-                            (uid === "7407463884") ||
+                            (uid === "QdG9A40mhqT7tCLfQPjatoI6mlJ2") ||
                             (user.mentorAccess === true) ||
                             (["mentor", "primary-mentor", "primarymentor", "staff", "admin", "examiner"].includes((user.role || "").toLowerCase()));
 
@@ -2221,7 +2221,7 @@ app.post("/api/auth/login", async (req, res) => {
     // One device, one mobile policy
     // Exempt magic-login (mentor student check)
     const isMagicLogin = req.path === '/api/auth/magic-login';
-    if (!isMagicLogin && deviceId && deviceId !== 'unknown') {
+    if (!isMagicLogin && deviceId && deviceId !== 'unknown' && role !== 'mentor') {
         const existingDeviceId = privateData.deviceId;
         if (existingDeviceId && existingDeviceId !== deviceId) {
             return res.status(401).json({ error: "Device mismatch! This account is registered to another device." });
@@ -2346,15 +2346,18 @@ app.post("/api/auth/magic-login", requireMentor, async (req, res) => {
     }
     
     if (querySnap.empty) {
+      console.log(`[DEBUG] Magic login failed: No user found for mobile: ${sanitizedMobile}`);
       return res.status(404).json({ error: `No user found with mobile number ${sanitizedMobile}` });
     }
     
     const privateDoc = querySnap.docs[0];
     const userId = privateDoc.id;
     const privateData = privateDoc.data();
-    
+    console.log(`[DEBUG] Magic login: User found, userId: ${userId}`);
+
     const userDoc = await db.collection("users").doc(userId).get();
     if (!userDoc.exists) {
+      console.log(`[DEBUG] Magic login failed: Public profile not found for userId: ${userId}`);
       return res.status(404).json({ error: "User public profile not found" });
     }
     const publicData = userDoc.data();

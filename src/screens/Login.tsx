@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
-import appLogo from "../assets/images/app_logo_base_1783466372014.jpg";
+import appLogo from "../assets/images/app_logo_final_1783550479368.jpg";
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthService } from '../services/auth';
 import { useAuth } from '../providers/AuthProvider';
@@ -251,6 +251,9 @@ export default function Login() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
               >
+                <div className="text-center mb-6">
+                    <img src={appLogo} alt="Logo" className="w-20 h-20 mx-auto rounded-full shadow-lg" />
+                </div>
                 <form className="space-y-4" onSubmit={handleStudentLogin}>
                   {error && (
                     <div className="bg-rose-50/90 text-rose-600 text-[10px] font-bold p-3 rounded-xl border border-rose-100 shadow-sm flex items-start gap-2">

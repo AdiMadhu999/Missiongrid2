@@ -32,7 +32,8 @@ export const getSystemSettings = async (): Promise<SystemSettings> => {
     elitePointRequirement: 1000,
     institutionalHolidays: [],
     maintenanceMode: false,
-    announcements: []
+    announcements: [],
+    premiumGatewayEnabled: true
   };
   
   await setDoc(docRef, defaults);

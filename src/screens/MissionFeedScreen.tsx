@@ -42,7 +42,10 @@ export default function MissionFeedScreen({ feedType = 'all' }: MissionFeedScree
       return onSnapshot(qPosts, (snap) => {
         const allPosts = snap.docs.map(d => ({ id: d.id, ...d.data() } as MentorPost));
         const filteredPosts = allPosts.filter(post => 
-            post.visibility === 'global' || post.batchId === userProfile?.batchId
+            userProfile?.role === 'mentor' ||
+            post.visibility === 'global' || 
+            post.batchId === userProfile?.batchId ||
+            (post.batchIds && Array.isArray(post.batchIds) && post.batchIds.includes(userProfile?.batchId))
         );
         const sortedPosts = filteredPosts.sort((a, b) => (b.pinnedStatus ? 1 : 0) - (a.pinnedStatus ? 1 : 0));
         callback(sortedPosts);

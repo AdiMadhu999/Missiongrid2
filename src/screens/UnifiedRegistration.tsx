@@ -11,6 +11,7 @@ import { uploadProfileImage } from '../services/storage';
 import { BatchService } from '../services/batch';
 import { Batch } from '../models/mission';
 import toast from 'react-hot-toast';
+import appLogo from "../assets/images/app_logo_final_1783550479368.jpg";
 
 export default function UnifiedRegistration() {
   const navigate = useNavigate();
@@ -57,47 +58,23 @@ export default function UnifiedRegistration() {
   
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showOtpInput, setShowOtpInput] = useState(false);
-  const [recaptchaVerifier, setRecaptchaVerifier] = useState<RecaptchaVerifier | null>(null);
+  const [countdown, setCountdown] = useState(0);
 
   useEffect(() => {
-    const fetchBatches = async () => {
-      try {
-        const list = await BatchService.getBatches();
-        setBatches(list);
-      } catch (e) {
-        console.error("Failed to fetch batches:", e);
+      if (countdown > 0) {
+          const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+          return () => clearTimeout(timer);
       }
-    };
-    fetchBatches();
-  }, []);
-
-  useEffect(() => {
-    try {
-      const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible',
-      });
-      setRecaptchaVerifier(verifier);
-      return () => {
-        try {
-          verifier.clear();
-        } catch (e) {
-          // Ignore
-        }
-      };
-    } catch (e: any) {
-      console.warn("Failed to initialize RecaptchaVerifier:", e);
-    }
-  }, []);
-
+  }, [countdown]);
+  
   const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || countdown > 0) return;
     if (password !== confirmPassword) {
       setError("PINs do not match.");
       return;
     }
     if (password.length !== 6 || !/^\d{6}$/.test(password)) {
-      console.log(`[DEBUG] PIN validation failed. PIN: "${password}", Length: ${password.length}, Test: ${/^\d{6}$/.test(password)}`);
       setError("Security PIN must be exactly 6 digits.");
       return;
     }
@@ -110,12 +87,19 @@ export default function UnifiedRegistration() {
       return;
     }
     setLoading(true);
+    setCountdown(5); // 5 second countdown/delay
     setError('');
     try {
       let finalPhotoUrl = previewUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`;
       const registeredUser = await AuthService.registerWithMobileAndPassword(mobile, password, name, selectedBatchId, finalPhotoUrl);
       const loginResponse = await AuthService.loginWithMobileAndPassword(mobile, password, 'student', 'pin');
+      
+      // Update AuthProvider profile and wait briefly
       setUserProfile(loginResponse);
+      
+      // Allow a moment for AuthProvider to potentially reconcile the profile
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       navigate('/app/doubt', { replace: true });
     } catch (err: any) {
       if (err.message === "An account already exists with this mobile number.") {
@@ -125,12 +109,16 @@ export default function UnifiedRegistration() {
       }
     } finally {
       setLoading(false);
+      setCountdown(0);
     }
   };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-tr from-sky-400 via-indigo-200 to-amber-100 p-4">
       <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-2xl">
+        <div className="text-center mb-6">
+           <img src={appLogo} alt="Logo" className="w-20 h-20 mx-auto rounded-full shadow-lg" />
+        </div>
         <h2 className="text-2xl font-black text-indigo-950 mb-6 text-center">Registration</h2>
         <div id="recaptcha-container"></div>
         
@@ -204,7 +192,7 @@ export default function UnifiedRegistration() {
               <span>আমি উপরোক্ত শর্তাবলী পড়েছি, বুঝেছি এবং মেনে নিতে সম্মত।</span>
             </label>
 
-            <button onClick={handleFinalSubmit} disabled={!acceptedTerms || loading} className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold disabled:opacity-50">{loading ? "Registering..." : "Finish Registration"}</button>
+            <button onClick={handleFinalSubmit} disabled={!acceptedTerms || loading || countdown > 0} className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold disabled:opacity-50">{loading ? "Registering..." : countdown > 0 ? `Wait ${countdown}s` : "Finish Registration"}</button>
           </div>
         )}
         

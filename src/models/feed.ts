@@ -7,6 +7,7 @@ export interface FeedItem {
   authorName: string;
   createdAt: any;
   batchId?: string;
+  batchIds?: string[];
   visibility: 'global' | 'batch';
   content?: string;
   attachments?: { url: string; type: 'image' | 'pdf' | 'video' | 'link'; name: string }[];

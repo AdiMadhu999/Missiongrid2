@@ -539,7 +539,7 @@ const StudentManagementModal = ({
 
                   <button 
                     onClick={async () => {
-                      if (window.confirm(`Are you absolutely sure you want to remove ${name} from the application? This action is irreversible.`)) {
+                      if (window.confirm(`Are you absolutely sure you want to remove ${name} from this list?`)) {
                         setLoading(true);
                         try {
                           await deleteUserProfile(studentId);
@@ -547,7 +547,7 @@ const StudentManagementModal = ({
                           onClose();
                         } catch (err) {
                           console.error(err);
-                          alert('Failed to remove student from application.');
+                          alert('Failed to remove student.');
                         } finally {
                           setLoading(false);
                         }
@@ -556,7 +556,7 @@ const StudentManagementModal = ({
                     disabled={loading} 
                     className="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 font-black py-3 rounded-2xl transition-all text-[9px] uppercase tracking-widest border border-rose-100"
                   >
-                    Remove Student Permanently
+                    Remove Student
                   </button>
                 </div>
               </motion.div>

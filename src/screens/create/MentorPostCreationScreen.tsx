@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import { db } from '../../services/firebase';
@@ -6,6 +6,7 @@ import { collection, addDoc, serverTimestamp, getDocs, query, where, limit } fro
 import { useAuth } from '../../providers/AuthProvider';
 import { MentorPostType } from '../../models/feed';
 import { sendNotification } from '../../services/notifications';
+import { BatchService } from '../../services/batch';
 
 export default function MentorPostCreationScreen() {
     const { activityType } = useParams<{ activityType: string }>();
@@ -14,14 +15,35 @@ export default function MentorPostCreationScreen() {
     
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [batchVisibility, setBatchVisibility] = useState('global');
+    const [batches, setBatches] = useState<any[]>([]);
+    const [selectedBatchIds, setSelectedBatchIds] = useState<string[]>([]);
     const [link, setLink] = useState('');
     const [saving, setSaving] = useState(false);
 
+    useEffect(() => {
+        const fetchBatches = async () => {
+            try {
+                const data = await BatchService.getBatches();
+                setBatches(data);
+                if (data.length > 0) {
+                    setSelectedBatchIds(data.map(b => b.id).filter(Boolean) as string[]);
+                }
+            } catch (error) {
+                console.error("Error fetching batches:", error);
+            }
+        };
+        fetchBatches();
+    }, []);
+
     const handlePublish = async (status: 'published' | 'draft') => {
         if (!title || !description) return;
+        if (selectedBatchIds.length === 0) {
+            alert('Please select at least one batch.');
+            return;
+        }
         setSaving(true);
         try {
+            const isAllSelected = selectedBatchIds.length === batches.length;
             const docRef = await addDoc(collection(db, 'mentorPosts'), {
                 title,
                 content: description,
@@ -29,8 +51,9 @@ export default function MentorPostCreationScreen() {
                 type: 'MentorPost',
                 authorId: userProfile?.id,
                 authorName: userProfile?.name,
-                visibility: batchVisibility === 'global' ? 'global' : 'batch',
-                batchId: batchVisibility !== 'global' ? batchVisibility : null,
+                visibility: isAllSelected ? 'global' : 'batch',
+                batchId: selectedBatchIds[0] || null,
+                batchIds: selectedBatchIds,
                 createdAt: serverTimestamp(),
                 publishedStatus: status,
                 pinnedStatus: false,
@@ -38,10 +61,14 @@ export default function MentorPostCreationScreen() {
                 externalLink: activityType === 'link' ? link : null
             });
             if (status === 'published') {
-                const q = query(collection(db, 'users'), where('role', '==', 'student'), limit(50));
+                const q = query(collection(db, 'users'), where('role', '==', 'student'), limit(200));
                 const usersSnap = await getDocs(q);
                 usersSnap.forEach(user => {
-                    sendNotification(user.id, userProfile!.uid, 'MentorPost', docRef.id, 'New Mentor Post', title);
+                    const userData = user.data();
+                    const studentBatchId = userData.batchId || '';
+                    if (isAllSelected || selectedBatchIds.includes(studentBatchId)) {
+                        sendNotification(user.id, userProfile!.uid, 'MentorPost', docRef.id, 'New Mentor Post', title);
+                    }
                 });
             }
             navigate('/app/guide');
@@ -102,14 +129,72 @@ export default function MentorPostCreationScreen() {
                         })()}
                     </div>
                 )}
-                <select 
-                    value={batchVisibility} 
-                    onChange={(e) => setBatchVisibility(e.target.value)}
-                    className="w-full p-4 rounded-xl border border-slate-200 font-bold"
-                >
-                    <option value="global">All Batches</option>
-                    <option value="batch1">Batch 1</option>
-                </select>
+                <div className="bg-white p-5 rounded-2xl border border-slate-200/85 shadow-sm space-y-3">
+                    <div className="flex justify-between items-center">
+                        <label className="block text-xs font-black text-slate-700 uppercase tracking-wider">
+                            👥 Target Batches (Visibility)
+                        </label>
+                        <div className="flex gap-2">
+                            <button
+                                type="button"
+                                onClick={() => setSelectedBatchIds(batches.map(b => b.id).filter(Boolean) as string[])}
+                                className="text-[10px] font-black text-indigo-600 uppercase tracking-wider hover:underline"
+                            >
+                                Select All
+                            </button>
+                            <span className="text-slate-300 text-xs">|</span>
+                            <button
+                                type="button"
+                                onClick={() => setSelectedBatchIds([])}
+                                className="text-[10px] font-black text-rose-500 uppercase tracking-wider hover:underline"
+                            >
+                                Clear All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {batches.length === 0 ? (
+                        <p className="text-xs text-slate-500 font-bold italic">No active batches found.</p>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                            {batches.map((batch) => {
+                                const isChecked = selectedBatchIds.includes(batch.id || '');
+                                return (
+                                    <label 
+                                        key={batch.id} 
+                                        className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all select-none ${
+                                            isChecked 
+                                                ? 'bg-indigo-50/55 border-indigo-200 text-indigo-900 font-extrabold' 
+                                                : 'bg-slate-50 border-slate-200/60 hover:bg-slate-100/50 text-slate-600'
+                                        }`}
+                                    >
+                                        <input 
+                                            type="checkbox"
+                                            checked={isChecked}
+                                            onChange={() => {
+                                                if (isChecked) {
+                                                    setSelectedBatchIds(prev => prev.filter(id => id !== batch.id));
+                                                } else {
+                                                    setSelectedBatchIds(prev => [...prev, batch.id || '']);
+                                                }
+                                            }}
+                                            className="w-4.5 h-4.5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
+                                        />
+                                        <div className="flex flex-col text-left">
+                                            <span className="text-xs font-bold leading-tight">{batch.batchName || batch.name}</span>
+                                            <span className="text-[9px] text-slate-450 font-bold tracking-wide uppercase mt-0.5">{batch.batchCode || 'No Code'}</span>
+                                        </div>
+                                    </label>
+                                );
+                            })}
+                        </div>
+                    )}
+                    {selectedBatchIds.length === 0 && (
+                        <p className="text-[10px] text-rose-500 font-extrabold tracking-wide mt-1 animate-pulse">
+                            ⚠️ Please select at least one batch for this post.
+                        </p>
+                    )}
+                </div>
             </div>
             
             <div className="flex gap-4 mt-8">

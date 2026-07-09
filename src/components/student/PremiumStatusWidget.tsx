@@ -2,6 +2,7 @@ import React from 'react';
 import { Calendar, Crown, Sparkles, Smartphone, Shield, User, Globe, Laptop, ArrowUpCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useAppConfig } from '../../providers/AppProvider';
+import { useSystemSettings } from '../../hooks/useSystemSettings';
 
 interface PremiumStatusWidgetProps {
   userProfile: any;
@@ -11,6 +12,7 @@ export function PremiumStatusWidget({ userProfile }: PremiumStatusWidgetProps) {
   if (!userProfile) return null;
 
   const { setIsPremiumModalOpen } = useAppConfig();
+  const { data: systemSettings } = useSystemSettings();
 
   const isActivePremium = !!userProfile.isPremium;
   const premiumStatus = userProfile.premiumStatus || (isActivePremium ? 'PREMIUM' : 'FREE');
@@ -165,13 +167,19 @@ export function PremiumStatusWidget({ userProfile }: PremiumStatusWidgetProps) {
                     <p className="text-xs font-bold text-rose-400 uppercase tracking-wide">
                       Premium Expired
                     </p>
-                    <button 
-                      onClick={() => setIsPremiumModalOpen(true)}
-                      className="mt-1 flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 active:scale-95 text-slate-950 font-black text-[10px] tracking-wider uppercase rounded-lg transition-all shadow-lg shadow-amber-500/10 cursor-pointer"
-                    >
-                      <ArrowUpCircle className="w-3.5 h-3.5 text-slate-950" />
-                      Upgrade Premium
-                    </button>
+                    {systemSettings?.premiumGatewayEnabled === false ? (
+                      <div className="mt-1 inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 text-slate-450 font-extrabold text-[9px] tracking-wider uppercase rounded-lg border border-slate-700 select-none">
+                        <span>Gateway Closed</span>
+                      </div>
+                    ) : (
+                      <button 
+                        onClick={() => setIsPremiumModalOpen(true)}
+                        className="mt-1 flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 active:scale-95 text-slate-950 font-black text-[10px] tracking-wider uppercase rounded-lg transition-all shadow-lg shadow-amber-500/10 cursor-pointer"
+                      >
+                        <ArrowUpCircle className="w-3.5 h-3.5 text-slate-950" />
+                        Upgrade Premium
+                      </button>
+                    )}
                   </>
                 )}
               </div>

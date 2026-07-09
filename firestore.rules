@@ -53,9 +53,7 @@ service cloud.firestore {
 
     function isValidNewStudentProfile(data, authUid) {
       return data.role == 'student' &&
-             data.uid == authUid &&
-             data.studentCode == data.missionGridStudentId &&
-             data.missionGridStudentId.matches('^MG[0-9]{6}$');
+             data.mobile != '';
     }
 
     function isFieldUnmodified(field) {
@@ -66,7 +64,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && (isMentor() || (request.resource.data.get('uid', '') == request.auth.uid && isValidNewStudentProfile(request.resource.data, request.auth.uid)));
+      allow create: if isSignedIn() && (isMentor() || (isValidNewStudentProfile(request.resource.data, request.auth.uid)));
       allow update: if isSignedIn() && (
         isMentor() || 
         (
@@ -98,8 +96,6 @@ service cloud.firestore {
           isFieldUnmodified('registrationDateTime') &&
           isFieldUnmodified('registrationIP') &&
           isFieldUnmodified('registrationSource') &&
-          isFieldUnmodified('currentBatch') &&
-          isFieldUnmodified('batchId') &&
           isFieldUnmodified('status') &&
           isFieldUnmodified('category') &&
           isFieldUnmodified('missionPoints') &&
@@ -399,6 +395,13 @@ service cloud.firestore {
       allow read, write: if isMentor();
     }
 
+    match /premium_requests/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && (isMentor() || (resource.data.status == request.resource.data.status && (resource.data.studentId == request.auth.uid || resource.data.userId == request.auth.uid)));
+      allow delete: if isMentor();
+    }
+
     match /premium_history/{id} {
       allow list: if isSignedIn();
       allow get: if isMentor() || (isSignedIn() && resource.data.studentId == request.auth.uid);
@@ -430,6 +433,11 @@ service cloud.firestore {
     match /login_history/{id} {
       allow read, create, update: if isSignedIn();
       allow delete: if isMentor();
+    }
+
+    match /payment_options/{id} {
+      allow read: if isSignedIn();
+      allow write: if isMentor();
     }
 
     // Default catch-all (Master Safety Net)

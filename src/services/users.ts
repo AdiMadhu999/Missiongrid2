@@ -521,6 +521,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
 
   const userId = sanitizedMobile; // Use verified mobile number as document ID
   const missionGridStudentId = await generateNextStudentId();
+  const uid = sanitizedMobile; // Use sanitized mobile as UID
 
   // Try to fetch current IP and user agent from our own endpoint
   let fetchedIp = 'unknown';
@@ -616,7 +617,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
     // Automatic Data Capture - Permanent Identity
     missionGridStudentId: missionGridStudentId,
     studentCode: missionGridStudentId,
-    uid: userData.uid,
+    uid: sanitizedMobile,
     mobile: sanitizedMobile,
     
     registrationDate,
@@ -661,7 +662,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
     mobile: sanitizedMobile,
     email: userData.email || '',
     pin: hashPin(userData.pin || '123456'),
-    uid: userData.uid,
+    uid: sanitizedMobile,
     address: userData.address || '',
     
     registrationDateTime: registrationTimestamp,

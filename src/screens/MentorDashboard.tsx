@@ -3,7 +3,7 @@ import {
   Users, UserPlus, BookOpen, Clock, Megaphone, Search, 
   RefreshCw, FileText, Target, Award, AlertTriangle, ShieldCheck, MessageSquare,
   Sparkles, ShieldAlert, DollarSign, ArrowUpRight, Zap, CheckCircle2, ChevronRight, PlaySquare,
-  User as UserIcon, Trophy
+  User as UserIcon, Trophy, Eye, EyeOff
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
@@ -15,10 +15,60 @@ import { motion, AnimatePresence } from 'motion/react';
 import { safeStorage } from '../lib/storage';
 import { OtpLogs } from '../components/OtpLogs';
 import { useCachedQuery } from '../hooks/useCachedQuery';
+import PremiumPaymentSetupModal from '../components/mentor/PremiumPaymentSetupModal';
+import PremiumRequestsModal from '../components/mentor/PremiumRequestsModal';
+import { useSystemSettings } from '../hooks/useSystemSettings';
+import { updateSystemSettings } from '../services/system';
+import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 export default function MentorDashboard() {
   const { userProfile } = useAuth();
   const navigate = useNavigate();
+
+  const [showRequestsModal, setShowRequestsModal] = useState(false);
+  const [showPaymentSetupModal, setShowPaymentSetupModal] = useState(false);
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
+
+  const { data: systemSettings } = useSystemSettings();
+  const queryClient = useQueryClient();
+  const [togglingGateway, setTogglingGateway] = useState(false);
+
+  const handleToggleGateway = async () => {
+    if (!systemSettings) {
+      toast.error('System settings not loaded yet.');
+      return;
+    }
+    setTogglingGateway(true);
+    const newStatus = systemSettings.premiumGatewayEnabled !== false ? false : true;
+    const toastId = toast.loading(newStatus ? 'Opening Premium Payment Gateway...' : 'Hiding Premium Payment Gateway...');
+    try {
+      await updateSystemSettings({
+        ...systemSettings,
+        premiumGatewayEnabled: newStatus
+      });
+      await queryClient.invalidateQueries({ queryKey: ['systemSettings'] });
+      toast.success(newStatus ? 'Premium Payment Gateway is now OPEN (Visible to Students)!' : 'Premium Payment Gateway is now HIDDEN (Offline for Students)!', { id: toastId });
+    } catch (err) {
+      console.error('Error toggling premium gateway status:', err);
+      toast.error('Failed to update premium gateway visibility.', { id: toastId });
+    } finally {
+      setTogglingGateway(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!userProfile?.id) return;
+    const q = query(
+      collection(db, 'premium_requests'),
+      where('status', '==', 'Pending')
+    );
+    getDocs(q).then(snap => {
+      setPendingRequestsCount(snap.size);
+    }).catch(err => {
+      console.error('Error fetching pending requests count:', err);
+    });
+  }, [userProfile?.id]);
   
   const { data: cachedStats, isLoading: loading } = useCachedQuery({
     queryKey: ['mentorDashboardStats', userProfile?.id || ''],
@@ -534,6 +584,64 @@ export default function MentorDashboard() {
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <button 
+              type="button"
+              onClick={() => setShowPaymentSetupModal(true)} 
+              className="py-3 bg-slate-50 border border-slate-200/80 hover:bg-slate-100 text-slate-800 font-black text-[10px] rounded-2xl transition-all text-center uppercase tracking-wider flex items-center justify-center gap-1 shadow-xs"
+            >
+              Setup Payment QR
+            </button>
+            <button 
+              type="button"
+              onClick={() => setShowRequestsModal(true)} 
+              className="py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-[10px] rounded-2xl transition-all text-center uppercase tracking-wider flex items-center justify-center gap-1 shadow-md shadow-indigo-100 relative"
+            >
+              <span>Premium Requests</span>
+              {pendingRequestsCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[8px] font-black h-5 w-5 rounded-full flex items-center justify-center border border-white animate-bounce">
+                  {pendingRequestsCount}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Toggle Gateway Visibility */}
+          <div className="p-3.5 bg-slate-50 border border-slate-200/60 rounded-2xl flex items-center justify-between transition-colors">
+            <div className="flex items-center gap-2.5">
+              <div className={`p-2 rounded-xl border ${
+                systemSettings?.premiumGatewayEnabled !== false 
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-600' 
+                  : 'bg-rose-50 border-rose-200 text-rose-500'
+              }`}>
+                {systemSettings?.premiumGatewayEnabled !== false ? (
+                  <Eye size={16} />
+                ) : (
+                  <EyeOff size={16} />
+                )}
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Gateway Status</p>
+                <p className="text-xs font-black text-slate-800 mt-1">
+                  {systemSettings?.premiumGatewayEnabled !== false ? 'ONLINE (Visible)' : 'OFFLINE (Hidden)'}
+                </p>
+              </div>
+            </div>
+            
+            <button
+              type="button"
+              disabled={togglingGateway}
+              onClick={handleToggleGateway}
+              className={`px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all border ${
+                systemSettings?.premiumGatewayEnabled !== false
+                  ? 'bg-rose-55 hover:bg-rose-100 text-rose-700 border-rose-200/60'
+                  : 'bg-emerald-55 hover:bg-emerald-100 text-emerald-800 border-emerald-200/60'
+              }`}
+            >
+              {systemSettings?.premiumGatewayEnabled !== false ? 'Hide Gateway' : 'Open Gateway'}
+            </button>
+          </div>
+
           <button 
             onClick={() => navigate('/app/mentor-place?action=rules')} 
             className="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3 rounded-2xl text-xs transition-colors uppercase tracking-widest flex items-center justify-center gap-2 shadow-xs"
@@ -595,6 +703,27 @@ export default function MentorDashboard() {
         </div>
         <OtpLogs />
       </div>
+
+      {/* Manual Premium Extension System Modals */}
+      <AnimatePresence>
+        {showPaymentSetupModal && (
+          <PremiumPaymentSetupModal onClose={() => setShowPaymentSetupModal(false)} />
+        )}
+        {showRequestsModal && (
+          <PremiumRequestsModal 
+            onClose={() => setShowRequestsModal(false)} 
+            onRefreshStats={async () => {
+              const q = query(
+                collection(db, 'premium_requests'),
+                where('status', '==', 'Pending')
+              );
+              getDocs(q).then(snap => {
+                setPendingRequestsCount(snap.size);
+              });
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
