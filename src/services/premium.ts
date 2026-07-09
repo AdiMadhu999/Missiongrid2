@@ -652,12 +652,29 @@ export const PremiumService = {
     const studentRef = doc(db, 'users', studentId);
     
     try {
-      // 1. Update public profile
-      await updateDoc(studentRef, {
+      const studentSnap = await getDoc(studentRef);
+      const data = studentSnap.exists() ? studentSnap.data() : {};
+      
+      const updates: any = {
         consecutiveMissedMissions: 0,
         consecutiveMissedDays: 0,
         updatedAt: timestamp
-      });
+      };
+
+      const isCurrentlyPremium = !!data.isPremium || data.premiumStatus === 'active' || data.premiumStatus === 'PREMIUM';
+      if (!isCurrentlyPremium) {
+        const defaultExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        updates.isPremium = true;
+        updates.premiumStatus = 'PREMIUM';
+        updates.premiumType = 'FREE_TRIAL';
+        updates.premiumSource = 'Registration Bonus';
+        updates.premiumStartDate = data.premiumStartDate || timestamp.split('T')[0];
+        updates.premiumExpiryDate = data.premiumExpiryDate || defaultExpiry;
+        updates.remainingPremiumDays = data.remainingPremiumDays || 30;
+      }
+
+      // 1. Update public profile
+      await updateDoc(studentRef, updates);
 
       // 2. Log action in premium_history
       await addDoc(collection(db, 'premium_history'), {

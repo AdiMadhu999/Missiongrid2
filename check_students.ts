@@ -9,10 +9,12 @@ const db = getFirestore(app, '(default)');
 
 async function check() {
   const users = await db.collection('users').get();
-  let students = 0;
+  console.log(`Found ${users.size} documents in 'users'.`);
   users.forEach(doc => {
-    if (doc.data().role === 'student') students++;
+    const data = doc.data();
+    if (data.role === 'student' || data.role === 'aspirant') {
+      console.log(`- ID: ${doc.id} | Name: ${data.name} | Role: ${data.role} | isPremium: ${data.isPremium} | premiumStatus: ${data.premiumStatus} | consecutiveMissedDays: ${data.consecutiveMissedDays} | consecutiveMissedMissions: ${data.consecutiveMissedMissions} | lastMissionSubmissionDate: ${data.lastMissionSubmissionDate}`);
+    }
   });
-  console.log(`Found ${students} students.`);
 }
 check();

@@ -227,7 +227,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               }).catch(err => console.warn("[AuthProvider] Background sync claims error:", err));
             });
           }
-          return;
         }
 
         let firstSnapReceived = false;
@@ -279,24 +278,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           let calculatedPremiumStatus = premiumStatus;
           let calculatedRemainingDays = combinedProfile.remainingPremiumDays !== undefined ? combinedProfile.remainingPremiumDays : 0;
 
-          if (expiryStr) {
-            // Rule 1: If Current Date <= Premium Expiry Date, Premium Status = PREMIUM
-            // Rule 2: If Current Date > Premium Expiry Date, Premium Status = FREE
-            const isExpiryISO = expiryStr.includes('T');
-            const cleanExpiryStr = isExpiryISO ? expiryStr.split('T')[0] : expiryStr;
+          if (isPremium) {
+            if (expiryStr) {
+              // Rule 1: If Current Date <= Premium Expiry Date, Premium Status = PREMIUM
+              // Rule 2: If Current Date > Premium Expiry Date, Premium Status = FREE
+              const isExpiryISO = expiryStr.includes('T');
+              const cleanExpiryStr = isExpiryISO ? expiryStr.split('T')[0] : expiryStr;
 
-            const active = todayISTStr <= cleanExpiryStr;
-            calculatedIsPremium = active;
-            calculatedPremiumStatus = active 
-              ? (['PREMIUM', 'active'].includes(premiumStatus) ? premiumStatus : 'PREMIUM') 
-              : 'FREE';
+              const active = todayISTStr <= cleanExpiryStr;
+              calculatedIsPremium = active;
+              calculatedPremiumStatus = active 
+                ? (['PREMIUM', 'active'].includes(premiumStatus) ? premiumStatus : 'PREMIUM') 
+                : 'FREE';
 
-            if (active) {
-              const todayMidnight = new Date(todayISTStr + 'T00:00:00Z');
-              const expiryMidnight = new Date(cleanExpiryStr + 'T00:00:00Z');
-              const diffTime = expiryMidnight.getTime() - todayMidnight.getTime();
-              calculatedRemainingDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+              if (active) {
+                const todayMidnight = new Date(todayISTStr + 'T00:00:00Z');
+                const expiryMidnight = new Date(cleanExpiryStr + 'T00:00:00Z');
+                const diffTime = expiryMidnight.getTime() - todayMidnight.getTime();
+                calculatedRemainingDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+              } else {
+                calculatedRemainingDays = 0;
+              }
             } else {
+              calculatedIsPremium = false;
+              calculatedPremiumStatus = 'FREE';
               calculatedRemainingDays = 0;
             }
           } else {
@@ -397,15 +402,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const fetchUserData = async (userId: string, privData: any) => {
           try {
-            const pubSnap = await getDoc(doc(db, 'users', userId));
-            if (!firstSnapReceived) {
-              firstSnapReceived = true;
-              clearTimeout(profileFetchTimeout);
-              setLoading(false);
+            if (unsubPublicDoc) {
+              unsubPublicDoc();
+              unsubPublicDoc = null;
             }
-            if (pubSnap.exists()) {
-              handleCombinedProfile(pubSnap.data(), privData, userId);
-            }
+
+            unsubPublicDoc = onSnapshot(doc(db, 'users', userId), (pubSnap) => {
+              if (!firstSnapReceived) {
+                firstSnapReceived = true;
+                clearTimeout(profileFetchTimeout);
+                setLoading(false);
+              }
+              if (pubSnap.exists()) {
+                handleCombinedProfile(pubSnap.data(), privData, userId);
+              }
+            }, (err) => {
+              console.error("Error listening to user public profile updates:", err);
+              // Fallback to one-time getDoc on error
+              getDoc(doc(db, 'users', userId)).then((pubSnap) => {
+                if (pubSnap.exists()) {
+                  handleCombinedProfile(pubSnap.data(), privData, userId);
+                }
+              }).catch(getErr => console.error("Fallback getDoc failed:", getErr));
+
+              if (!firstSnapReceived) {
+                firstSnapReceived = true;
+                clearTimeout(profileFetchTimeout);
+                setLoading(false);
+              }
+            });
           } catch (err) {
             console.error("AuthProvider fetchUserData error:", err);
             if (!firstSnapReceived) {

@@ -347,6 +347,17 @@ export const PremiumManagementDashboard: React.FC<PremiumManagementDashboardProp
           lastPremiumChangeDate: timestampIso,
           premiumChangedBy: mentorName
         };
+        const isCurrentlyPremium = !!selectedStudent.isPremium || selectedStudent.premiumStatus === 'active' || selectedStudent.premiumStatus === 'PREMIUM';
+        if (!isCurrentlyPremium) {
+          const defaultExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+          publicUpdates.isPremium = true;
+          publicUpdates.premiumStatus = 'PREMIUM';
+          publicUpdates.premiumType = 'FREE_TRIAL';
+          publicUpdates.premiumSource = 'Registration Bonus';
+          publicUpdates.premiumStartDate = selectedStudent.premiumStartDate || timestampIso.split('T')[0];
+          publicUpdates.premiumExpiryDate = selectedStudent.premiumExpiryDate || defaultExpiry;
+          publicUpdates.remainingPremiumDays = selectedStudent.remainingPremiumDays || 30;
+        }
       }
 
       // 1. Write the user document updates to Firestore

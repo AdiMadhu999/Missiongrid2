@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { safeStorage } from '../lib/storage';
 
@@ -20,7 +20,7 @@ export function useCachedQuery<T>({
   enabled = true,
   persistKey,
   subscribeFn,
-}: CachedQueryOptions<T>) {
+}: CachedQueryOptions<T>): UseQueryResult<T, Error> {
   const queryClient = useQueryClient();
 
   // Load from localStorage cache first for instant loading
@@ -38,9 +38,23 @@ export function useCachedQuery<T>({
     return undefined;
   };
 
-  const queryResult = useQuery<T>({
+  const queryResult = useQuery<T, Error, T, string[]>({
     queryKey,
     queryFn: async () => {
+      // If there is a real-time subscription, the subscription handles syncing the latest data.
+      // The queryFn doesn't need to fetch anything, but to satisfy useQuery we return the current cached value if exists.
+      if (subscribeFn) {
+        if (persistKey) {
+          const cached = safeStorage.getItem(persistKey);
+          if (cached) {
+            try {
+              return JSON.parse(cached) as T;
+            } catch (e) {}
+          }
+        }
+        return await queryFn();
+      }
+
       try {
         const data = await queryFn();
         if (persistKey) {
@@ -66,7 +80,7 @@ export function useCachedQuery<T>({
     staleTime,
     gcTime,
     enabled,
-    initialData: () => getInitialData(),
+    placeholderData: getInitialData() as any,
     refetchOnWindowFocus: false, // Turn off refetch on focus to prevent unneeded mobile network traffic
     refetchOnReconnect: 'always', // Force re-fetching only when connection is restored
     retry: navigator.onLine ? 1 : 0, // Minimize network retries when offline
