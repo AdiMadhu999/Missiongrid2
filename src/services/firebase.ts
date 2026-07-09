@@ -17,7 +17,7 @@ try {
     localCache: persistentLocalCache({
       tabManager: persistentSingleTabManager({ forceOwnership: true })
     }),
-    experimentalForceLongPolling: Capacitor.isNativePlatform() ? true : undefined
+    experimentalForceLongPolling: true
   }, '(default)');
 } catch (e) {
   console.warn('[FirestoreInit] Failed to initialize with persistent cache:', e);
@@ -25,7 +25,7 @@ try {
     dbInstance = getFirestore(app);
   } catch (err) {
     dbInstance = initializeFirestore(app, {
-      experimentalForceLongPolling: Capacitor.isNativePlatform() ? true : undefined
+      experimentalForceLongPolling: true
     });
   }
 }
