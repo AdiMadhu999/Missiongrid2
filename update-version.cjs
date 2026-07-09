@@ -2,7 +2,7 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 
 let version = '1.0.55';
-let buildVersionCode = 56;
+let buildVersionCode = 57;
 
 try {
   const gradlePath = 'android/app/build.gradle';
