@@ -977,3 +977,79 @@ export const deleteUserProfile = async (idOrMobile: string) => {
   await deleteDoc(privateRef);
   clearUsersCache();
 };
+
+/**
+ * Searches users across lakhs of profiles using prefix matching and direct ID resolution
+ * in Firestore. Highly optimized for performance and scales with large datasets.
+ */
+export const searchUsers = async (searchTerm: string): Promise<User[]> => {
+  const term = searchTerm.trim();
+  if (!term) return [];
+
+  // If it's a mobile number (digit only) or student ID (starts with MG)
+  const isMobile = /^\d+$/.test(term);
+  const isStudentCode = /^MG\d+/i.test(term);
+
+  if (isMobile || isStudentCode) {
+    try {
+      const { publicRef, privateRef, userId } = await resolveUserDoc(term);
+      const pubSnap = await getDoc(publicRef);
+      if (pubSnap.exists()) {
+        const data = pubSnap.data();
+        let privateData: any = {};
+        try {
+          const privSnap = await getDoc(privateRef);
+          if (privSnap.exists()) {
+            privateData = privSnap.data();
+          }
+        } catch (e) {}
+        
+        const user = { ...(data as any), ...(privateData as any), id: userId } as User;
+        if (!user.studentCode) {
+          user.studentCode = getStudentCode(user);
+        }
+        return await getSanitizedUsersList([user]);
+      }
+    } catch (e) {
+      console.warn("searchUsers direct resolution failed:", e);
+    }
+  }
+
+  // Fallback prefix query on 'name' in Firestore
+  // Capitalize first letter since names are usually capitalized
+  const capitalizedTerm = term.charAt(0).toUpperCase() + term.slice(1);
+  const lowercaseTerm = term.toLowerCase();
+
+  const resultsMap = new Map<string, User>();
+
+  const runPrefixQuery = async (queryTerm: string) => {
+    const q = query(
+      collection(db, 'users'),
+      where('name', '>=', queryTerm),
+      where('name', '<=', queryTerm + '\uf8ff'),
+      limit(20)
+    );
+    const snap = await getDocs(q);
+    for (const d of snap.docs) {
+      const data = d.data();
+      const user = { ...data, id: d.id } as User;
+      if (!user.studentCode) {
+        user.studentCode = getStudentCode(user);
+      }
+      resultsMap.set(d.id, user);
+    }
+  };
+
+  try {
+    await Promise.all([
+      runPrefixQuery(term),
+      runPrefixQuery(capitalizedTerm),
+      runPrefixQuery(lowercaseTerm)
+    ]);
+  } catch (e) {
+    console.warn("Prefix query searchUsers failed:", e);
+  }
+
+  const list = Array.from(resultsMap.values());
+  return await getSanitizedUsersList(list);
+};

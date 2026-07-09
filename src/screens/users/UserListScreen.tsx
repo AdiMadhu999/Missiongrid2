@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, UserCircle, Shield, BookOpen, MoreVertical, Loader2, AlertTriangle, History, Layers, LogOut } from 'lucide-react';
-import { getUsers, updateUserProfile, incrementPoints, deleteUserProfile } from '../../services/users';
+import { getUsers, updateUserProfile, incrementPoints, deleteUserProfile, searchUsers } from '../../services/users';
 import { User } from '../../models/user';
 import { getStudentCode } from '../../utils/privacy';
 import UserCreateEditModal from './UserCreateEditModal';
@@ -55,10 +55,6 @@ export default function UserListScreen() {
         }
     };
 
-    useEffect(() => {
-        loadUsers();
-    }, []);
-
     const loadUsers = async () => {
         setLoading(true);
         try {
@@ -70,6 +66,27 @@ export default function UserListScreen() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (!search.trim()) {
+            loadUsers();
+            return;
+        }
+
+        const delayDebounceFn = setTimeout(async () => {
+            setLoading(true);
+            try {
+                const searchResults = await searchUsers(search);
+                setUsers(searchResults);
+            } catch (e) {
+                console.error("Database search failed:", e);
+            } finally {
+                setLoading(false);
+            }
+        }, 400); // 400ms debounce
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search]);
 
     const handleAdjustPoints = async () => {
         if (!adjustingPoints || !isMentor) return;
@@ -83,7 +100,7 @@ export default function UserListScreen() {
         }
     };
 
-    const filteredUsers = users.filter(u => {
+    const filteredUsers = search.trim() ? users : users.filter(u => {
         const term = search.toLowerCase();
         const matchName = u.name?.toLowerCase().includes(term);
         const code = u.studentCode || getStudentCode(u);

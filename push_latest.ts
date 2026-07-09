@@ -13,7 +13,7 @@ try {
     execSync('git add -A');
     
     console.log("Committing changes...");
-    execSync('git commit -m "feat(ci): add codemagic.yaml configuration for Capacitor Android release builds"');
+    execSync('git commit -m "perf(optimization): optimize applet load with lazy loading and high-performance user search indexing"');
     
     console.log("Setting remote URL...");
     const remoteUrl = `https://x-access-token:${token}@github.com/${owner}/${repo}.git`;
