@@ -44,7 +44,7 @@ jobs:
         run: |
           if [ ! -f android/app/release.keystore ]; then
             echo "Keystore not found. Generating a persistent keystore..."
-            keytool -genkey -v -keystore android/app/release.keystore -alias release -keyalg RSA -keysize 2048 -validity 10000 -storepass password -keypass password -dname "CN=MissionGrid, OU=Dev, O=Mission, L=City, ST=State, C=US"
+            keytool -genkey -v -keystore android/app/release.keystore -storetype JKS -alias release -keyalg RSA -keysize 2048 -validity 10000 -storepass password -keypass password -dname "CN=MissionGrid, OU=Dev, O=Mission, L=City, ST=State, C=US"
             
             git config --global user.name "github-actions[bot]"
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
