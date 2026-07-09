@@ -170,13 +170,26 @@ createRoot(document.getElementById('root')!).render(
 );
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((reg) => {
-        console.log('[SW] Service Worker registered successfully with scope:', reg.scope);
-      })
-      .catch((err) => {
-        console.error('[SW] Service Worker registration failed:', err);
-      });
-  });
+  if (import.meta.env.PROD) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => {
+          console.log('[SW] Service Worker registered successfully with scope:', reg.scope);
+        })
+        .catch((err) => {
+          console.error('[SW] Service Worker registration failed:', err);
+        });
+    });
+  } else {
+    // Unregister active service worker in development to prevent stale files and dynamic import errors
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister().then((success) => {
+          if (success) {
+            console.log('[SW] Unregistered active service worker for development mode');
+          }
+        });
+      }
+    });
+  }
 }
