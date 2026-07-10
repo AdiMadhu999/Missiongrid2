@@ -33,6 +33,6 @@ workflows:
           echo "JAVA_HOME=$JAVA_HOME"
           gradle wrapper --gradle-version 8.14.3
           chmod +x gradlew
-          ./gradlew assembleRelease
+          gradle assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/*.apk
