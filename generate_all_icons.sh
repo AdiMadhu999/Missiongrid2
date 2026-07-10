@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BASE_IMAGE="src/assets/images/app_logo_base_1783466372014.jpg"
+BASE_IMAGE="src/assets/images/app_logo_final_1783550479368.jpg"
 RES_DIR="android/app/src/main/res"
 
 if [ ! -f "$BASE_IMAGE" ]; then
