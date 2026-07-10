@@ -315,18 +315,9 @@ async function processPremiumVerificationForUser(adminDb: any, doc: any, now: Da
       await doc.ref.update(data);
     }
   };
-  
-  // Skip if student was never premium or already revoked
-  if (isPremium === false && uData.premiumStatus !== 'premium') {
-    return { studentId, name: uData.name, status: "skipped_not_premium", missedCount: uData.consecutiveMissedMissions || 0 };
-  }
-  
-  if (manualOverride) {
-    return { studentId, name: uData.name, status: "skipped_manual_override", missedCount: uData.consecutiveMissedMissions || 0 };
-  }
-  
+
   // 1. Premium Expiry Rule
-  if (isPremium && premiumExpiryDate) {
+  if (isPremium && premiumExpiryDate && !manualOverride) {
     const expiryDate = new Date(premiumExpiryDate);
     
     // Update remaining premium days
@@ -383,8 +374,8 @@ async function processPremiumVerificationForUser(adminDb: any, doc: any, now: Da
     }
   }
   
-  // 2. Mission Consistency Rule (Only run if they are premium after any expiry check)
-  if (uData.isPremium) {
+  // 2. Mission Consistency Rule (Run for all students)
+  if (true) {
     // Check yesterday's daily mission report
     let submitted = false;
     if (authHeader) {
@@ -463,8 +454,9 @@ async function processPremiumVerificationForUser(adminDb: any, doc: any, now: Da
       actionTaken = 'incremented_missed_missions';
       finalStatus = 'missed';
       
-      // 3. Warnings
-      if (missedCount === 5) {
+      if (uData.isPremium && !manualOverride) {
+        // 3. Warnings
+        if (missedCount === 5) {
         await restAdd("warnings", {
           studentId,
           studentName: uData.name || 'Student',
@@ -585,23 +577,17 @@ async function processPremiumVerificationForUser(adminDb: any, doc: any, now: Da
         });
       }
     }
-    
-    if (needsUpdate) {
-      updateData.updatedAt = timestamp;
-      updateData.lastPremiumChangeDate = timestamp;
-      updateData.premiumChangedBy = 'system';
-      await restUpdateUser(updateData);
-    }
-    
-    return { studentId, name: uData.name, status: finalStatus, missedCount, actionTaken };
-  } else {
-    // Currently free/revoked
-    if (needsUpdate) {
-      updateData.updatedAt = timestamp;
-      await restUpdateUser(updateData);
-    }
-    return { studentId, name: uData.name, status: "skipped_not_premium", missedCount: uData.consecutiveMissedMissions || 0 };
   }
+}
+
+if (needsUpdate) {
+    updateData.updatedAt = timestamp;
+    updateData.lastPremiumChangeDate = timestamp;
+    updateData.premiumChangedBy = 'system';
+    await restUpdateUser(updateData);
+  }
+  
+  return { studentId, name: uData.name, status: finalStatus, missedCount, actionTaken };
 }
 
 async function performDailyPremiumVerification() {
@@ -2119,7 +2105,6 @@ async function syncCustomClaimsForUser(uid: string): Promise<any> {
   }
 }
 
-// O(1) Auth Login Endpoint - Issues Custom Claims Token instantly
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { mobile, pin, role, verificationMethod, deviceId } = req.body;

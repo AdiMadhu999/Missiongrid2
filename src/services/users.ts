@@ -637,7 +637,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
     // Automatic Data Capture - Permanent Identity
     missionGridStudentId: missionGridStudentId,
     studentCode: missionGridStudentId,
-    uid: sanitizedMobile,
+    uid: userData.uid || sanitizedMobile,
     mobile: sanitizedMobile,
     
     registrationDate,
@@ -682,7 +682,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
     mobile: sanitizedMobile,
     email: userData.email || '',
     pin: hashPin(userData.pin || '123456'),
-    uid: sanitizedMobile,
+    uid: userData.uid || sanitizedMobile,
     address: userData.address || '',
     
     registrationDateTime: registrationTimestamp,

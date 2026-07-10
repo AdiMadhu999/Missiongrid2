@@ -54,81 +54,79 @@ export default function MainLayout() {
           
           {role === 'student' ? (
             <>
-              {/* Student order: Home (profile), Target, Community, Mission */}
-              {!isSpecialPage && (
-                <NavLink 
-                  to="/app/home" 
-                  className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 relative group ${
-                    isActive 
-                      ? 'text-violet-600 bg-violet-50/80 scale-105 font-bold' 
-                      : 'text-slate-500 hover:text-violet-500'
-                  }`}
-                >
-                  <div className="relative">
-                    <img src={userProfile?.photoUrl || '/placeholder-avatar.png'} alt="Profile" className="w-8 h-8 rounded-full border-2 border-white shadow-sm" />
-                  </div>
-                  <span className="text-[10px] font-bold tracking-tight mt-1">Home</span>
-                </NavLink>
-              )}
+              {/* Student order: Home, Target, Doubt, Guide, Mission, Test */}
+              <NavLink 
+                to="/app/home" 
+                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-1.5 rounded-2xl transition-all duration-300 relative group ${
+                  isActive 
+                    ? 'text-violet-600 bg-gradient-to-br from-violet-100 to-indigo-50 border border-violet-200 scale-105 font-black shadow-md' 
+                    : 'text-slate-500 hover:text-violet-500 hover:bg-slate-50'
+                }`}
+              >
+                <div className="relative">
+                  <img src={userProfile?.photoUrl || '/placeholder-avatar.png'} alt="Profile" className="w-7 h-7 rounded-full border-2 border-violet-300 shadow-sm" />
+                </div>
+                <span className="text-[9px] font-black tracking-tight mt-0.5 uppercase">Home</span>
+              </NavLink>
 
               <NavLink 
                 to="/app/targets" 
-                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-1.5 rounded-2xl transition-all duration-300 ${
                   isActive 
-                    ? 'text-amber-600 bg-amber-50/80 scale-105 font-bold' 
-                    : 'text-slate-500 hover:text-amber-500'
+                    ? 'text-amber-600 bg-gradient-to-br from-amber-100 to-yellow-50 border border-amber-200 scale-105 font-black shadow-md' 
+                    : 'text-slate-500 hover:text-amber-500 hover:bg-slate-50'
                 }`}
               >
-                <Target size={22} className="transition-transform duration-200" />
-                <span className="text-[10px] font-bold tracking-tight mt-1">Target</span>
+                <Target size={20} className="transition-transform duration-200" />
+                <span className="text-[9px] font-black tracking-tight mt-0.5 uppercase">Target</span>
               </NavLink>
 
               <NavLink 
                 to="/app/doubt" 
-                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-1.5 rounded-2xl transition-all duration-300 ${
                   isActive 
-                    ? 'text-indigo-600 bg-indigo-50/80 scale-105 font-bold' 
-                    : 'text-slate-500 hover:text-indigo-500'
+                    ? 'text-indigo-600 bg-gradient-to-br from-indigo-100 to-blue-50 border border-indigo-200 scale-105 font-black shadow-md' 
+                    : 'text-slate-500 hover:text-indigo-500 hover:bg-slate-50'
                 }`}
               >
-                <HelpCircle size={22} className="transition-transform duration-200" />
-                <span className="text-[10px] font-bold tracking-tight mt-1">Doubt</span>
+                <HelpCircle size={20} className="transition-transform duration-200" />
+                <span className="text-[9px] font-black tracking-tight mt-0.5 uppercase">Doubt</span>
               </NavLink>
 
               <NavLink 
                 to="/app/guide" 
-                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-1.5 rounded-2xl transition-all duration-300 ${
                   isActive 
-                    ? 'text-blue-600 bg-blue-50/80 scale-105 font-bold' 
-                    : 'text-slate-500 hover:text-blue-500'
+                    ? 'text-blue-600 bg-gradient-to-br from-blue-100 to-cyan-50 border border-blue-200 scale-105 font-black shadow-md' 
+                    : 'text-slate-500 hover:text-blue-500 hover:bg-slate-50'
                 }`}
               >
-                <BookOpen size={22} className="transition-transform duration-200" />
-                <span className="text-[10px] font-bold tracking-tight mt-1">Guide</span>
+                <BookOpen size={20} className="transition-transform duration-200" />
+                <span className="text-[9px] font-black tracking-tight mt-0.5 uppercase">Guide</span>
               </NavLink>
 
               <NavLink 
                 to="/app/missions" 
-                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-1.5 rounded-2xl transition-all duration-300 ${
                   isActive 
-                    ? 'text-emerald-600 bg-emerald-50/80 scale-105 font-bold' 
-                    : 'text-slate-500 hover:text-emerald-500'
+                    ? 'text-emerald-600 bg-gradient-to-br from-emerald-100 to-teal-50 border border-emerald-200 scale-105 font-black shadow-md' 
+                    : 'text-slate-500 hover:text-emerald-500 hover:bg-slate-50'
                 }`}
               >
-                <ClipboardCheck size={22} className="transition-transform duration-200" />
-                <span className="text-[10px] font-bold tracking-tight mt-1">Mission</span>
+                <ClipboardCheck size={20} className="transition-transform duration-200" />
+                <span className="text-[9px] font-black tracking-tight mt-0.5 uppercase">Mission</span>
               </NavLink>
 
               <NavLink 
                 to="/app/tests" 
-                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-2 rounded-2xl transition-all duration-300 ${
+                className={({ isActive }) => `flex flex-col items-center flex-shrink-0 min-w-[50px] flex-1 px-1 py-1.5 rounded-2xl transition-all duration-300 ${
                   isActive 
-                    ? 'text-rose-600 bg-rose-50/80 scale-105 font-bold' 
-                    : 'text-slate-500 hover:text-rose-500'
+                    ? 'text-rose-600 bg-gradient-to-br from-rose-100 to-pink-50 border border-rose-200 scale-105 font-black shadow-md' 
+                    : 'text-slate-500 hover:text-rose-500 hover:bg-slate-50'
                 }`}
               >
-                <ClipboardList size={22} className="transition-transform duration-200" />
-                <span className="text-[10px] font-bold tracking-tight mt-1">Test</span>
+                <ClipboardList size={20} className="transition-transform duration-200" />
+                <span className="text-[9px] font-black tracking-tight mt-0.5 uppercase">Test</span>
               </NavLink>
             </>
           ) : (

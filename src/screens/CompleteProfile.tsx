@@ -106,9 +106,7 @@ export default function CompleteProfile() {
         sessionStorage.removeItem('redirect_url');
         navigate(redirectUrl, { replace: true });
       } else {
-        const userRole = (userProfile?.role || '').toLowerCase();
-        const isMentor = userRole === 'mentor' || userRole === 'primary-mentor' || userRole === 'staff' || userRole === 'admin' || userRole === 'examiner';
-        navigate(isMentor ? '/app/home' : '/app/doubt');
+        navigate('/app/home');
       }
     } catch (err: any) {
       setError(err.message);

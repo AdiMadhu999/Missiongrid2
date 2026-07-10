@@ -4,7 +4,7 @@ import appLogo from "../assets/images/app_logo_final_1783550479368.jpg";
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthService } from '../services/auth';
 import { useAuth } from '../providers/AuthProvider';
-import { Eye, EyeOff, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, ShieldAlert, ArrowRight, Phone, Lock, Trophy, Sparkles, Users, CheckCircle2, Star, Flame, Mail, Shield } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ export default function Login() {
 
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -32,7 +33,7 @@ export default function Login() {
     } else if (userProfile.role === 'examiner') {
       return <Navigate to="/app/examiner" replace />;
     }
-    return <Navigate to="/app/doubt" replace />;
+    return <Navigate to="/app/home" replace />;
   }
 
   const handleLogoClick = () => {
@@ -62,7 +63,7 @@ export default function Login() {
     try {
       const user = await AuthService.loginWithMobileAndPassword(mobile, password, 'student', 'pin');
       setUserProfile(user);
-      navigate('/app/doubt', { replace: true });
+      navigate('/app/home', { replace: true });
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Invalid credentials.');
     } finally {
@@ -100,47 +101,72 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center relative overflow-hidden bg-gradient-to-tr from-sky-400 via-indigo-200 to-amber-100 p-2 sm:p-4">
-      {/* Dynamic colorful blur spheres behind the form */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40" />
-      <div className="absolute -bottom-40 -right-4 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40" />
+    <div className="flex min-h-screen flex-col items-center justify-center relative overflow-y-auto bg-slate-50 p-4 font-sans selection:bg-indigo-200 selection:text-slate-900">
       
-      <div className="relative w-full max-w-sm">
+      {/* Immersive background glow elements */}
+      <div className="absolute top-[-10%] left-[-20%] w-[600px] h-[600px] rounded-full bg-indigo-300/40 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-20%] w-[600px] h-[600px] rounded-full bg-sky-300/40 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[40%] left-[30%] w-[300px] h-[300px] rounded-full bg-fuchsia-300/30 blur-[100px] pointer-events-none" />
+
+      {/* Grid Overlay for high-tech aesthetic */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+
+      <div className="relative w-full max-w-md py-8">
+        
+        {/* Top Floating Trust Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-auto mb-6 flex items-center justify-center gap-1.5 bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200 shadow-xl w-fit"
+        >
+          <Trophy size={14} className="text-indigo-600 animate-pulse" />
+          <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase">
+            Govt Selection Command Center
+          </span>
+        </motion.div>
+
         {/* Logo and Brand Header */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="flex flex-col items-center mb-6"
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-col items-center mb-8"
         >
-          <div 
-            onClick={handleLogoClick}
-            className="h-16 w-16 rounded-xl overflow-hidden shadow-lg mb-2 border border-white/40 transition-transform active:scale-95 select-none"
-          >
-            <img 
-               src={appLogo} 
-               alt="MissionGrid Logo" 
-               className="w-full h-full object-cover pointer-events-none" 
-               referrerPolicy="no-referrer"
-            />
+          <div className="relative">
+            <div 
+              onClick={handleLogoClick}
+              className="h-20 w-20 rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(79,70,229,0.15)] mb-4 border-2 border-violet-500/30 transition-all active:scale-95 select-none cursor-pointer hover:border-violet-400/60 duration-300"
+            >
+              <img 
+                 src={appLogo} 
+                 alt="MissionGrid Logo" 
+                 className="w-full h-full object-cover pointer-events-none" 
+                 referrerPolicy="no-referrer"
+              />
+            </div>
+            <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-slate-950"></span>
+            </span>
           </div>
-          <h1 className="text-center text-2xl font-black leading-tight tracking-tight text-indigo-950">
+          
+          <h1 className="text-center text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 via-indigo-700 to-indigo-500 tracking-tight drop-shadow-md">
             MissionGrid
           </h1>
-          <p className="text-center text-[9px] font-black text-indigo-700/80 uppercase tracking-[0.2em] mt-0.5">
-            By Adi Madhu • Daily Mission for Selection
+          <p className="text-center text-[10px] font-black text-violet-400 uppercase tracking-[0.25em] mt-1.5">
+            Decide. Commit. Overcome.
           </p>
         </motion.div>
 
-        {/* Elegant Glassmorphic Card Container */}
+        {/* Glassmorphic Interactive Login Card */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="bg-white/90 p-5 rounded-2xl shadow-xl border border-white/60 relative overflow-hidden"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="bg-white/90 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-200 relative overflow-hidden"
         >
-          {/* Top aesthetic color bar */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-amber-500" />
+          {/* Subtle inner corner glow */}
+          <div className="absolute top-0 left-0 w-24 h-[1px] bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
           
           <AnimatePresence mode="wait">
             {showMentorLogin ? (
@@ -150,98 +176,101 @@ export default function Login() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
               >
-                <div className="text-center mb-4 bg-indigo-50 p-3 rounded-xl border border-indigo-100">
-                    <h2 className="text-sm font-black text-indigo-900">Restricted Portal</h2>
+                <div className="flex items-center gap-2 justify-center mb-6">
+                  <Shield size={18} className="text-indigo-400" />
+                  <h2 className="text-lg font-black text-white uppercase tracking-wider">Mentor Validation</h2>
                 </div>
                 
-                <form className="space-y-3" onSubmit={handleMentorLogin}>
+                <form className="space-y-4" onSubmit={handleMentorLogin}>
                   {error && (
-                    <div className="bg-rose-50/90 text-rose-600 text-[10px] font-bold p-2.5 rounded-xl border border-rose-100 flex items-start gap-2">
-                      <ShieldAlert size={14} className="mt-0.5 shrink-0" />
+                    <div className="bg-rose-950/60 text-rose-300 text-xs font-bold p-3 rounded-2xl border border-rose-900/50 flex items-center gap-2">
+                      <ShieldAlert size={16} className="shrink-0 text-rose-400" />
                       <span>{error}</span>
                     </div>
                   )}
 
-                  <div>
-                    <label className="block text-[10px] font-extrabold text-indigo-900 uppercase tracking-wider mb-1">
-                      Mobile Number
-                    </label>
+                  {/* Mentor Phone */}
+                  <div className="relative">
+                    <span className="absolute left-4 top-3.5 text-slate-400">
+                      <Phone size={16} />
+                    </span>
                     <input
                       type="tel"
                       required
                       value={mentorMobile}
                       onChange={(e) => setMentorMobile(e.target.value)}
-                      className="block w-full rounded-xl border-indigo-200 bg-white py-2 px-3 text-slate-900 font-medium text-xs border shadow-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                      placeholder="Enter mobile no"
+                      className="block w-full rounded-2xl border border-slate-200 bg-slate-50/60 py-3.5 pl-12 pr-4 text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                      placeholder="Mentor Mobile"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[10px] font-extrabold text-indigo-900 uppercase tracking-wider mb-1">
-                      Email Address
-                    </label>
+                  {/* Mentor Email */}
+                  <div className="relative">
+                    <span className="absolute left-4 top-3.5 text-slate-400">
+                      <Mail size={16} />
+                    </span>
                     <input
                       type="email"
                       required
                       value={mentorEmail}
                       onChange={(e) => setMentorEmail(e.target.value)}
-                      className="block w-full rounded-xl border-indigo-200 bg-white py-2 px-3 text-slate-900 font-medium text-xs border shadow-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                      placeholder="Enter email"
+                      className="block w-full rounded-2xl border border-slate-200 bg-slate-50/60 py-3.5 pl-12 pr-4 text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                      placeholder="Mentor Email"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[10px] font-extrabold text-indigo-900 uppercase tracking-wider mb-1">
-                      Secret Name
-                    </label>
+                  {/* Mentor Secret */}
+                  <div className="relative">
+                    <span className="absolute left-4 top-3.5 text-slate-400">
+                      <Sparkles size={16} />
+                    </span>
                     <input
                       type="text"
                       required
                       value={mentorSecret}
                       onChange={(e) => setMentorSecret(e.target.value)}
-                      className="block w-full rounded-xl border-indigo-200 bg-white py-2 px-3 text-slate-900 font-medium text-xs border shadow-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                      placeholder="Enter secret name"
+                      className="block w-full rounded-2xl border border-slate-200 bg-slate-50/60 py-3.5 pl-12 pr-4 text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                      placeholder="Secret Key"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[10px] font-extrabold text-indigo-900 uppercase tracking-wider mb-1">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showMentorPassword ? "text" : "password"}
-                        required
-                        value={mentorPassword}
-                        onChange={(e) => setMentorPassword(e.target.value)}
-                        className="block w-full rounded-xl border-indigo-200 bg-white py-2 px-3 pr-9 text-slate-900 font-medium text-xs border shadow-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                        placeholder="Enter password"
-                      />
-                      <button 
-                         type="button" 
-                         onClick={() => setShowMentorPassword(!showMentorPassword)}
-                        className="absolute right-3 top-2 text-slate-400 hover:text-slate-600"
-                      >
-                          {showMentorPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="pt-2">
+                  {/* Mentor Password */}
+                  <div className="relative">
+                    <span className="absolute left-4 top-3.5 text-slate-400">
+                      <Lock size={16} />
+                    </span>
+                    <input
+                      type={showMentorPassword ? "text" : "password"}
+                      required
+                      value={mentorPassword}
+                      onChange={(e) => setMentorPassword(e.target.value)}
+                      className="block w-full rounded-2xl border border-slate-200 bg-slate-50/60 py-3.5 pl-12 pr-12 text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                      placeholder="Secret PIN"
+                    />
                     <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 text-xs font-black text-white shadow-md hover:bg-indigo-700 active:translate-y-0 hover:-translate-y-0.5 transition-all disabled:opacity-75 flex items-center justify-center gap-2"
+                      type="button"
+                      onClick={() => setShowMentorPassword(!showMentorPassword)}
+                      className="absolute right-4 top-3.5 text-slate-400 hover:text-slate-900 transition-colors"
                     >
-                      {loading ? 'Authenticating...' : 'Access Authority'} <ArrowRight size={14} />
+                      {showMentorPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-sm font-black text-white shadow-xl shadow-indigo-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {loading ? 'Validating Authorities...' : 'Enter Mentor Domain'} <ArrowRight size={16} />
+                  </button>
                   
-                  <div className="text-center mt-2">
-                     <button type="button" onClick={() => setShowMentorLogin(false)} className="text-[10px] font-bold text-slate-500 hover:text-slate-800">
-                         Back to Student Login
-                     </button>
-                  </div>
+                  <button 
+                    type="button" 
+                    onClick={() => setShowMentorLogin(false)} 
+                    className="w-full text-xs font-black text-slate-400 hover:text-slate-350 transition-colors py-2 uppercase tracking-widest mt-1"
+                  >
+                    ← Back to Student Login
+                  </button>
                 </form>
               </motion.div>
             ) : (
@@ -251,85 +280,92 @@ export default function Login() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
               >
-                <div className="text-center mb-6">
-                    <img src={appLogo} alt="Logo" className="w-20 h-20 mx-auto rounded-full shadow-lg" />
-                </div>
-                <form className="space-y-4" onSubmit={handleStudentLogin}>
+                
+
+                <form className="space-y-5" onSubmit={handleStudentLogin}>
                   {error && (
-                    <div className="bg-rose-50/90 text-rose-600 text-[10px] font-bold p-3 rounded-xl border border-rose-100 shadow-sm flex items-start gap-2">
-                      <span className="mt-0.5">⚠️</span>
+                    <div className="bg-rose-950/60 text-rose-300 text-xs font-bold p-3.5 rounded-2xl border border-rose-900/50 flex items-start gap-2.5">
+                      <ShieldAlert size={16} className="shrink-0 text-rose-400 mt-0.5" />
                       <span>{error}</span>
                     </div>
                   )}
                   
                   {/* Mobile Number Field */}
-                  <div>
-                    <label htmlFor="mobile" className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                      Mobile No
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-slate-400 font-bold text-xs">
-                        +91
-                      </span>
-                      <input
-                        id="mobile"
-                        name="mobile"
-                        type="tel"
-                        required
-                        value={mobile}
-                        onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))}
-                        className="block w-full rounded-xl border-slate-200 bg-white py-2.5 pl-10 pr-3 text-slate-900 font-medium text-sm border shadow-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
-                        placeholder="10-digit number"
-                      />
-                    </div>
+                  <div className="relative group">
+                    <span className="absolute left-4 top-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                      <Phone size={18} />
+                    </span>
+                    <span className="absolute left-11 top-4.5 text-slate-400 font-black text-xs pointer-events-none select-none">
+                      +91
+                    </span>
+                    <input
+                      id="mobile"
+                      name="mobile"
+                      type="tel"
+                      required
+                      value={mobile}
+                      onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))}
+                      className="block w-full rounded-2xl border border-slate-200 bg-slate-50/70 py-4 pl-20 pr-4 text-slate-900 font-extrabold text-base shadow-inner outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all placeholder-slate-400"
+                      placeholder="Mobile Number"
+                    />
                   </div>
 
                   {/* Password */}
-                  <div>
-                      <label htmlFor="password" className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1"> 
-                        Password 
-                      </label>
-                      <input
-                        id="password"
-                        name="password"
-                        type="password" 
-                        inputMode="numeric"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="block w-full rounded-xl border-slate-200 bg-white py-2.5 px-3 text-slate-900 font-medium text-sm border shadow-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
-                        placeholder="Enter Security PIN"
-                      />
+                  <div className="relative group">
+                    <span className="absolute left-4 top-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                      <Lock size={18} />
+                    </span>
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"} 
+                      inputMode="numeric"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="block w-full rounded-2xl border border-slate-200 bg-slate-50/70 py-4 pl-12 pr-12 text-slate-900 font-extrabold text-base shadow-inner outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all placeholder-slate-400"
+                      placeholder="Security PIN"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-4 text-slate-400 hover:text-slate-900 transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
                   </div>
 
                   {/* Submit Button */}
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-xs font-black text-white shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-75 disabled:pointer-events-none flex items-center justify-center gap-2"
-                    >
-                      {loading ? 'Logging in...' : 'Login'}
-                    </button>
-                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-4.5 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 text-sm font-black text-white uppercase tracking-widest shadow-xl shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-75"
+                  >
+                    {loading ? 'Establishing Link...' : 'Sign In to Missions'}
+                  </button>
                   
                   {/* Register Link */}
-                  <div className="text-center text-[11px] font-bold text-slate-600 mt-4">
-                      New student? <br/>
-                      <Link to="/register" className="text-amber-600 hover:text-amber-800 underline">Complete your profile</Link>
+                  <div className="text-center text-xs font-semibold text-slate-400 pt-2 border-t border-slate-200">
+                      New candidate ready for selection? <br/>
+                      <Link to="/register" className="text-indigo-600 font-extrabold hover:text-indigo-700 underline inline-block mt-1.5 transition-colors">
+                        Build your Selection Profile →
+                      </Link>
                   </div>
                 </form>
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
-        
-        {/* Dynamic decorative branding subtitle */}
-        <div className="flex flex-col items-center gap-4 mt-6">
-          <p className="text-center text-[10px] font-bold text-slate-500/80 drop-shadow-sm">
-            Secure biometric-level validation protecting your SSC roadmap.
-          </p>
-        </div>
+
+        {/* Footer info/trust markers */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-8"
+        >
+          Secured with Real-Time Encrypted Check-ins
+        </motion.p>
       </div>
     </div>
   );

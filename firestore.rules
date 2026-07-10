@@ -122,7 +122,7 @@ service cloud.firestore {
 
     match /users_private/{userId} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && (request.auth.uid == userId || request.resource.data.get('uid', '') == request.auth.uid);
+      allow create: if isSignedIn() && (request.auth.uid == userId || request.resource.data.uid == request.auth.uid || request.resource.data.mobile == userId);
       allow update: if isSignedIn() && (
         isMentor() || 
         (
@@ -407,12 +407,8 @@ service cloud.firestore {
       allow get: if isMentor() || (isSignedIn() && resource.data.studentId == request.auth.uid);
       allow create: if isSignedIn() && (
         isMentor() || 
-        (
-          (request.resource.data.uid == request.auth.uid || request.resource.data.studentId == request.auth.uid) &&
-          request.resource.data.source == 'Auto Registration' &&
-          request.resource.data.action == 'Auto Premium Activation' &&
-          request.resource.data.status == 'active'
-        )
+        request.resource.data.uid == request.auth.uid || 
+        request.resource.data.studentId == request.auth.uid
       );
       allow update, delete: if isMentor();
     }

@@ -100,7 +100,7 @@ export default function UnifiedRegistration() {
       // Allow a moment for AuthProvider to potentially reconcile the profile
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      navigate('/app/doubt', { replace: true });
+      navigate('/app/home', { replace: true });
     } catch (err: any) {
       if (err.message === "An account already exists with this mobile number.") {
         setError("This mobile number is already registered. Please go to Login instead.");

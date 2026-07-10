@@ -23,9 +23,7 @@ export default function Splash() {
   useEffect(() => {
     if (!loading && minTimeElapsed) {
       if (userProfile && userProfile.status === 'active') {
-        const role = (userProfile.role || '').toLowerCase();
-        const isMentor = role === 'mentor' || role === 'primary-mentor' || role === 'staff' || role === 'admin' || role === 'examiner';
-        navigate(isMentor ? '/app/home' : '/app/doubt', { replace: true });
+        navigate('/app/home', { replace: true });
       } else {
         navigate('/login', { replace: true });
       }

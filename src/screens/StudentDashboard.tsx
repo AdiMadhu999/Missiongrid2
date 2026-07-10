@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BookOpen, Users, User as UserIcon, UserCheck, Shield, HelpCircle, RefreshCw, Flame, Target, Star, BarChart3, ClipboardCheck, Calendar, Megaphone, X, MessageSquare, Volume2, Play, Pause, Check, Trophy, Award, AlertTriangle, CalendarCheck, CalendarX, Info, Lock, ShieldAlert, BellRing, Settings, LogOut, Camera, Loader2, History } from 'lucide-react';
+import { BookOpen, Users, User as UserIcon, UserCheck, Shield, HelpCircle, RefreshCw, Flame, Target, Star, BarChart3, ClipboardCheck, Calendar, Megaphone, X, MessageSquare, Volume2, Play, Pause, Check, Trophy, Award, AlertTriangle, CalendarCheck, CalendarX, Info, Lock, ShieldAlert, BellRing, Settings, LogOut, Camera, Loader2, History, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
 import { BatchService } from '../services/batch';
@@ -29,6 +29,7 @@ export default function StudentDashboard() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
   
   const uId = userProfile?.id || '';
 
@@ -458,273 +459,183 @@ export default function StudentDashboard() {
       {/* Premium Engine and Security Profile Panel */}
       <PremiumStatusWidget userProfile={userProfile} />
 
-      <div id="official-notice-board" className="bg-white p-4 rounded-[1.5rem] border border-slate-200/85 shadow-xs space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 shadow-sm">
-              <BellRing size={16} />
+      {/* Bengali Guide Section */}
+      <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-[2.5rem] p-6 shadow-sm border border-indigo-100/50 relative overflow-hidden mb-4 mt-4">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400 rounded-full blur-[60px] opacity-20" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-400 rounded-full blur-[60px] opacity-20" />
+        
+        <h2 className="text-lg font-black text-slate-900 mb-5 flex items-center gap-2 relative z-10">
+          <span className="text-xl">🌟</span> ছাত্র গাইডলাইন (সম্পূর্ণ গাইড)
+        </h2>
+
+        <div className="space-y-4 relative z-10">
+          {/* A. Mission submission rule */}
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-3xl border border-indigo-100 shadow-sm flex gap-3">
+            <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold shrink-0 mt-0.5">
+              ১
             </div>
             <div>
-              <h3 className="text-[11px] font-black text-slate-900 tracking-tight uppercase">Mentor Guidance</h3>
-              <p className="text-[8px] text-slate-400 font-extrabold uppercase tracking-widest mt-0.5">Mentor-Student Coordination</p>
-            </div>
-          </div>
-          {(studentWarnings.some(w => w.status === 'Active') || !!userProfile?.restrictedFromSubmitting) && (
-            <span className="flex h-2 w-2 relative">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-            </span>
-          )}
-        </div>
-
-        <div className="space-y-2.5">
-          {/* 1. Account status notice if not active */}
-          {userProfile?.status && userProfile.status !== 'active' && (
-            <div className={`p-3 rounded-xl border flex items-start gap-2.5 ${
-              userProfile.status === 'suspended' || userProfile.status === 'blocked'
-                ? 'bg-rose-50/50 border-rose-150 text-rose-900'
-                : 'bg-amber-50/50 border-amber-150 text-amber-900'
-            }`}>
-              <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-extrabold text-[10px] uppercase tracking-wider">Account Status Restriction</p>
-                <p className="text-[10px] font-semibold mt-0.5 opacity-90 leading-tight">
-                  Your official profile authorization status has been marked as <span className="font-extrabold uppercase">{userProfile.status}</span> by your mentor.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* 2. Submission Ban Notice */}
-          {!!userProfile?.restrictedFromSubmitting && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-150 text-rose-900 flex items-start gap-2.5">
-              <Lock className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
-              <div>
-                <p className="font-extrabold text-[10px] uppercase tracking-wider text-rose-700">Submission Ban Active</p>
-                <p className="text-[10px] font-semibold mt-0.5 leading-tight">
-                  You are temporarily restricted from checking-in your daily tasks. Please contact your mentor immediately to resolve this block.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* 3. Warnings / Strikes */}
-          {studentWarnings.map((w, idx) => {
-            const isActive = w.status === 'Active';
-            return (
-              <div 
-                key={`student-warning-${w.id || idx}`}
-                className={`p-3 rounded-xl border flex items-start gap-2.5 transition-all ${
-                  isActive 
-                    ? 'bg-rose-50/30 border-rose-200 text-rose-950 shadow-sm' 
-                    : 'bg-slate-50/50 border-slate-200 text-slate-700'
-                }`}
-              >
-                <AlertTriangle className={`w-4 h-4 shrink-0 mt-0.5 ${isActive ? 'text-rose-600' : 'text-slate-400'}`} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className={`font-black text-[10px] uppercase tracking-wider ${isActive ? 'text-rose-800' : 'text-slate-600'}`}>
-                      {isActive ? '⚠️ Official Warning (Active Strike)' : '✅ Warning Resolved'}
-                    </p>
-                    <span className="text-[8px] text-slate-400 font-bold shrink-0">
-                      {w.date ? new Date(w.date).toLocaleDateString([], { month: 'short', day: 'numeric' }) : ''}
-                    </span>
-                  </div>
-                  <p className="text-[10px] font-semibold mt-0.5 leading-tight">
-                    Reason: "{w.reason}"
-                  </p>
-                  <p className="text-[8px] text-slate-400 mt-1 font-bold">
-                    Issued by: {w.mentorName || 'Mentor'}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-
-          {/* 4. Leave Applications (Instant Approval / Rejection notices) */}
-          {studentLeaves.slice(0, 3).map((l, idx) => {
-            const isApproved = l.status === 'approved';
-            const isRejected = l.status === 'rejected';
-            const isPending = l.status === 'pending';
-            
-            return (
-              <div 
-                key={`student-leave-${l.id || idx}`}
-                className={`p-3 rounded-xl border flex items-start gap-2.5 ${
-                  isApproved 
-                    ? 'bg-emerald-50/40 border-emerald-150 text-emerald-900' 
-                    : isRejected 
-                      ? 'bg-rose-50/40 border-rose-150 text-rose-900'
-                      : 'bg-amber-50/40 border-amber-150 text-amber-900'
-                }`}
-              >
-                {isApproved ? (
-                  <CalendarCheck className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
-                ) : isRejected ? (
-                  <CalendarX className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
-                ) : (
-                  <Calendar className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className={`font-black text-[10px] uppercase tracking-wider ${
-                      isApproved ? 'text-emerald-800' : isRejected ? 'text-rose-800' : 'text-amber-800'
-                    }`}>
-                      {isApproved ? 'Leave Approved' : isRejected ? 'Leave Rejected' : 'Leave Request Pending'}
-                    </p>
-                    <span className="text-[8px] text-slate-400 font-bold shrink-0">
-                      {l.requestDate ? new Date(l.requestDate).toLocaleDateString([], { month: 'short', day: 'numeric' }) : ''}
-                    </span>
-                  </div>
-                  <p className="text-[10px] font-semibold mt-0.5 leading-tight">
-                    Dates: <span className="font-extrabold">{l.startDate}</span> to <span className="font-extrabold">{l.endDate}</span>
-                  </p>
-                  {l.reason && (
-                    <p className="text-[10px] font-medium mt-0.5 leading-snug opacity-85 italic">
-                      Reason: "{l.reason}"
-                    </p>
-                  )}
-                  {l.remark && (
-                    <div className="mt-1.5 p-1.5 rounded-lg bg-white/60 border border-slate-100 text-[9px]">
-                      <span className="font-bold text-slate-500 block text-[8px] uppercase tracking-wider">Mentor Remark:</span>
-                      <p className="italic font-medium text-slate-900">"{l.remark}"</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-
-          {/* 5. Grace Exemptions */}
-          {(!!userProfile?.exemptFromPenalty || !!userProfile?.excusedFromAttendance) && (
-            <div className="p-4 rounded-2xl bg-indigo-50/30 border border-indigo-150 text-indigo-900 space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-indigo-800">
-                <Info size={14} /> Active Grace Considerations
-              </div>
-              <div className="space-y-1.5 pl-1">
-                {!!userProfile?.exemptFromPenalty && (
-                  <div className="flex items-center gap-2 text-xs font-semibold">
-                    <span className="text-emerald-600 font-bold">✓</span> Auto-Penalty Exemption is Active (Protects consistency history).
-                  </div>
-                )}
-                {!!userProfile?.excusedFromAttendance && (
-                  <div className="flex items-center gap-2 text-xs font-semibold">
-                    <span className="text-emerald-600 font-bold">✓</span> Long-term Health/Emergency Waiver is Active.
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* 6. Normal State (All Quiet) */}
-          {studentWarnings.length === 0 && studentLeaves.length === 0 && !userProfile?.restrictedFromSubmitting && !userProfile?.exemptFromPenalty && !userProfile?.excusedFromAttendance && (!userProfile?.status || userProfile.status === 'active') && (
-            <div className="p-4 border border-dashed border-slate-200 rounded-2xl text-center">
-              <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">Profile Status Normal</p>
-              <p className="text-[10px] text-slate-400 mt-1">No active warnings, pending leaves, or restrictions on your profile.</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-
-      {/* 2nd: Emergency Leave */}
-      <button onClick={() => setShowLeaveModal(true)} className="w-full flex items-center gap-3 p-4 bg-white rounded-3xl border border-indigo-100 shadow-sm text-indigo-700 font-bold text-sm">
-         <Calendar size={20} /> Apply for Emergency Leave
-      </button>
-
-      {/* Community Card Integration */}
-      {(!communityConfig || (communityConfig.showCommunityCard !== false && communityConfig.communityStatus !== 'Disabled')) && (
-        <div 
-          id="student_community_card"
-          className="bg-white p-6 rounded-[2.5rem] border border-indigo-150/50 shadow-xs space-y-4"
-        >
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-violet-50 text-violet-600 rounded-2xl flex items-center justify-center font-bold text-lg shrink-0">
-              💬
-            </div>
-            <div className="text-left">
-              <h3 className="text-base font-black text-slate-950">
-                {communityConfig?.communityName || "Join Our Community"}
-              </h3>
-              <p className="text-xs text-slate-800 font-semibold leading-relaxed mt-1">
-                {communityConfig?.communityDescription || "Connect with fellow MissionGrid aspirants, participate in discussions, receive updates, ask doubts, and stay accountable throughout your preparation journey."}
+              <h3 className="font-bold text-slate-900 mb-1">মিশন সাবমিশন নিয়ম (Mission Submission)</h3>
+              <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
+                Premium সুবিধা বজায় রাখতে হলে প্রতিদিনের Mission নিয়মিত সম্পন্ন করে Submission করতে হবে।
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-1">
-            <button 
-              id="join_community_main_btn"
-              onClick={async () => {
-                await trackCommunityClick('main');
-                setShowJoinModal(true);
-              }}
-              className="flex-1 bg-violet-600 hover:bg-violet-700 text-white text-xs font-black uppercase tracking-wider py-4 rounded-3xl shadow-md hover:shadow-lg hover:shadow-violet-200/40 transition-all flex items-center justify-center gap-1.5 active:scale-95 duration-200"
-            >
-              Join Community
-            </button>
-            <button 
-              id="community_rules_main_btn"
-              onClick={() => setShowRulesModal(true)}
-              className="flex-1 bg-slate-50 border border-slate-200 hover:bg-slate-150 transition-colors text-slate-900 text-xs font-black uppercase tracking-wider py-4 rounded-3xl flex items-center justify-center gap-1.5 active:scale-95 duration-200"
-            >
-              Community Rules
-            </button>
+          {/* B. 10 days compliance rule */}
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-3xl border border-blue-100 shadow-sm flex gap-3">
+            <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold shrink-0 mt-0.5">
+              ২
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 mb-1">১০ দিনের কমপ্লায়েন্স (10 Days Compliance)</h3>
+              <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
+                যদি কোনো শিক্ষার্থী টানা ১০ দিন Mission Submission না করেন, তাহলে তিনি তার Premium Access হারাবেন।
+              </p>
+            </div>
           </div>
+
+          {/* C. Leave rule */}
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-3xl border border-amber-100 shadow-sm flex gap-3">
+            <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold shrink-0 mt-0.5">
+              ৩
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 mb-1">ছুটির নিয়ম (Leave Rule)</h3>
+              <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
+                প্রয়োজনে ড্যাশবোর্ডের Quick Actions থেকে "Apply for Emergency Leave" ব্যবহার করে ছুটির আবেদন করতে পারবেন।
+              </p>
+            </div>
+          </div>
+
         </div>
-      )}
+      </div>
 
-      {/* Performance Feed Container */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="bg-white rounded-[2.5rem] p-6 border border-slate-200/60 shadow-xs"
-      >
-           <div className="flex items-center justify-between mb-6">
-              <h3 className="font-black text-slate-900 flex items-center gap-2.5 text-sm uppercase tracking-wider">
-                  <div className="w-1.5 h-6 bg-indigo-600 rounded-full" /> Performance Feed
-              </h3>
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Reports History</span>
-           </div>
-           
-           <div className="space-y-4">
-              {loading && recentReports.length === 0 ? (
-                <div className="text-center py-10 animate-pulse text-[10px] font-black text-slate-400">SYNCING FEED...</div>
-              ) : recentReports.length === 0 ? (
-                <div className="text-center py-10">
-                   <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">No mission records found</p>
-                </div>
-              ) : recentReports.slice(0, 10).map((m, idx) => (
-                <div key={m.id || m.date || idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-100/50 flex items-center justify-between">
-                   <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                        m.status === 'Approved' ? 'bg-emerald-50 text-emerald-600' : 
-                        m.status === 'Warning' ? 'bg-rose-50 text-rose-600' :
-                        m.status === 'Absent' ? 'bg-slate-100 text-slate-400' : 'bg-indigo-50 text-indigo-600'
-                      }`}>
-                         {m.status === 'Approved' ? <UserCheck size={18} /> : <Award size={18} />}
-                      </div>
-                      <div>
-                        <p className="text-xs font-black text-slate-900 leading-none">{m.status}</p>
-                        <p className="text-[10px] font-bold text-slate-400 mt-1">{m.date}</p>
-                      </div>
-                   </div>
-                   <div className="text-right">
-                      <p className="text-[10px] font-black text-indigo-600">+{m.marks} pts</p>
-                   </div>
-                </div>
-              ))}
-           </div>
-      </motion.div>
+      {/* Student Day Workflow Visual */}
+      <div className="bg-white rounded-[2rem] p-5 shadow-sm border border-slate-100 mb-4 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500 rounded-full blur-[80px] opacity-10" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-500 rounded-full blur-[80px] opacity-10" />
+        
+        <h2 className="text-sm font-black text-slate-900 flex items-center gap-2 mb-5 relative z-10">
+          <span className="text-lg">🗺️</span> Student Day Workflow
+        </h2>
+        
+        <div className="space-y-4 relative before:absolute before:inset-0 before:ml-[1.125rem] before:h-full before:w-0.5 before:bg-gradient-to-b before:from-indigo-200 before:via-pink-200 before:to-rose-100 z-10">
+          
+          {/* Step 1 */}
+          <div className="relative flex items-start gap-4">
+            <div className="w-9 h-9 rounded-full bg-indigo-500 border-4 border-white shadow-sm flex items-center justify-center text-white shrink-0 z-10 relative">
+              <Target size={14} />
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-indigo-50/80 to-white p-3 rounded-2xl border border-indigo-100/50 shadow-sm flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+              <div>
+                <h4 className="font-bold text-indigo-950 text-xs">Start Your Day</h4>
+                <p className="text-[10px] text-indigo-700/80 font-semibold">Check your mission & start preparing</p>
+              </div>
+            </div>
+          </div>
 
-      {/* Quick Actions */}
-      <QuickActionsPanel 
-        userProfile={userProfile} 
-      />
+          {/* Step 2 */}
+          <div className="relative flex items-start gap-4">
+            <div className="w-9 h-9 rounded-full bg-emerald-500 border-4 border-white shadow-sm flex items-center justify-center text-white shrink-0 z-10 relative">
+              <BookOpen size={14} />
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-emerald-50/80 to-white p-3 rounded-2xl border border-emerald-100/50 shadow-sm flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+              <div>
+                <h4 className="font-bold text-emerald-950 text-xs">Attempt Test</h4>
+                <p className="text-[10px] text-emerald-700/80 font-semibold">Practice what you prepared</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div className="relative flex items-start gap-4">
+            <div className="w-9 h-9 rounded-full bg-amber-500 border-4 border-white shadow-sm flex items-center justify-center text-white shrink-0 z-10 relative">
+              <Clock size={14} />
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-amber-50/80 to-white p-3 rounded-2xl border border-amber-100/50 shadow-sm flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+              <div>
+                <h4 className="font-bold text-amber-950 text-xs">Deep Work</h4>
+                <p className="text-[10px] text-amber-700/80 font-semibold">Use focus timer for study sessions</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 4 */}
+          <div className="relative flex items-start gap-4">
+            <div className="w-9 h-9 rounded-full bg-pink-500 border-4 border-white shadow-sm flex items-center justify-center text-white shrink-0 z-10 relative">
+              <HelpCircle size={14} />
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-pink-50/80 to-white p-3 rounded-2xl border border-pink-100/50 shadow-sm flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+              <div>
+                <h4 className="font-bold text-pink-950 text-xs">Have a Doubt?</h4>
+                <p className="text-[10px] text-pink-700/80 font-semibold">Ask mentor privately or publicly</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 5 */}
+          <div className="relative flex items-start gap-4">
+            <div className="w-9 h-9 rounded-full bg-violet-500 border-4 border-white shadow-sm flex items-center justify-center text-white shrink-0 z-10 relative">
+              <Users size={14} />
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-violet-50/80 to-white p-3 rounded-2xl border border-violet-100/50 shadow-sm flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+              <div>
+                <h4 className="font-bold text-violet-950 text-xs">Discussion & Guide</h4>
+                <p className="text-[10px] text-violet-700/80 font-semibold">Discuss preparation & check guides</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 6 */}
+          <div className="relative flex items-start gap-4">
+            <div className="w-9 h-9 rounded-full bg-blue-500 border-4 border-white shadow-sm flex items-center justify-center text-white shrink-0 z-10 relative">
+              <ClipboardCheck size={14} />
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-blue-50/80 to-white p-3 rounded-2xl border border-blue-100/50 shadow-sm flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+              <div>
+                <h4 className="font-bold text-blue-950 text-xs">Mission Report</h4>
+                <p className="text-[10px] text-blue-700/80 font-semibold">Submit your daily mission report</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 7 */}
+          <div className="relative flex items-start gap-4">
+            <div className="w-9 h-9 rounded-full bg-teal-500 border-4 border-white shadow-sm flex items-center justify-center text-white shrink-0 z-10 relative">
+              <Check size={14} />
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-teal-50/80 to-white p-3 rounded-2xl border border-teal-100/50 shadow-sm flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+              <div>
+                <h4 className="font-bold text-teal-950 text-xs">Target Complete</h4>
+                <p className="text-[10px] text-teal-700/80 font-semibold">Mark your target as completed</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 8 */}
+          <div className="relative flex items-start gap-4 pt-2">
+            <div className="w-9 h-9 rounded-full bg-rose-500 border-4 border-white shadow-sm flex items-center justify-center text-white shrink-0 z-10 relative">
+              <CalendarX size={14} />
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-rose-50/80 to-white p-3 rounded-2xl border border-rose-100/50 shadow-sm flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
+              <div>
+                <h4 className="font-bold text-rose-950 text-xs">Unable to Study?</h4>
+                <p className="text-[10px] text-rose-700/80 font-semibold">Apply for emergency leave</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div className="text-center pb-8 pt-4 space-y-1">
+        <p className="text-[12px] text-slate-600 font-extrabold italic">"কঠোর পরিশ্রম আর অধ্যবসায়ই সফলতার একমাত্র চাবিকাঠি।"</p>
+        <p className="text-[10px] text-slate-400 font-black tracking-widest uppercase">MissionGrid by Adi Madhu</p>
+      </div>
       
       {showLeaveModal && <ApplyLeaveModal onClose={() => setShowLeaveModal(false)} userProfile={userProfile as User} />}
-
-
 
       </div>
 

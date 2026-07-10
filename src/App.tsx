@@ -50,9 +50,7 @@ import { MaintenanceBanner } from './components/MaintenanceBanner';
 const IndexRedirect = () => {
   const { userProfile } = useAuth();
   if (!userProfile) return null;
-  const role = (userProfile.role || '').toLowerCase();
-  const isMentor = role === 'mentor' || role === 'primary-mentor' || role === 'staff' || role === 'admin' || role === 'examiner';
-  return <Navigate to={isMentor ? "home" : "doubt"} replace />;
+  return <Navigate to="home" replace />;
 };
 
 // Sleek, animated skeleton spinner for lazy-loaded route transitions

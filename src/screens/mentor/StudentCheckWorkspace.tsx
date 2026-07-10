@@ -34,8 +34,8 @@ export default function StudentCheckWorkspace({ onBack }: Props) {
       setUserProfile(user);
       toast.success(`Logged in as ${user.name || 'Student'}`);
       
-      // Navigate to student dashboard (or doubt area)
-      navigate('/app/doubt', { replace: true });
+      // Navigate to student dashboard (or home area)
+      navigate('/app/home', { replace: true });
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Magic login failed. Make sure the student mobile number is correct.');

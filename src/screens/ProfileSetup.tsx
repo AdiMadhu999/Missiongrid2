@@ -33,8 +33,7 @@ export const ProfileSetup: React.FC = () => {
       setUserProfile({ ...userProfile, name, isProfileCompleted: true });
       toast.success('Profile setup complete!');
       const userRole = (userProfile.role || '').toLowerCase();
-      const isMentor = userRole === 'mentor' || userRole === 'primary-mentor' || userRole === 'staff' || userRole === 'admin' || userRole === 'examiner';
-      navigate(isMentor ? '/app/home' : '/app/doubt');
+      navigate('/app/home');
     } catch (err) {
       toast.error('Failed to complete profile.');
     } finally {
