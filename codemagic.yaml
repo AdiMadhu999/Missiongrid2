@@ -25,6 +25,10 @@ workflows:
       - name: Build Android Release APK
         script: |
           cd android
+          if [ ! -f app/release.keystore ]; then
+            echo "Keystore not found. Generating a persistent keystore..."
+            keytool -genkey -v -keystore app/release.keystore -storetype JKS -alias release -keyalg RSA -keysize 2048 -validity 10000 -storepass password -keypass password -dname "CN=MissionGrid, OU=Dev, O=Mission, L=City, ST=State, C=US"
+          fi
           java -version
           echo "JAVA_HOME=$JAVA_HOME"
           chmod +x gradlew
