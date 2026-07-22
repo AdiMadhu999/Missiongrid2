@@ -1,0 +1,44 @@
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+import { defineConfig } from 'vite';
+
+export default defineConfig(() => {
+  return {
+    plugins: [react(), tailwindcss()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, '.'),
+      },
+      dedupe: ['react', 'react-dom'],
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router-dom', 'motion/react'],
+    },
+    esbuild: {
+      drop: ['console', 'debugger'] as ('console' | 'debugger')[],
+    },
+    build: {
+      target: 'es2020',
+      minify: 'esbuild' as const,
+      cssMinify: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+            'vendor-motion': ['motion/react'],
+            'vendor-charts': ['recharts'],
+            'vendor-math': ['katex', 'react-katex', 'react-markdown'],
+            'vendor-pdf': ['pdf-lib'],
+            'vendor-query': ['@tanstack/react-query'],
+          }
+        }
+      }
+    },
+    server: {
+      hmr: process.env.DISABLE_HMR !== 'true',
+      watch: process.env.DISABLE_HMR === 'true' ? null : {},
+    },
+  };
+});

@@ -1,0 +1,38 @@
+# codemagic.yaml
+workflows:
+  capacitor-android:
+    name: Capacitor Android Release Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      node: 22
+      java: 21
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm install
+      - name: Build React application
+        script: |
+          npm run build
+      - name: Sync Capacitor project with Android
+        script: |
+          npx cap sync android
+      - name: Build Android Release APK
+        script: |
+          cd android
+          if [ ! -f app/release.keystore ]; then
+            echo "Keystore not found. Generating a persistent keystore..."
+            keytool -genkey -v -keystore app/release.keystore -storetype JKS -alias release -keyalg RSA -keysize 2048 -validity 10000 -storepass password -keypass password -dname "CN=MissionGrid, OU=Dev, O=Mission, L=City, ST=State, C=US"
+          fi
+          java -version
+          echo "JAVA_HOME=$JAVA_HOME"
+          gradle wrapper --gradle-version 8.14.3
+          chmod +x gradlew
+          gradle assembleRelease
+    artifacts:
+      - android/app/build/outputs/apk/release/*.apk

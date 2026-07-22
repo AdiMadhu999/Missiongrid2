@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.missiongrid.app",
+      "sha256_cert_fingerprints": [
+        "FE:66:CB:F5:9D:72:BD:F9:51:C8:DD:05:31:67:4D:CB:DA:24:18:6A:D9:A3:5C:7C:51:EA:99:D5:F9:59:73:CD"
+      ]
+    }
+  }
+]

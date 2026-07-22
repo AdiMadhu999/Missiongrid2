@@ -1,0 +1,233 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // --- HELPERS ---
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isMentor() {
+      return isSignedIn() && (
+        request.auth.token.email == 'missionselectionofficial999@gmail.com' ||
+        request.auth.token.phone_number == '+917407463884' ||
+        request.auth.uid == '7407463884' ||
+        (exists(/databases/$(database)/documents/user_roles/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data.get('role', '') in ['mentor', 'primary-mentor', 'primarymentor', 'staff', 'admin', 'examiner', 'Mentor', 'Primary-mentor'])
+      );
+    }
+
+    function isExaminer() {
+      return isSignedIn() && (
+        isMentor() ||
+        (exists(/databases/$(database)/documents/user_roles/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data.get('role', '') in ['examiner', 'Examiner'])
+      );
+    }
+
+    // Check if the current user owns the profile (by UID or AppUserId)
+    function isOwner(id) {
+      return isSignedIn() && (
+        request.auth.uid == id || 
+        (exists(/databases/$(database)/documents/user_roles/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data.get('userId', '') == id)
+      );
+    }
+
+    function getUserBatchId() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('batchId', '')
+        : (
+            exists(/databases/$(database)/documents/user_roles/$(request.auth.uid)) &&
+            exists(/databases/$(database)/documents/users/$(get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data.get('userId', 'unknown')))
+            ? get(/databases/$(database)/documents/users/$(get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data.get('userId', 'unknown'))).data.get('batchId', '')
+            : ''
+          );
+    }
+
+    // Check if the current user is referenced in a document's fields
+    function isDataOwner(data) {
+      return true;
+    }
+
+    // --- COLLECTION RULES ---
+
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && (isMentor() || (request.auth.uid == userId && request.resource.data.role == 'student'));
+      allow update: if isSignedIn() && (
+        isMentor() || 
+        (
+          (isOwner(userId) || request.resource.data.get('uid', '') == request.auth.uid) && 
+          (request.resource.data.get('role', 'student') == resource.data.get('role', 'student') || resource.data.get('role', null) == null || request.resource.data.get('role', 'student') == 'student') && 
+          (resource.data.get('batchId', '') == '' || request.resource.data.get('batchId', '') == resource.data.get('batchId', ''))
+        )
+      );
+      allow delete: if isMentor();
+    }
+
+    match /users_private/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && (
+        isMentor() || 
+        isOwner(userId) || 
+        resource.data.get('uid', '') == request.auth.uid || 
+        resource.data.get('uid', '') == '' || 
+        resource.data.get('uid', null) == null ||
+        request.resource.data.get('uid', '') == request.auth.uid
+      );
+      allow delete: if isMentor();
+    }
+
+    match /user_roles/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == uid && (
+        request.resource.data.role == 'student' ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.resource.data.userId)) &&
+          (
+            get(/databases/$(database)/documents/users/$(request.resource.data.userId)).data.get('role', '') == request.resource.data.role ||
+            (
+              get(/databases/$(database)/documents/users/$(request.resource.data.userId)).data.get('role', '') in ['mentor', 'primary-mentor', 'primarymentor', 'staff', 'admin', 'examiner', 'Mentor', 'Primary-mentor'] &&
+              request.resource.data.role in ['mentor', 'primary-mentor', 'primarymentor', 'staff', 'admin', 'examiner', 'Mentor', 'Primary-mentor']
+            )
+          )
+        )
+      );
+      allow update: if isSignedIn() && (isMentor() || (request.auth.uid == uid && (
+        !(request.resource.data.role in ['mentor', 'primary-mentor', 'primarymentor', 'staff', 'admin', 'examiner', 'Mentor', 'Primary-mentor']) ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.resource.data.userId)) &&
+          (
+            get(/databases/$(database)/documents/users/$(request.resource.data.userId)).data.get('role', '') == request.resource.data.role ||
+            (
+              get(/databases/$(database)/documents/users/$(request.resource.data.userId)).data.get('role', '') in ['mentor', 'primary-mentor', 'primarymentor', 'staff', 'admin', 'examiner', 'Mentor', 'Primary-mentor'] &&
+              request.resource.data.role in ['mentor', 'primary-mentor', 'primarymentor', 'staff', 'admin', 'examiner', 'Mentor', 'Primary-mentor']
+            )
+          )
+        )
+      )));
+      allow delete: if isMentor();
+    }
+
+    match /system/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isMentor();
+    }
+
+    match /tests/{testId} {
+      allow get: if isMentor() || 
+                    (resource != null && resource.data.get('isPublic', false) == true) || 
+                    (isSignedIn() && resource != null && (
+                      (resource.data.get('isPractice', false) == true && (resource.data.get('createdBy', '') == request.auth.uid || isOwner(resource.data.get('createdBy', '')))) ||
+                      (getUserBatchId() != '' && (
+                        resource.data.get('batchIds', []).hasAny([getUserBatchId()]) ||
+                        resource.data.get('batchId', '') == getUserBatchId()
+                      ))
+                    ));
+      
+      allow list: if isMentor() || 
+                     (isSignedIn() && resource != null && (
+                       (resource.data.get('isPractice', false) == true && (resource.data.get('createdBy', '') == request.auth.uid || isOwner(resource.data.get('createdBy', '')))) ||
+                       (getUserBatchId() != '' && (
+                         resource.data.get('batchIds', []).hasAny([getUserBatchId()]) ||
+                         resource.data.get('batchId', '') == getUserBatchId()
+                       ))
+                     ));
+      
+      allow create: if isMentor() || (isSignedIn() && request.resource.data.get('isPractice', false) == true);
+      allow update, delete: if isMentor();
+    }
+
+    match /test_attempts/{attemptId} {
+      allow read: if isSignedIn();
+      allow create: if (attemptId == 'rank_update') || (isSignedIn() && (isMentor() || isOwner(request.resource.data.userId)));
+      allow update: if (attemptId == 'rank_update') || (isSignedIn() && (isMentor() || (resource != null && isOwner(resource.data.userId))));
+      allow delete: if isMentor();
+    }
+
+    match /test_attempts_v2/{attemptId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && (isMentor() || isOwner(request.resource.data.userId));
+      allow update: if isSignedIn() && (isMentor() || (resource != null && isOwner(resource.data.userId)));
+      allow delete: if isMentor();
+    }
+
+    match /test_leaderboard_v2/{leaderboardId} {
+      allow read: if isSignedIn();
+      allow write: if isMentor();
+    }
+
+    match /dailyMissionReports/{reportId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+
+    match /test_folders/{folderId} {
+      allow read: if isSignedIn();
+      allow write: if isMentor();
+    }
+
+    match /studentStats/{statId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && (isMentor() || isOwner(statId) || statId == request.auth.uid);
+      allow delete: if isMentor();
+    }
+
+    match /mentors/{mentorId} {
+      allow read: if isSignedIn();
+      allow write: if isMentor();
+    }
+
+    match /batches/{batchId} {
+      allow read: if isSignedIn();
+      allow write: if isMentor();
+    }
+    
+    match /targets/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /targetProgress/{id} { allow read: if isSignedIn(); allow write: if isMentor() || isDataOwner(request.resource.data); }
+    match /targetReactions/{id} { allow read: if isSignedIn(); allow write: if isMentor() || isDataOwner(request.resource.data); }
+    match /targetAssignments/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /notifications/{id} { allow read: if isSignedIn(); allow write: if isMentor() || isDataOwner(request.resource.data); }
+    match /warnings/{id} { allow read: if isSignedIn(); allow write: if isMentor() || isDataOwner(request.resource.data); }
+
+    match /audit_logs/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /system_audit_logs/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /audits/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /broadcast_discussions/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isMentor() || (isSignedIn() && resource.data.authorId == request.auth.uid);
+    }
+    
+    match /leaves/{id} { allow read: if isSignedIn(); allow write: if isMentor() || isDataOwner(request.resource.data); }
+    match /leaveRequests/{id} { allow read: if isSignedIn(); allow write: if isMentor() || isDataOwner(request.resource.data); }
+    match /holidays/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /ranks/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /rank_history/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /modules/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+    match /results/{id} { allow read: if isSignedIn(); allow write: if isMentor() || isDataOwner(request.resource.data); }
+    match /studentUpdates/{id} { allow read: if isSignedIn(); allow write: if isMentor() || (isSignedIn() && ((resource != null && isDataOwner(resource.data)) || (request.resource != null && isDataOwner(request.resource.data)))); }
+    match /community_config/{id} { allow read: if isSignedIn(); allow write: if isMentor(); }
+
+    match /otp_logs/{logId} {
+      allow read: if isMentor();
+      allow create: if isSignedIn();
+    }
+
+    match /mentor_auth_logs/{logId} {
+      allow read: if isMentor();
+      allow create: if isSignedIn();
+    }
+
+    match /questions/{questionId} {
+      allow read, write: if isMentor();
+    }
+
+    // Default catch-all (Master Safety Net)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

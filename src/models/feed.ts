@@ -1,0 +1,59 @@
+export type FeedItemType = 'Doubt' | 'MissionReport' | 'DailyTest' | 'MentorPost';
+
+export interface FeedItem {
+  id: string;
+  type: FeedItemType;
+  authorId: string;
+  authorName: string;
+  createdAt: any;
+  batchId?: string;
+  batchIds?: string[];
+  visibility: 'global' | 'batch';
+  content?: string;
+  attachments?: { url: string; type: 'image' | 'pdf' | 'video' | 'link'; name: string }[];
+  metadata?: Record<string, any>;
+}
+
+export type MentorPostType = 'announcement' | 'article' | 'video' | 'image' | 'pdf' | 'test' | 'link' | 'voiceNote' | 'poll';
+
+export interface MentorPost extends FeedItem {
+  type: 'MentorPost';
+  title: string;
+  postType: MentorPostType;
+  publishedStatus: 'published' | 'draft';
+  pinnedStatus: boolean;
+  dayNumber?: number; // Added dayNumber
+  sendPushNotification?: boolean; // Added sendPushNotification
+  category?: 'Mentor Message' | 'Video Guidance' | 'Study Material';
+  youtubeLink?: string;
+  externalLink?: string;
+  pollOptions?: { id: string; text: string; votes: string[] }[];
+  audioUrl?: string;
+  duration?: string;
+}
+
+export interface DailyTest extends FeedItem {
+  type: 'DailyTest';
+  testName: string;
+  duration: number;
+  questionCount: number;
+  shareToCommunity?: boolean;
+  testId?: string;
+}
+
+export interface Reply {
+  authorId: string;
+  authorName: string;
+  content: string;
+  createdAt: any;
+}
+
+export interface Doubt extends FeedItem {
+  type: 'Doubt';
+  title: string;
+  status: 'Solved' | 'Unsolved';
+  replies?: Reply[];
+  solvedBy?: string;
+  privacy?: 'public' | 'private';
+  mentorId?: string;
+}
