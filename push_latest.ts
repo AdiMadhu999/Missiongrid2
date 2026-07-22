@@ -38,7 +38,7 @@ try {
     }
     
     console.log("Setting authenticated remote URL...");
-    const remoteUrl = `https://${token}@github.com/${owner}/${repo}.git`;
+    const remoteUrl = `https://${token}:x-oauth-basic@github.com/${owner}/${repo}.git`;
     execSync(`git remote set-url origin "${remoteUrl}"`);
     
     console.log("Pushing to GitHub...");
