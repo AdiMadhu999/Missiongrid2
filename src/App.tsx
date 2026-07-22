@@ -16,37 +16,39 @@ import Splash from './screens/Splash';
 import Login from './screens/Login';
 import MainLayout from './components/MainLayout';
 
-// Route-level Lazy Loading to keep the initial APK load light and ultra-fast
-const Dashboard = React.lazy(() => import('./screens/Dashboard'));
-const CompleteProfile = React.lazy(() => import('./screens/CompleteProfile'));
-const ForgotPin = React.lazy(() => import('./screens/ForgotPin'));
-const RecoverAccount = React.lazy(() => import('./screens/RecoverAccount'));
-const DeveloperConsole = React.lazy(() => import('./screens/DeveloperConsole'));
-const PublicLiveTestLanding = React.lazy(() => import('./screens/test/PublicLiveTestLanding'));
-const TargetScreen = React.lazy(() => import('./screens/targets/TargetScreen'));
-const UserListScreen = React.lazy(() => import('./screens/users/UserListScreen'));
-const BatchListScreen = React.lazy(() => import('./screens/admin/BatchListScreen'));
-const BatchCreateScreen = React.lazy(() => import('./screens/admin/BatchCreateScreen'));
-const BatchDetailScreen = React.lazy(() => import('./screens/admin/BatchDetailScreen'));
-const ProfileScreen = React.lazy(() => import('./screens/ProfileScreen'));
-const MissionViewDistributor = React.lazy(() => import('./screens/MissionViewDistributor'));
-const MissionFeedScreen = React.lazy(() => import('./screens/MissionFeedScreen'));
-const MentorPostCreationScreen = React.lazy(() => import('./screens/create/MentorPostCreationScreen'));
-const MentorPlace = React.lazy(() => import('./screens/mentor/MentorPlace'));
-const CommunityManagementScreen = React.lazy(() => import('./screens/mentor/CommunityManagementScreen'));
-const StudyMaterialCreator = React.lazy(() => import('./screens/mentor/StudyMaterialCreator'));
-const StudentManagementScreen = React.lazy(() => import('./screens/admin/StudentManagementScreen'));
-const NotificationScreen = React.lazy(() => import('./screens/NotificationScreen').then(m => ({ default: m.NotificationScreen })));
-const TestDashboardScreen = React.lazy(() => import('./screens/test/TestDashboardScreen'));
-const TestAttemptSession = React.lazy(() => import('./screens/test-v2/TestAttemptSession'));
-const AIConfigScreen = React.lazy(() => import('./screens/mentor/AIConfigScreen'));
-const GenerationCenterPage = React.lazy(() => import('./components/GenerationCenter').then(m => ({ default: m.GenerationCenter })));
-const AttemptTestView = React.lazy(() => import('./screens/test/AttemptTestView'));
-const TestResultView = React.lazy(() => import('./screens/test/TestResultView'));
-const AITestCreator = React.lazy(() => import('./screens/test/AITestCreator'));
-
 import { AppSecurityWrapper } from './components/AppSecurityWrapper';
 import { MaintenanceBanner } from './components/MaintenanceBanner';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { lazyWithRetry } from './utils/lazyWithRetry';
+
+// Route-level Resilient Lazy Loading to handle network hiccups or chunk updates smoothly
+const Dashboard = lazyWithRetry(() => import('./screens/Dashboard'));
+const CompleteProfile = lazyWithRetry(() => import('./screens/CompleteProfile'));
+const ForgotPin = lazyWithRetry(() => import('./screens/ForgotPin'));
+const RecoverAccount = lazyWithRetry(() => import('./screens/RecoverAccount'));
+const DeveloperConsole = lazyWithRetry(() => import('./screens/DeveloperConsole'));
+const PublicLiveTestLanding = lazyWithRetry(() => import('./screens/test/PublicLiveTestLanding'));
+const TargetScreen = lazyWithRetry(() => import('./screens/targets/TargetScreen'));
+const UserListScreen = lazyWithRetry(() => import('./screens/users/UserListScreen'));
+const BatchListScreen = lazyWithRetry(() => import('./screens/admin/BatchListScreen'));
+const BatchCreateScreen = lazyWithRetry(() => import('./screens/admin/BatchCreateScreen'));
+const BatchDetailScreen = lazyWithRetry(() => import('./screens/admin/BatchDetailScreen'));
+const ProfileScreen = lazyWithRetry(() => import('./screens/ProfileScreen'));
+const MissionViewDistributor = lazyWithRetry(() => import('./screens/MissionViewDistributor'));
+const MissionFeedScreen = lazyWithRetry(() => import('./screens/MissionFeedScreen'));
+const MentorPostCreationScreen = lazyWithRetry(() => import('./screens/create/MentorPostCreationScreen'));
+const MentorPlace = lazyWithRetry(() => import('./screens/mentor/MentorPlace'));
+const CommunityManagementScreen = lazyWithRetry(() => import('./screens/mentor/CommunityManagementScreen'));
+const StudyMaterialCreator = lazyWithRetry(() => import('./screens/mentor/StudyMaterialCreator'));
+const StudentManagementScreen = lazyWithRetry(() => import('./screens/admin/StudentManagementScreen'));
+const NotificationScreen = lazyWithRetry(() => import('./screens/NotificationScreen').then(m => ({ default: m.NotificationScreen })));
+const TestDashboardScreen = lazyWithRetry(() => import('./screens/test/TestDashboardScreen'));
+const TestAttemptSession = lazyWithRetry(() => import('./screens/test-v2/TestAttemptSession'));
+const AIConfigScreen = lazyWithRetry(() => import('./screens/mentor/AIConfigScreen'));
+const GenerationCenterPage = lazyWithRetry(() => import('./components/GenerationCenter').then(m => ({ default: m.GenerationCenter })));
+const AttemptTestView = lazyWithRetry(() => import('./screens/test/AttemptTestView'));
+const TestResultView = lazyWithRetry(() => import('./screens/test/TestResultView'));
+const AITestCreator = lazyWithRetry(() => import('./screens/test/AITestCreator'));
 
 const IndexRedirect = () => {
   const { userProfile } = useAuth();
@@ -77,17 +79,18 @@ export default function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <ResponsiveLayoutProvider>
-              <ServiceWorkerNavigationHandler />
-              <AppSecurityWrapper>
-                <MaintenanceBanner />
-                <UpdateChecker />
-                <React.Suspense fallback={<LazyFallbackLoader />}>
-                  <Routes>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AppProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <ResponsiveLayoutProvider>
+                <ServiceWorkerNavigationHandler />
+                <AppSecurityWrapper>
+                  <MaintenanceBanner />
+                  <UpdateChecker />
+                  <React.Suspense fallback={<LazyFallbackLoader />}>
+                    <Routes>
                     <Route path="/" element={<Splash />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Navigate to="/login" replace />} />
@@ -159,6 +162,7 @@ export default function App() {
         </AuthProvider>
       </AppProvider>
     </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
