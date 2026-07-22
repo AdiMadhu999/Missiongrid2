@@ -16,14 +16,25 @@ export const UpdateChecker = () => {
         const info = await App.getInfo();
         const currentVersion = info.version;
 
-        const response = await fetch('https://mission-selection-ultimate.web.app/version.json?t=' + Date.now(), {
+        let response = await fetch('/version.json?t=' + Date.now(), {
           headers: {
             'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Pragma': 'no-cache',
             'Expires': '0'
           }
-        });
-        if (!response.ok) return;
+        }).catch(() => null);
+
+        if (!response || !response.ok) {
+          response = await fetch('https://mission-selection-ultimate.web.app/version.json?t=' + Date.now(), {
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
+          }).catch(() => null);
+        }
+
+        if (!response || !response.ok) return;
         const data = await response.json();
         const latestVersion = data.version;
 
@@ -44,7 +55,8 @@ export const UpdateChecker = () => {
           };
 
           if (compareVersions(latestVersion, currentVerNormalized) > 0) {
-            setDownloadUrl(`https://mission-selection-ultimate.web.app/app-release.apk?v=${latestVersion}&t=${Date.now()}`);
+            const apkUrl = data.downloadUrl || `https://mission-selection-ultimate.web.app/app-release.apk?v=${latestVersion}&t=${Date.now()}`;
+            setDownloadUrl(apkUrl);
             setUpdateAvailable(true);
           }
         }
