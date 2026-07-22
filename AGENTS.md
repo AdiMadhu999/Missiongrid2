@@ -50,7 +50,12 @@ The following rules are MANDATORY for all AI test creation and processing tasks:
 
 These rules override token optimization, early stopping, partial extraction, and default model behavior.
 
-## Database Rules
+## Deployment & Synchronization Rules
+
+1. Web updates must always be synchronized between Google Cloud Run (hosting backend/Gemini API applet runtime) and Firebase Hosting URL (`mission-selection-ultimate`).
+2. Do NOT build APK or Android packages during standard web updates unless explicitly requested by the user.
+3. Keep GitHub Actions (`.github/workflows/firebase-hosting-merge.yml`) optimized for direct, fast web build deployment to Firebase Hosting on every push to `main`.
+4. Whenever changes are made, ensure Git commits are pushed to `origin main` so Firebase Hosting automations run seamlessly alongside Cloud Run execution.
 
 1. ALWAYS use the Firestore Database ID `(default)`. Never use a custom or generated database ID. The config file `firebase-applet-config.json` must always specify `"firestoreDatabaseId": "(default)"`.
 2. ALWAYS use the Firebase project ID `mission-selection-ultimate`. The config file `firebase-applet-config.json` must always specify `"projectId": "mission-selection-ultimate"`.
